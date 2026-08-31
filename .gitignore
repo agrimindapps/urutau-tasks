@@ -7,6 +7,9 @@
 .buildlog/
 .history
 
+# Flutter application dependency lockfile
+!pubspec.lock
+
 
 
 # Flutter repo-specific
