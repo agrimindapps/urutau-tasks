@@ -178,6 +178,12 @@ verificação da mesma data não poderá remover ou duplicar tarefas novamente.
 
 ## 7. Ordenação
 
+Os cartões de tarefas em My Day, nas visões inteligentes e nas listas deverão
+mostrar o prazo e o horário do lembrete quando configurados, além da
+prioridade quando diferente de nenhuma. Tarefas ativas com prazo anterior à
+data local atual deverão identificar visualmente que estão atrasadas. A
+formatação de datas e horários seguirá a região do dispositivo.
+
 ### RF-11 — Ordenação das visões inteligentes
 
 As visões Todas, Importante, Planejado e Concluídas utilizarão a seguinte
@@ -355,6 +361,14 @@ são renumeradas sem lacunas.
 **Quando** o usuário inicia o aplicativo
 **Então** My Day é a visão inicial e exibe essas tarefas na ordem manual
 definida para o dia.
+
+### CA-20 — Identificar prazo, lembrete e prioridade no cartão
+
+**Dado** que uma tarefa em My Day, numa visão inteligente ou numa lista possui
+prazo, lembrete ou prioridade
+**Quando** o usuário visualiza o cartão da tarefa
+**Então** os dados configurados são mostrados com formato regional, e um prazo
+passado de tarefa ativa é identificado como atrasado.
 
 ## 11. Dependências e próximos documentos
 

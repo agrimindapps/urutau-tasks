@@ -11,6 +11,7 @@ import '../application/task_providers.dart';
 import '../domain/task.dart';
 import '../domain/task_ordering.dart';
 import 'task_detail_page.dart';
+import 'task_card_metadata.dart';
 import 'task_search_page.dart';
 import 'task_title_dialog.dart';
 
@@ -551,7 +552,7 @@ class _TaskCard extends ConsumerWidget {
                 )
               : null,
         ),
-        subtitle: progressText == null ? null : Text(progressText!),
+        subtitle: TaskCardMetadata.maybe(task, progressText: progressText),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../application/task_providers.dart';
 import '../domain/task.dart';
+import 'task_card_metadata.dart';
 import 'task_detail_page.dart';
 import 'task_title_dialog.dart';
 
@@ -179,14 +180,15 @@ class _ListTaskCard extends ConsumerWidget {
               : null,
         ),
         subtitle: subtasks.when(
-          data: (steps) => steps.isEmpty
-              ? null
-              : Text(
-                  l10n.taskProgress(
+          data: (steps) => TaskCardMetadata.maybe(
+            task,
+            progressText: steps.isEmpty
+                ? null
+                : l10n.taskProgress(
                     steps.where((step) => step.isCompleted).length,
                     steps.length,
                   ),
-                ),
+          ),
           loading: () => null,
           error: (_, _) => null,
         ),
