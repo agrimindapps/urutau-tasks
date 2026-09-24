@@ -415,17 +415,12 @@ class _TaskCollectionView extends ConsumerWidget {
           final progressText = allSubtasks == null || progress == null
               ? null
               : l10n.taskProgress(progress.completed, progress.total);
-          final taskList = task.listId == null ? null : listsById[task.listId!];
-          final group = taskList?.groupId == null
-              ? null
-              : groupsById[taskList!.groupId!];
-          final sourceText = task.listId == null
-              ? l10n.noList
-              : taskList == null
-              ? null
-              : group == null
-              ? taskList.name
-              : '${group.name} · ${taskList.name}';
+          final sourceText = taskOriginLabel(
+            task: task,
+            listsById: listsById,
+            groupsById: groupsById,
+            l10n: l10n,
+          );
           return _TaskCard(
             key: ValueKey(task.id),
             task: task,

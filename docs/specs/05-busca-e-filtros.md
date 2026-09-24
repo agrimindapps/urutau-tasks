@@ -239,6 +239,12 @@ criará dados adicionais na tarefa.
 Ao abrir um resultado cujo termo esteja em uma subtarefa, o usuário deverá
 continuar acessando a tarefa principal e seu detalhamento interno.
 
+O cartão de resultado deverá mostrar a lista e o grupo de origem quando
+existirem, ou identificar que a tarefa está sem lista. Prazo, horário do
+lembrete e prioridade configurados também permanecerão visíveis junto ao
+indicador de correspondência, com formatação regional definida na
+[especificação de internacionalização](09-internacionalizacao.md).
+
 ## 8. Atualização e integridade
 
 ### RF-18 — Atualização dos resultados
@@ -414,6 +420,15 @@ data local atual.
 ambos os limites, **quando** tenta aplicar os filtros, **então** a aplicação
 permanece aberta, explica que as datas inicial e final são necessárias e não
 altera os resultados.
+
+### CA-23 — Identificar contexto do resultado
+
+**Dado** que uma tarefa sem lista ou com dados de organização ou planejamento
+é encontrada
+**Quando** aparece na busca global, **então** o cartão identifica sua lista e
+grupo de origem ou que está sem lista, mostra prazo, lembrete e prioridade
+configurados, e mantém visível o campo em que o texto correspondeu quando
+houver consulta textual.
 
 ## 11. Dependências e próximos documentos
 

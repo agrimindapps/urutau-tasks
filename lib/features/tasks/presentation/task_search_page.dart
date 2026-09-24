@@ -10,6 +10,7 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../application/task_providers.dart';
 import '../domain/task.dart';
 import '../domain/task_ordering.dart';
+import 'task_card_metadata.dart';
 import 'task_detail_page.dart';
 
 enum _DueCriterion { noDueDate, overdue, today, nextSevenDays, customRange }
@@ -342,11 +343,32 @@ class _TaskSearchPageState extends ConsumerState<TaskSearchPage>
                         itemBuilder: (context, index) {
                           final task = matching[index];
                           final rank = matchRanksByTask[task.id];
-                          final deviceLocale = WidgetsBinding
-                              .instance
-                              .platformDispatcher
-                              .locale
-                              .toString();
+                          final sourceText = taskOriginLabel(
+                            task: task,
+                            listsById: listsById,
+                            groupsById: groupsById,
+                            l10n: l10n,
+                          );
+                          final metadata = TaskCardMetadata.maybe(
+                            task,
+                            sourceText: sourceText,
+                          );
+                          final matchText = _query.isEmpty || rank == null
+                              ? null
+                              : rank == 1
+                              ? l10n.searchMatchInNotes
+                              : rank == 2
+                              ? l10n.searchMatchInSteps
+                              : l10n.searchMatchInTitle;
+                          final Widget? subtitle = matchText == null
+                              ? metadata
+                              : metadata == null
+                              ? Text(matchText)
+                              : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [Text(matchText), metadata],
+                                );
                           return Card(
                             clipBehavior: Clip.antiAlias,
                             child: ListTile(
@@ -364,21 +386,7 @@ class _TaskSearchPageState extends ConsumerState<TaskSearchPage>
                                       )
                                     : null,
                               ),
-                              subtitle: _query.isNotEmpty && rank != null
-                                  ? Text(
-                                      rank == 1
-                                          ? l10n.searchMatchInNotes
-                                          : rank == 2
-                                          ? l10n.searchMatchInSteps
-                                          : l10n.searchMatchInTitle,
-                                    )
-                                  : task.dueDateIso == null
-                                  ? null
-                                  : Text(
-                                      DateFormat.yMMMd(
-                                        deviceLocale,
-                                      ).format(parseDateOnly(task.dueDateIso!)),
-                                    ),
+                              subtitle: subtitle,
                               trailing: task.status == TaskStatus.completed
                                   ? const Icon(Icons.task_alt)
                                   : null,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../../l10n/generated/app_localizations.dart';
+import '../../organization/domain/organization.dart';
 import '../domain/task.dart';
 
 class TaskCardMetadata extends StatelessWidget {
@@ -80,4 +81,20 @@ class TaskCardMetadata extends StatelessWidget {
 
     return Wrap(spacing: 12, runSpacing: 4, children: details);
   }
+}
+
+String? taskOriginLabel({
+  required Task task,
+  required Map<String, TaskList> listsById,
+  required Map<String, TaskGroup> groupsById,
+  required AppLocalizations l10n,
+}) {
+  final listId = task.listId;
+  if (listId == null) return l10n.noList;
+
+  final taskList = listsById[listId];
+  if (taskList == null) return null;
+  final groupId = taskList.groupId;
+  final group = groupId == null ? null : groupsById[groupId];
+  return group == null ? taskList.name : '${group.name} · ${taskList.name}';
 }

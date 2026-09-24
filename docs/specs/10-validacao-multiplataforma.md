@@ -152,6 +152,13 @@ agregadas, `flutter analyze --no-pub` passou em 3,6 s.
 em 2026-09-24 com Flutter 3.47.2/Dart 3.13.2 no Debian 13 x86_64. Smoke tests
 e testes automatizados não foram executados.
 
+Após mostrar origem e metadados nos resultados da busca,
+`flutter analyze --no-pub` passou em 5,9 s.
+`flutter build web --release --no-pub` compilou em 60,1 s,
+`flutter build apk --debug --no-pub` em 11,0 s e a build Linux release passou
+em 2026-09-24, com Flutter 3.47.2/Dart 3.13.2 no Debian 13 x86_64. Smoke
+tests e testes automatizados não foram executados.
+
 ## 5. Cenários comuns de smoke test
 
 ### RF-01 — Inicialização e navegação
