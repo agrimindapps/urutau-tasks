@@ -131,6 +131,13 @@ concorrente, `flutter analyze --no-pub` passou em 3,4 s;
 `flutter build apk --debug --no-pub` em 14,5 s, em 2026-09-24. Smoke tests e
 testes automatizados não foram executados.
 
+Após definir My Day como visão inicial, `flutter analyze --no-pub` passou em
+4,6 s; `flutter build web --release --no-pub` compilou em 60,3 s,
+`flutter build apk --debug --no-pub` em 13,1 s, e a build Linux release também
+passou, em 2026-09-24 com Flutter 3.47.2/Dart 3.13.2 no Debian 13 x86_64.
+Nenhum smoke test ou teste automatizado foi executado nesta rodada; iOS, macOS
+e Windows continuam sem build neste host.
+
 ## 5. Cenários comuns de smoke test
 
 ### RF-01 — Inicialização e navegação
