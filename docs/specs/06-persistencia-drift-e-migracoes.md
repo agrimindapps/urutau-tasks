@@ -162,6 +162,13 @@ estado, posição, datas e demais dados históricos. A próxima ocorrência ser�
 criada em transação com a conclusão da ocorrência anterior quando a série
 continuar ativa.
 
+O `created_at_utc` será o marcador da ordem das ocorrências dentro da série e
+deverá ser distinto entre elas na precisão de milissegundos persistida pelo
+aplicativo. A criação de uma nova ocorrência deverá usar um instante
+estritamente posterior ao maior instante já registrado na série, mesmo se o
+relógio não avançar ou retroceder. Essa distinção não restringe instantes
+iguais em séries diferentes ou em tarefas sem recorrência.
+
 A nova ocorrência não receberá cópia das subtarefas da ocorrência anterior.
 As subtarefas continuarão pertencendo exclusivamente à ocorrência em que
 foram criadas.

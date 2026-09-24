@@ -613,6 +613,7 @@ class DataPortabilityService {
     final taskIds = <String>{};
     final taskPositionKeys = <String>{};
     final statusByTask = <String, String>{};
+    final occurrenceCreationTimesBySeries = <String, Set<int>>{};
     for (final row in tasks) {
       _registerId(row['id'], 'tarefa', allIds);
       final id = row['id'] as String;
@@ -634,6 +635,13 @@ class DataPortabilityService {
           seriesId != null && !seriesIds.contains(seriesId)) {
         throw const InvalidBackupFileException();
       }
+      final createdAtUtc = _utcMilliseconds(row['created_at_utc']);
+      if (seriesId != null &&
+          !occurrenceCreationTimesBySeries
+              .putIfAbsent(seriesId, () => <int>{})
+              .add(createdAtUtc)) {
+        throw const InvalidBackupFileException();
+      }
       final dueDate = _optionalString(row, 'due_date_iso');
       if (dueDate != null) _requireDateOnly(dueDate, 'due_date_iso');
       if (seriesId != null &&
@@ -642,7 +650,6 @@ class DataPortabilityService {
         throw const InvalidBackupFileException();
       }
       _optionalUtcMilliseconds(row['reminder_at_utc']);
-      _utcMilliseconds(row['created_at_utc']);
       _utcMilliseconds(row['updated_at_utc']);
       final completedAt = _optionalUtcMilliseconds(row['completed_at_utc']);
       final previousStatus = row['status_before_trash'];

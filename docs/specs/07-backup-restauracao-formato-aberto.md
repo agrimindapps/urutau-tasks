@@ -200,7 +200,10 @@ deverão ser únicas em cada coleção; as posições de tarefas deverão ser ú
 na lista ou inbox de origem. Posições repetidas que impeçam recuperar a ordem
 de origem deverão invalidar o arquivo. Tarefas de uma série recorrente ativa
 deverão manter um prazo; tarefas ligadas a uma série cancelada poderão não ter
-prazo.
+prazo. Os instantes `created_at_utc` das ocorrências de uma mesma série
+deverão ser distintos após conversão à precisão de milissegundos persistida
+pelo aplicativo, pois identificam a ordem histórica usada pela recorrência;
+ocorrências empatadas deverão invalidar o arquivo.
 
 Uma versão antiga só será aceita se houver conversor explícito para a versão
 atual. Uma versão desconhecida, mais nova ou com estrutura incompatível
@@ -362,6 +365,13 @@ teve seu prazo removido
 **Quando** o arquivo é exportado e importado
 **Então** a tarefa e a série cancelada são aceitas e preservadas sem reativar
 a recorrência.
+
+### CA-16 — Rejeitar ordem ambígua de ocorrências
+
+**Dado** que duas ocorrências da mesma série possuem o mesmo `created_at_utc`
+na precisão de milissegundos persistida pelo aplicativo
+**Quando** o arquivo é validado para importação ou restauração
+**Então** o arquivo é rejeitado antes da substituição dos dados locais.
 
 ## 10. Dependências e documentos relacionados
 

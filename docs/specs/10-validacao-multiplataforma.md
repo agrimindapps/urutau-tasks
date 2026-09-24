@@ -166,6 +166,13 @@ em 5,3 s; `flutter build web --release --no-pub` compilou em 69,1 s,
 em 2026-09-24, com Flutter 3.47.2/Dart 3.13.2 no Debian 13 x86_64. Não foram
 executados testes automatizados nem smoke tests.
 
+Após rejeitar backups com timestamps empatados entre ocorrências da mesma
+série recorrente, `flutter analyze` passou em 6,9 s;
+`flutter build web --release --no-pub` compilou em 75,1 s,
+`flutter build apk --debug --no-pub` em 15,4 s e `flutter build linux
+--release --no-pub` passou, em 2026-09-24 com Flutter 3.47.2/Dart 3.13.2 no
+Debian 13 x86_64. Testes automatizados e smoke tests não foram executados.
+
 ## 5. Cenários comuns de smoke test
 
 ### RF-01 — Inicialização e navegação
