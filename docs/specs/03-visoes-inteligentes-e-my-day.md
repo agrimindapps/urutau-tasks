@@ -43,6 +43,8 @@ My Day para a nova data.
 
 ## 4. Regras comuns das visões
 
+- Ao iniciar o aplicativo, My Day será a visão inicial. O usuário poderá
+  navegar para qualquer outra visão sem alterar os dados das tarefas.
 - Todas as visões normais exibirão apenas tarefas principais.
 - Subtarefas nunca aparecerão como itens independentes.
 - Itens na lixeira ficarão fora de todas as visões normais.
@@ -346,6 +348,13 @@ atribuir prioridade, prazo ou lembrete implicitamente.
 **Dado** que há várias tarefas no My Day, **quando** uma delas é concluída ou
 enviada à lixeira, **então** as demais mantêm a ordem relativa e suas posições
 são renumeradas sem lacunas.
+
+### CA-19 — Abrir o aplicativo em My Day
+
+**Dado** que existem tarefas adicionadas ao foco da data local atual
+**Quando** o usuário inicia o aplicativo
+**Então** My Day é a visão inicial e exibe essas tarefas na ordem manual
+definida para o dia.
 
 ## 11. Dependências e próximos documentos
 
