@@ -79,11 +79,12 @@ O usuário deverá manter controle efetivo sobre seus dados.
 
 O projeto terá dois objetivos complementares:
 
-- oferecer backup e restauração fiéis do banco local;
+- oferecer backup e restauração fiéis do estado dos dados locais;
 - oferecer também um formato aberto de intercâmbio, independente da
   implementação interna do banco.
 
-O backup do banco priorizará a restauração completa do estado do aplicativo.
+O backup lógico priorizará a restauração completa do estado persistido do
+aplicativo, sem depender da representação física do banco.
 O formato aberto priorizará interoperabilidade, inspeção e migração. O modelo,
 o versionamento e os critérios de compatibilidade de ambos serão definidos em
 especificações próprias antes da implementação.
@@ -100,14 +101,16 @@ mas poderá ajustar layout, navegação e interação para respeitar as
 características de cada plataforma.
 
 As plataformas suportadas são Android, iOS, Web, Linux, macOS e Windows. A
-Web será a plataforma principal de validação contínua; as demais terão
-verificações opcionais ou não bloqueantes no início e rodadas manuais em
-marcos importantes.
+Web será a plataforma principal e bloqueante, validada no Chrome Stable. As
+outras cinco plataformas serão não bloqueantes no fluxo normal e verificadas
+manualmente em marcos importantes, conforme a
+[especificação de validação multiplataforma](specs/10-validacao-multiplataforma.md).
 
 ## 8. Internacionalização
 
-A interface do aplicativo será preparada desde o início para português,
-inglês e espanhol.
+A interface do aplicativo será preparada desde o início para português do
+Brasil, inglês e espanhol, conforme a
+[especificação de internacionalização](specs/09-internacionalizacao.md).
 
 Textos apresentados ao usuário não deverão ficar espalhados diretamente na
 interface. Recursos de tradução, formatação de datas, números e demais
@@ -123,8 +126,9 @@ O projeto adotará uma pirâmide de testes composta por:
 - testes de integração para cenários completos e comportamento entre camadas.
 
 A validação Web será o conjunto bloqueante principal. As outras plataformas
-serão verificadas de maneira não bloqueante durante a evolução inicial, com
-execuções manuais mais amplas ao final de marcos definidos.
+serão verificadas manualmente em marcos importantes sem bloquear o fluxo
+normal, conforme a
+[especificação de validação multiplataforma](specs/10-validacao-multiplataforma.md).
 
 Uma mudança só deverá ser considerada concluída quando atender à
 especificação relacionada, aos critérios de aceitação e às validações
@@ -151,3 +155,8 @@ Decisões arquiteturais importantes deverão ser registradas separadamente,
 incluindo o contexto, as alternativas consideradas, a decisão tomada e suas
 consequências. Quando uma decisão deste documento for alterada, o histórico da
 mudança deverá permanecer compreensível para a comunidade.
+
+As decisões sobre backup lógico, criptografia e formato aberto estão
+registradas no [ADR de backup e formato aberto](decisoes/0001-backup-e-formato-aberto.md).
+As decisões sobre lembretes locais e diferenças de entrega entre plataformas
+estão registradas no [ADR de notificações locais](decisoes/0002-notificacoes-locais.md).

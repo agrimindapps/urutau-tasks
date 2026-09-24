@@ -328,9 +328,10 @@ acessíveis em seu detalhe.
 Esta especificação deverá ser usada como entrada para:
 
 - [especificação de prazos, lembretes e recorrência](04-prazos-lembretes-e-recorrencia.md);
-- especificação de busca e filtros;
-- especificação de persistência Drift e migrações;
-- especificação de notificações por plataforma.
+- [especificação de busca e filtros](05-busca-e-filtros.md);
+- [especificação de persistência Drift e migrações](06-persistencia-drift-e-migracoes.md);
+- [especificação de notificações por plataforma](08-notificacoes-por-plataforma.md);
+- [especificação de backup, restauração e formato aberto](07-backup-restauracao-formato-aberto.md).
 
 As visões deverão continuar sendo projeções dos dados das tarefas. Nenhuma
 implementação poderá criar um segundo estado independente para uma tarefa sem

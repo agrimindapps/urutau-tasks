@@ -327,9 +327,9 @@ demais dados preservados.
 Esta especificação deverá ser usada como entrada para:
 
 - [especificação de visões inteligentes e My Day](03-visoes-inteligentes-e-my-day.md);
-- especificação de busca e filtros;
-- especificação de persistência Drift e migrações;
-- especificação de backup e formato aberto.
+- [especificação de busca e filtros](05-busca-e-filtros.md);
+- [especificação de persistência Drift e migrações](06-persistencia-drift-e-migracoes.md);
+- [especificação de backup, restauração e formato aberto](07-backup-restauracao-formato-aberto.md).
 
 As regras de pertencimento e classificação definidas aqui não poderão ser
 alteradas por uma implementação sem uma nova decisão documentada.

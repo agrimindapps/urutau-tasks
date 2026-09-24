@@ -104,7 +104,8 @@ fins de histórico e eventual reabertura.
 
 Ao reabrir uma tarefa:
 
-- um lembrete futuro poderá ser agendado novamente;
+- um lembrete futuro deverá ser agendado novamente quando a plataforma
+  oferecer suporte e houver autorização;
 - um lembrete que já passou permanecerá registrado como vencido, sem
   notificação imediata;
 - a tarefa não deverá ser alterada automaticamente por causa do lembrete.
@@ -116,9 +117,9 @@ permissão que ainda não foi concedida, a configuração do lembrete deverá se
 preservada e o usuário deverá ser informado sobre a limitação. A tarefa
 continuará utilizável sem depender da entrega da notificação.
 
-A especificação não define APIs de notificação nem diferenças detalhadas
-entre Web, Android, iOS, Linux, macOS e Windows. Essas regras pertencerão aos
-adaptadores de plataforma futuros.
+A capacidade, as permissões, os estados visíveis e o comportamento dos
+adaptadores em Web, Android, iOS, Linux, macOS e Windows estão definidos na
+[especificação de notificações por plataforma](08-notificacoes-por-plataforma.md).
 
 ## 6. Regras de recorrência
 
@@ -271,7 +272,8 @@ conclui a tarefa, **então** a notificação pendente é cancelada e a configura
 ### CA-07 — Reabrir tarefa com lembrete futuro
 
 **Dado** que uma tarefa concluída possui lembrete futuro, **quando** o usuário a
-reabre, **então** o lembrete pode ser agendado novamente.
+reabre, **então** o lembrete deverá ser agendado novamente se houver autorização
+e a plataforma oferecer suporte.
 
 ### CA-08 — Reabrir tarefa com lembrete vencido
 
@@ -343,9 +345,10 @@ recorrente.
 
 Esta especificação deverá ser usada como entrada para:
 
-- especificação de notificações por plataforma;
-- especificação de persistência Drift e migrações;
-- especificação de backup, restauração e formato aberto;
+- [especificação de notificações por plataforma](08-notificacoes-por-plataforma.md);
+- [especificação de busca e filtros](05-busca-e-filtros.md);
+- [especificação de persistência Drift e migrações](06-persistencia-drift-e-migracoes.md);
+- [especificação de backup, restauração e formato aberto](07-backup-restauracao-formato-aberto.md);
 - implementação das visões Planejado e Concluídas.
 
 Prazos, lembretes e recorrência devem continuar sendo dados da tarefa e de

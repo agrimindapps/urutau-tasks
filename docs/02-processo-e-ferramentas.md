@@ -141,15 +141,16 @@ uma escolha momentânea de ferramenta em uma regra arquitetural do aplicativo.
 ## 7. Estratégia de validação multiplataforma
 
 A Web será a plataforma principal para desenvolvimento, validação e
-verificação contínua. As verificações de análise, testes e comportamento que
-forem executadas na Web formarão o conjunto de validação bloqueante do fluxo
-normal.
+verificação contínua. Análise estática, testes automatizados, build Web e
+smoke test automatizado no Chrome Stable formarão o conjunto bloqueante do
+fluxo normal.
 
 Android, iOS, Linux, macOS e Windows continuarão fazendo parte do escopo do
-produto, mas suas validações poderão ser opcionais ou não bloqueantes durante
-as primeiras etapas. Ao final de marcos importantes, será realizada uma
-rodada manual mais ampla para verificar as seis plataformas.
+produto. Suas validações serão não bloqueantes no fluxo normal e realizadas
+manualmente em marcos importantes, com um resultado registrado para cada
+plataforma.
 
 Essa estratégia equilibra o custo de manter uma matriz multiplataforma com a
 necessidade de preservar a compatibilidade e registrar evidências reais de
-execução em cada sistema.
+execução em cada sistema. O formato da matriz e os critérios de cada rodada
+estão na [especificação de validação multiplataforma](specs/10-validacao-multiplataforma.md).

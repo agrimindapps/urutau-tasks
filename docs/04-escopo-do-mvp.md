@@ -164,10 +164,7 @@ natural digitada no título.
 ### 3.10 Lembretes
 
 Os lembretes utilizarão notificações locais adaptadas à capacidade de cada
-plataforma.
-
-As limitações específicas de Web, Android, iOS, Linux, macOS e Windows deverão
-ser documentadas quando a funcionalidade for especificada e implementada.
+plataforma, conforme a [especificação de notificações por plataforma](specs/08-notificacoes-por-plataforma.md).
 
 ### 3.11 Dados e portabilidade
 
@@ -176,7 +173,7 @@ técnicos do projeto.
 
 O MVP deverá prever:
 
-- backup e restauração do banco local;
+- backup e restauração completos dos dados locais;
 - exportação em formato aberto;
 - importação de formato aberto;
 - preservação de dados durante migrações de versão.
@@ -188,12 +185,14 @@ de conflito serão definidos em especificações próprias antes da implementaç
 
 A interface será preparada para:
 
-- português;
-- inglês;
-- espanhol.
+- português do Brasil (`pt-BR`);
+- inglês (`en`);
+- espanhol (`es`).
 
-Textos, datas, números e demais elementos dependentes de idioma ou região
-deverão respeitar a configuração local do usuário.
+O idioma seguirá o sistema por padrão, permitirá substituição manual local e
+usará `pt-BR` como fallback. Textos seguirão o idioma da interface; datas,
+números e início da semana seguirão a região do dispositivo, conforme a
+[especificação de internacionalização](specs/09-internacionalizacao.md).
 
 ## 4. Funcionalidades fora do MVP
 
@@ -232,7 +231,7 @@ O MVP será considerado funcional quando o usuário puder:
 9. pesquisar e filtrar tarefas;
 10. excluir e restaurar tarefas;
 11. fazer backup, restaurar e importar ou exportar dados;
-12. utilizar a interface em português, inglês e espanhol;
+12. utilizar a interface em português do Brasil, inglês e espanhol;
 13. executar a experiência principal na Web e manter o projeto preparado para
     Android, iOS, Linux, macOS e Windows.
 
@@ -246,8 +245,9 @@ unidades menores, começando por:
 2. [listas, grupos, categorias e tags](specs/02-listas-grupos-categorias-tags.md);
 3. [visões inteligentes e My Day](specs/03-visoes-inteligentes-e-my-day.md);
 4. [prazos, lembretes e recorrência](specs/04-prazos-lembretes-e-recorrencia.md);
-5. busca e filtros;
-6. persistência Drift e migrações;
-7. backup, restauração e formato aberto;
-8. internacionalização;
-9. validação da experiência Web e das demais plataformas.
+5. [busca e filtros](specs/05-busca-e-filtros.md);
+6. [persistência Drift e migrações](specs/06-persistencia-drift-e-migracoes.md);
+7. [backup, restauração e formato aberto](specs/07-backup-restauracao-formato-aberto.md);
+8. [notificações por plataforma](specs/08-notificacoes-por-plataforma.md);
+9. [internacionalização](specs/09-internacionalizacao.md);
+10. [validação multiplataforma](specs/10-validacao-multiplataforma.md).

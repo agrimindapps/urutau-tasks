@@ -286,7 +286,9 @@ Esta especificação deverá ser usada como entrada para:
 - especificação de listas, grupos, categorias e tags;
 - especificação de visões inteligentes e My Day;
 - especificação de recorrência, prazos e lembretes;
-- especificação de persistência, migrações e portabilidade.
+- especificação de busca e filtros;
+- [especificação de persistência Drift e migrações](06-persistencia-drift-e-migracoes.md);
+- [especificação de backup, restauração e formato aberto](07-backup-restauracao-formato-aberto.md);
 
 Nenhuma decisão de armazenamento ou integração poderá contradizer as regras
 de identidade, hierarquia, estado e preservação definidas aqui sem uma nova
