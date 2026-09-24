@@ -383,6 +383,13 @@ aparece em My Day ou numa visão inteligente
 **Então** ele identifica a lista e o grupo de origem, ou que a tarefa está sem
 lista, sem alterar sua organização.
 
+### CA-22 — Atualizar o estado de atraso pela data local
+
+**Dado** que uma tarefa ativa possui prazo para hoje e está visível numa lista
+**Quando** chega a meia-noite local ou o aplicativo retorna do segundo plano
+em outro dia
+**Então** o cartão atualiza a indicação de atraso sem exigir edição da tarefa.
+
 ## 11. Dependências e próximos documentos
 
 Esta especificação deverá ser usada como entrada para:

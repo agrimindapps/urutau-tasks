@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,7 +19,45 @@ class TaskListPage extends ConsumerStatefulWidget {
   ConsumerState<TaskListPage> createState() => _TaskListPageState();
 }
 
-class _TaskListPageState extends ConsumerState<TaskListPage> {
+class _TaskListPageState extends ConsumerState<TaskListPage>
+    with WidgetsBindingObserver {
+  Timer? _calendarTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _scheduleCalendarRefresh();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _refreshCalendar();
+  }
+
+  @override
+  void didChangeLocales(List<Locale>? locales) => _refreshCalendar();
+
+  @override
+  void dispose() {
+    _calendarTimer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  void _refreshCalendar() {
+    if (!mounted) return;
+    setState(() {});
+    _scheduleCalendarRefresh();
+  }
+
+  void _scheduleCalendarRefresh() {
+    _calendarTimer?.cancel();
+    final now = DateTime.now();
+    final nextMidnight = DateTime(now.year, now.month, now.day + 1);
+    _calendarTimer = Timer(nextMidnight.difference(now), _refreshCalendar);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
