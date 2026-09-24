@@ -145,6 +145,13 @@ Após incluir prazo, lembrete e prioridade nos cartões de tarefas,
 em 2026-09-24 no mesmo ambiente Flutter 3.47.2/Dart 3.13.2 e Debian 13
 x86_64. Smoke tests e testes automatizados não foram executados.
 
+Após identificar lista, grupo ou ausência de lista nos cartões de visões
+agregadas, `flutter analyze --no-pub` passou em 3,6 s.
+`flutter build web --release --no-pub` compilou em 65,2 s,
+`flutter build apk --debug --no-pub` em 11,4 s e a build Linux release passou
+em 2026-09-24 com Flutter 3.47.2/Dart 3.13.2 no Debian 13 x86_64. Smoke tests
+e testes automatizados não foram executados.
+
 ## 5. Cenários comuns de smoke test
 
 ### RF-01 — Inicialização e navegação

@@ -415,11 +415,23 @@ class _TaskCollectionView extends ConsumerWidget {
           final progressText = allSubtasks == null || progress == null
               ? null
               : l10n.taskProgress(progress.completed, progress.total);
+          final taskList = task.listId == null ? null : listsById[task.listId!];
+          final group = taskList?.groupId == null
+              ? null
+              : groupsById[taskList!.groupId!];
+          final sourceText = task.listId == null
+              ? l10n.noList
+              : taskList == null
+              ? null
+              : group == null
+              ? taskList.name
+              : '${group.name} · ${taskList.name}';
           return _TaskCard(
             key: ValueKey(task.id),
             task: task,
             collection: collection,
             progressText: progressText,
+            sourceText: sourceText,
             onOpen: () => onOpenTask(task.id),
             onCompleteChanged: (completed) => onTaskChanged(() async {
               await ref
@@ -502,6 +514,7 @@ class _TaskCard extends ConsumerWidget {
     required this.task,
     required this.collection,
     required this.progressText,
+    required this.sourceText,
     required this.onOpen,
     required this.onCompleteChanged,
     required this.onTaskDayChanged,
@@ -512,6 +525,7 @@ class _TaskCard extends ConsumerWidget {
   final Task task;
   final _TaskCollection collection;
   final String? progressText;
+  final String? sourceText;
   final VoidCallback onOpen;
   final ValueChanged<bool> onCompleteChanged;
   final ValueChanged<bool> onTaskDayChanged;
@@ -552,7 +566,11 @@ class _TaskCard extends ConsumerWidget {
                 )
               : null,
         ),
-        subtitle: TaskCardMetadata.maybe(task, progressText: progressText),
+        subtitle: TaskCardMetadata.maybe(
+          task,
+          progressText: progressText,
+          sourceText: sourceText,
+        ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

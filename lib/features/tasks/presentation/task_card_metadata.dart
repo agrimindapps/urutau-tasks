@@ -5,19 +5,30 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../domain/task.dart';
 
 class TaskCardMetadata extends StatelessWidget {
-  const TaskCardMetadata({required this.task, this.progressText, super.key});
+  const TaskCardMetadata({
+    required this.task,
+    this.progressText,
+    this.sourceText,
+    super.key,
+  });
 
   final Task task;
   final String? progressText;
+  final String? sourceText;
 
-  static Widget? maybe(Task task, {String? progressText}) {
+  static Widget? maybe(Task task, {String? progressText, String? sourceText}) {
     if (progressText == null &&
+        sourceText == null &&
         task.dueDateIso == null &&
         task.reminderAtUtc == null &&
         task.priority == TaskPriority.none) {
       return null;
     }
-    return TaskCardMetadata(task: task, progressText: progressText);
+    return TaskCardMetadata(
+      task: task,
+      progressText: progressText,
+      sourceText: sourceText,
+    );
   }
 
   @override
@@ -26,6 +37,7 @@ class TaskCardMetadata extends StatelessWidget {
     final locale = WidgetsBinding.instance.platformDispatcher.locale.toString();
     final details = <Widget>[];
     if (progressText != null) details.add(Text(progressText!));
+    if (sourceText != null) details.add(Text(sourceText!));
 
     final dueDateIso = task.dueDateIso;
     if (dueDateIso != null) {

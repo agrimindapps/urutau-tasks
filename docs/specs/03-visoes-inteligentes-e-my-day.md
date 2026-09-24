@@ -184,6 +184,11 @@ prioridade quando diferente de nenhuma. Tarefas ativas com prazo anterior à
 data local atual deverão identificar visualmente que estão atrasadas. A
 formatação de datas e horários seguirá a região do dispositivo.
 
+Fora da lista de origem, o cartão deverá identificar a lista da tarefa e seu
+grupo quando houver. Tarefas sem lista deverão ser identificadas como sem
+lista. Essa informação será contextual e não modificará a organização da
+tarefa.
+
 ### RF-11 — Ordenação das visões inteligentes
 
 As visões Todas, Importante, Planejado e Concluídas utilizarão a seguinte
@@ -369,6 +374,14 @@ prazo, lembrete ou prioridade
 **Quando** o usuário visualiza o cartão da tarefa
 **Então** os dados configurados são mostrados com formato regional, e um prazo
 passado de tarefa ativa é identificado como atrasado.
+
+### CA-21 — Identificar a origem da tarefa em visões agregadas
+
+**Dado** que uma tarefa sem lista ou atribuída a uma lista dentro de um grupo
+aparece em My Day ou numa visão inteligente
+**Quando** o usuário visualiza o cartão
+**Então** ele identifica a lista e o grupo de origem, ou que a tarefa está sem
+lista, sem alterar sua organização.
 
 ## 11. Dependências e próximos documentos
 
