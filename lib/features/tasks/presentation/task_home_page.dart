@@ -25,7 +25,7 @@ class TaskHomePage extends ConsumerStatefulWidget {
 
 class _TaskHomePageState extends ConsumerState<TaskHomePage>
     with WidgetsBindingObserver {
-  _TaskCollection _collection = _TaskCollection.active;
+  _TaskCollection _collection = _TaskCollection.myDay;
   Timer? _rolloverTimer;
 
   @override
