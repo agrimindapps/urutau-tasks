@@ -401,6 +401,20 @@ tarefa ou da hierarquia é alterado.
 **Dado** que uma tarefa concluída possui prazo passado, **quando** o usuário
 aplica o filtro **Atrasadas**, **então** a tarefa não é exibida como atrasada.
 
+### CA-21 — Atualizar filtros na virada do dia
+
+**Dado** que a tela de busca permanece aberta durante a meia-noite local ou o
+app retorna do segundo plano em outro dia, **quando** os filtros são
+recalculados, **então** **Hoje**, **Atrasadas** e **Próximos 7 dias** usam a
+data local atual.
+
+### CA-22 — Exigir intervalo completo
+
+**Dado** que o usuário seleciona **Intervalo personalizado** sem escolher
+ambos os limites, **quando** tenta aplicar os filtros, **então** a aplicação
+permanece aberta, explica que as datas inicial e final são necessárias e não
+altera os resultados.
+
 ## 11. Dependências e próximos documentos
 
 Esta especificação deverá ser usada como entrada para:

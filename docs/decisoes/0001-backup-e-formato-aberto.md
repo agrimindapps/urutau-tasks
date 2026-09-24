@@ -64,7 +64,5 @@ comportamento previsível e pode ser validada antes de modificar a base.
   alertar o usuário antes da exportação.
 - A restauração substitui os dados locais e, por isso, exige resumo,
   confirmação explícita e gravação atômica.
-- A escolha da biblioteca e dos algoritmos criptográficos permanece para uma
-  decisão técnica anterior à implementação. A solução deverá usar uma
-  biblioteca mantida e criptografia autenticada para dados protegidos por
-  senha, sem armazenar a senha ou depender de serviços externos.
+- A escolha da biblioteca, do envelope e dos parâmetros criptográficos está
+  registrada na [decisão técnica de implementação](0003-implementacao-backup-portabilidade.md).

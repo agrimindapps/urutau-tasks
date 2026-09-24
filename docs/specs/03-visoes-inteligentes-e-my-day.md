@@ -53,6 +53,10 @@ My Day para a nova data.
 - Tarefas sem lista poderão aparecer nas visões que não dependem de lista.
 - As visões não poderão alterar automaticamente prazo, prioridade, lista,
   categoria, tags, recorrência ou notas da tarefa.
+- Se a criação for oferecida em Importante ou Planejado, a tarefa recém-criada
+  deverá continuar acessível em seu detalhe para que o usuário defina a
+  prioridade, o prazo ou o lembrete que a fará corresponder à visão. A criação
+  não preencherá esses dados automaticamente.
 
 ## 5. Visões inteligentes
 
@@ -99,6 +103,10 @@ visíveis dentro da tarefa principal quando a tarefa for aberta.
 Quando uma tarefa for enviada para a lixeira, deverá deixar imediatamente todas
 as visões normais, incluindo My Day.
 
+Ao remover a entrada do My Day por conclusão ou envio à lixeira, a ordem
+relativa das demais entradas do mesmo dia deverá ser preservada e as posições
+deverão ser renumeradas em uma transação.
+
 Quando uma tarefa for restaurada, deverá voltar às visões correspondentes ao
 seu estado e aos seus dados atuais. Uma tarefa restaurada como concluída deverá
 aparecer em Concluídas; uma tarefa restaurada como ativa poderá aparecer em
@@ -142,6 +150,9 @@ foco diário e aparecer em Concluídas.
 
 Essa transição não deverá concluir ou alterar automaticamente suas subtarefas.
 Subtarefas concluídas e pendentes deverão manter seus estados.
+
+A remoção da entrada deverá preservar a ordem das demais tarefas do dia e
+compactar suas posições.
 
 Uma tarefa concluída não poderá ser adicionada novamente ao My Day.
 
@@ -322,6 +333,19 @@ permanecem fora do My Day.
 **Quando** ela aparece em uma visão inteligente ou no My Day
 **Então** apenas a tarefa principal aparece como item, com suas subtarefas
 acessíveis em seu detalhe.
+
+### CA-17 — Criar tarefa a partir de visão derivada
+
+**Dado** que o usuário inicia a criação em Importante ou Planejado, **quando**
+uma nova tarefa ainda não atende ao critério da visão, **então** o app abre seu
+detalhe para manter a tarefa acessível e permitir completar os dados, sem
+atribuir prioridade, prazo ou lembrete implicitamente.
+
+### CA-18 — Preservar a ordem ao concluir ou excluir do My Day
+
+**Dado** que há várias tarefas no My Day, **quando** uma delas é concluída ou
+enviada à lixeira, **então** as demais mantêm a ordem relativa e suas posições
+são renumeradas sem lacunas.
 
 ## 11. Dependências e próximos documentos
 

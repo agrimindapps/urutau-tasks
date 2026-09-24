@@ -71,12 +71,65 @@ anteriores.
 | iOS | iOS 15.0 | Versão iOS, dispositivo ou simulador, arquitetura e versão/revisão Flutter |
 | Linux | Nenhum mínimo de distribuição definido | Distribuição/versão, ambiente desktop, arquitetura e versão/revisão Flutter |
 | macOS | macOS 12.0 | Versão macOS, arquitetura e versão/revisão Flutter |
-| Windows | Nenhum mínimo de versão definido | Versão Windows, arquitetura e versão/revisão Flutter |
+| Windows | Windows 10 versão 1809 (`10.0.17763.0`) para o pacote MSIX configurado no ADR-0004 | Versão Windows, arquitetura e versão/revisão Flutter |
 
 A entrada de cada ensaio deverá conter data, plataforma, ambiente, categorias
 de testes executadas, resultado, evidência ou log e limitações conhecidas.
 Valores desconhecidos deverão ser marcados como não registrados, nunca
 presumidos.
+
+### 4.1 Registro do marco do MVP — 2026-09-24
+
+Ambiente disponível: Debian GNU/Linux 13 (trixie), Linux
+`6.6.141-09476-g954adab60416`, arquitetura `x86_64`. Flutter `3.47.2`
+stable, revisão `d3b14c876900e553bc736ca19295fc09e3853e8e`, Dart `3.13.2`.
+O Chrome instalado é Google Chrome for Testing `153.0.8010.52`; não foi
+identificado como Chrome Stable e, por isso, não foi usado como evidência do
+gate de navegador. Nenhum aparelho Android ou emulador estava conectado.
+
+| Plataforma | Build/análise | Smoke test manual | Resultado e evidência |
+| --- | --- | --- | --- |
+| Web | `flutter analyze` no projeto inteiro passou e `flutter build web --release` passou em 2026-09-24, após os ajustes de localização, organização, associação de categorias/tags, bloqueio de edição na lixeira, reconciliação idempotente de lembretes, atualização do My Day no rollover, limite local do filtro “Próximos 7 dias” calculado por calendário, atualização de filtros relativos na virada local, exigência de datas no intervalo personalizado, criação contextual em Importante/Planejado, isolamento da data-base ao editar prazo de ocorrência concluída e fluxo de permissão por plataforma e detecção de suporte da API/Service Worker, calendário gregoriano UTC nos seletores de prazo e intervalo de busca, congelamento profundo do retrato de importação, uso compartilhado do parser de datas civis na recorrência e no lembrete recorrente, cacheamento do ranking de busca por tarefa, sincronização da aba de organização ao navegar por gesto, ocultação da ação de remover prazo em séries recorrentes ativas, preservação da região preferida do sistema ao resolver o idioma de interface, orientação Web quando a permissão exige ajuste nas configurações do site, atualização imediata dos resultados ao limpar a busca, remoção da mensagem de validação do título assim que o campo recebe conteúdo válido, rótulos de progresso por operação de portabilidade e rotulagem da aba de tarefas ativas, sinalização visual de tarefas concluídas nas listas, ocultação do botão de criação na aba Concluídas de cada lista e bloqueio de geração de duplicata ao concluir ocorrência histórica depois de existir ocorrência posterior. A compactação das posições do My Day ao concluir ou enviar tarefas à lixeira e a proteção da data-base/regra ao editar ocorrência recorrente anterior reaberta também foram compiladas. A ajuda de recorrência agora aparece apenas em tarefas ativas editáveis, com o texto atualizado nos quatro idiomas. O progresso de subtarefas nas listas usa uma observação compartilhada. A busca distingue selecionar explicitamente todas as opções de grupo, prioridade e prazo de não aplicar esses filtros. Os seletores de prazo/lembrete e o intervalo personalizado da busca incluem datas existentes fora de 1900–2200. `flutter build web --release` compilou em 65,9 s nesta rodada, após o ajuste do fallback de notificações em segundo plano | Não executado no Chrome Stable | Gate incompleto: testes automatizados e smoke no navegador Stable não foram executados. Build em `build/web`; Chrome disponível era for Testing `153.0.8010.52`. |
+| Android | `flutter build apk --debug` passou em 2026-09-24 após os ajustes de bloqueio de edição na lixeira, reconciliação dos lembretes, atualização do My Day no rollover, limite local do filtro “Próximos 7 dias” calculado por calendário, atualização dos filtros relativos na virada local, exigência de datas no intervalo personalizado, criação contextual em Importante/Planejado, isolamento da data-base ao editar prazo de ocorrência concluída, consulta de disponibilidade da integração separada do estado de permissão, calendário gregoriano UTC nos seletores de prazo e intervalo de busca, congelamento profundo do retrato de importação, uso compartilhado do parser de datas civis na recorrência e no lembrete recorrente, cacheamento do ranking de busca por tarefa e sincronização da aba de organização ao navegar por gesto; após a proteção da data-base e da regra recorrente em ocorrências anteriores reabertas, a ajuda de recorrência passou a aparecer apenas em tarefas ativas editáveis e foi atualizada nos quatro idiomas; o progresso de subtarefas nas listas usa uma observação compartilhada; a busca distingue selecionar explicitamente todas as opções de grupo, prioridade e prazo de não aplicar esses filtros; os seletores de prazo/lembrete e o intervalo personalizado da busca incluem datas existentes fora de 1900–2200; após adotar um ícone monocromático dedicado para notificações, a build debug passou novamente nesta rodada em 13,3 s em `build/app/outputs/flutter-apk/app-debug.apk`; `flutter.minSdkVersion` do SDK usado é 24 | Não executado | APK debug compilado no marco; o manifesto mesclado declara `POST_NOTIFICATIONS` via plugin; não havia dispositivo ou emulador conectado. |
+| Linux | `flutter build linux --release` passou em 2026-09-24 após os ajustes de bloqueio de edição na lixeira, reconciliação dos lembretes, atualização do My Day no rollover, limite local do filtro “Próximos 7 dias” calculado por calendário, atualização dos filtros relativos na virada local, exigência de datas no intervalo personalizado, criação contextual em Importante/Planejado, isolamento da data-base ao editar prazo de ocorrência concluída e consulta de disponibilidade do servidor D-Bus separada do estado de permissão, calendário gregoriano UTC nos seletores de prazo e intervalo de busca, congelamento profundo do retrato de importação, uso compartilhado do parser de datas civis na recorrência e no lembrete recorrente, cacheamento do ranking de busca por tarefa e sincronização da aba de organização ao navegar por gesto; após a proteção da data-base e da regra recorrente em ocorrências anteriores reabertas, a ajuda de recorrência passou a aparecer apenas em tarefas ativas editáveis e foi atualizada nos quatro idiomas; o progresso de subtarefas nas listas usa uma observação compartilhada; a busca distingue selecionar explicitamente todas as opções de grupo, prioridade e prazo de não aplicar esses filtros; os seletores de prazo/lembrete e o intervalo personalizado da busca incluem datas existentes fora de 1900–2200; a build release passou novamente nesta rodada em `build/linux/x64/release/bundle/urutau_tasks` | Não executado | Bundle x64 release compilado no Debian 13; interação em desktop não foi ensaiada. |
+| iOS | Não executado | Não executado | Host Linux sem macOS/Xcode e sem simulador iOS. Alvo declarado permanece iOS 15.0. |
+| macOS | Não executado | Não executado | Host Linux; build e execução requerem ambiente macOS. Alvo declarado permanece macOS 12.0. |
+| Windows | Não executado | Não executado | Host Linux sem ambiente Windows para build, gerar/instalar o MSIX ou executar smoke test. A configuração do pacote declara mínimo Windows 10 versão 1809 (`10.0.17763.0`); a execução ainda não foi validada. |
+
+Este registro separa compilação de execução manual. Ele não declara o gate Web
+completo nem aprova o smoke test das plataformas em que somente a build foi
+executada.
+
+Após o ajuste do fallback em segundo plano, `flutter analyze --no-pub` passou e
+as builds Web release, Android debug e Linux release passaram. O APK Android
+foi recompilado após a correção do ícone pequeno de notificação.
+
+Depois da inicialização explícita dos dados de formatação regional do `intl`
+antes de montar a interface, `flutter analyze --no-pub` passou e as builds Web
+release (53,7 s), Android debug (9,9 s) e Linux release passaram em
+2026-09-24. Testes automatizados do app e smoke manual não foram executados
+nesta rodada.
+
+Após corrigir a atualização visual do campo de busca para consultas contendo
+somente espaços, `flutter analyze --no-pub` passou e `flutter build web
+--release --no-pub` compilou em 145,9 s em 2026-09-24. Testes e smoke manual
+continuam não executados.
+
+Após tornar crescente a marca temporal de criação das ocorrências recorrentes
+para preservar sua ordem em empates de milissegundos ou retrocesso do relógio,
+`flutter analyze --no-pub` passou e `flutter build apk --debug --no-pub`
+compilou em 18,4 s em 2026-09-24. O smoke Android ainda não foi executado.
+
+Após reagendar o rollover do My Day quando o locale do dispositivo muda,
+`flutter analyze --no-pub` passou e `flutter build apk --debug --no-pub`
+compilou em 30,0 s em 2026-09-24. O smoke Android ainda não foi executado.
+
+Após preservar os mapeamentos quando o cancelamento de uma notificação nativa
+falha, expor o estado de cancelamento não confirmado e evitar um temporizador
+concorrente, `flutter analyze --no-pub` passou em 3,4 s;
+`flutter build web --release --no-pub` compilou em 76,1 s e
+`flutter build apk --debug --no-pub` em 14,5 s, em 2026-09-24. Smoke tests e
+testes automatizados não foram executados.
 
 ## 5. Cenários comuns de smoke test
 
@@ -159,7 +212,9 @@ normal de mudanças.
 **Dado** que uma versão de sistema, distribuição ou navegador não aparece como
 alvo declarado ou ambiente ensaiado, **quando** a compatibilidade é
 comunicada, **então** nenhuma garantia será inferida apenas por pertencer à
-mesma família de plataforma.
+mesma família de plataforma. No Windows, a versão mínima declarada pelo pacote
+MSIX é a definida no ADR-0004; a compatibilidade observada continua limitada
+aos ambientes ensaiados.
 
 ## 8. Fora do escopo
 

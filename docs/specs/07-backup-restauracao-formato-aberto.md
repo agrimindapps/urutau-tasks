@@ -19,6 +19,8 @@ O projeto oferece duas formas complementares de portabilidade:
 
 As decisões de arquitetura que fundamentam esses formatos estão registradas
 no [ADR de backup e formato aberto](../decisoes/0001-backup-e-formato-aberto.md).
+A seleção da biblioteca, dos algoritmos e do envelope criptográfico está no
+[ADR técnico de implementação](../decisoes/0003-implementacao-backup-portabilidade.md).
 
 ## 2. Objetivo
 
@@ -193,7 +195,12 @@ ignorar duplicatas ou resolver conflitos por nome.
 
 O aplicativo deverá validar a estrutura JSON, os tipos dos campos, a versão
 do formato, a unicidade de UUIDs e a integridade das referências entre
-registros antes de alterar o banco local.
+registros antes de alterar o banco local. As posições de grupos e listas
+deverão ser únicas em cada coleção; as posições de tarefas deverão ser únicas
+na lista ou inbox de origem. Posições repetidas que impeçam recuperar a ordem
+de origem deverão invalidar o arquivo. Tarefas de uma série recorrente ativa
+deverão manter um prazo; tarefas ligadas a uma série cancelada poderão não ter
+prazo.
 
 Uma versão antiga só será aceita se houver conversor explícito para a versão
 atual. Uma versão desconhecida, mais nova ou com estrutura incompatível
@@ -330,8 +337,9 @@ autenticação
 
 ### CA-12 — Rejeitar JSON inválido
 
-**Dado** que o arquivo aberto está malformado, contém UUID duplicado ou
-referência inconsistente
+**Dado** que o arquivo aberto está malformado, contém UUID duplicado,
+referência inconsistente ou posições repetidas dentro do mesmo contexto de
+ordenação
 **Quando** o usuário tenta importá-lo
 **Então** o aplicativo informa a falha e não altera os dados locais.
 
@@ -346,6 +354,14 @@ referência inconsistente
 **Dado** que o arquivo usa uma versão antiga com conversor suportado
 **Quando** o aplicativo importa ou restaura o arquivo
 **Então** os dados são convertidos deterministicamente e preservados.
+
+### CA-15 — Preservar série cancelada sem prazo
+
+**Dado** que uma tarefa continua ligada a uma série recorrente cancelada e
+teve seu prazo removido
+**Quando** o arquivo é exportado e importado
+**Então** a tarefa e a série cancelada são aceitas e preservadas sem reativar
+a recorrência.
 
 ## 10. Dependências e documentos relacionados
 

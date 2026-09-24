@@ -91,4 +91,4 @@ sistema onde ele existir e manterá fallback visível nas demais situações.
 - Testes de implementação deverão cobrir permissões, reconciliação, toques e
   transições de primeiro e segundo plano em cada adaptador.
 - Nenhum pacote nem API nativa foi escolhido neste ADR. Essas opções deverão
-  ser avaliadas e registradas antes da implementação.
+  ser detalhadas no [ADR de implementação das notificações](0004-implementacao-notificacoes.md).

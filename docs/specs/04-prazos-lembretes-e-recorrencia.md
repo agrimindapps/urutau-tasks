@@ -12,8 +12,10 @@ de tarefas, subtarefas, listas e visões inteligentes já definidas nas
 especificações anteriores.
 
 As regras são locais e independentes de contas, servidores ou serviços
-externos. A entrega de notificações será feita por adaptadores de plataforma
-em uma etapa posterior.
+externos. A entrega de notificações segue o contrato dos adaptadores de
+plataforma definido na [especificação de notificações por plataforma](08-notificacoes-por-plataforma.md)
+e as escolhas técnicas registradas no
+[ADR de implementação de notificações](../decisoes/0004-implementacao-notificacoes.md).
 
 ## 2. Objetivo
 
@@ -201,11 +203,27 @@ Se uma ou mais datas da série tiverem ficado para trás, não serão criadas
 ocorrências retroativas em lote. Será criada apenas a próxima ocorrência que
 estiver no futuro em relação ao calendário local.
 
+Reabrir e concluir uma ocorrência histórica não deverá fazer a série
+retroceder. Se já existir outra ocorrência registrada depois dela na mesma
+série, inclusive concluída ou enviada à lixeira, nenhuma ocorrência adicional
+será gerada a partir da ocorrência histórica.
+
 ### RF-12 — Alterar prazo ou regra
 
 Ao editar o prazo ou a regra de recorrência, a alteração valerá a partir da
 ocorrência atual e para as ocorrências futuras. Ocorrências concluídas ou
 registradas no histórico não serão reescritas.
+
+Editar diretamente o prazo de uma ocorrência concluída poderá alterar somente
+essa ocorrência histórica. A operação não deverá mover a data-base da série,
+alterar sua regra nem mudar a ocorrência ativa ou datas futuras. A edição da
+data-base da série deverá partir da ocorrência ativa.
+
+Se uma ocorrência anterior for reaberta depois que outra ocorrência da mesma
+série já tiver sido registrada, editar seu prazo continuará afetando somente
+essa tarefa e não moverá a data-base. A regra da série só poderá ser alterada
+ou cancelada na ocorrência mais recente; o controle de recorrência ficará
+indisponível nas anteriores.
 
 Se a alteração produzir uma próxima data que já tenha passado, a série deverá
 avançar até a próxima data futura conforme a regra, sem criar várias
@@ -359,6 +377,26 @@ permanecem disponíveis no histórico.
 **Dado** que uma tarefa não possui prazo, **quando** o usuário tenta ativar
 recorrência, **então** a operação é rejeitada e a tarefa permanece não
 recorrente.
+
+### CA-19 — Editar prazo no histórico recorrente
+
+**Dado** que uma ocorrência concluída pertence a uma série com ocorrência
+ativa, **quando** o usuário altera o prazo da ocorrência concluída, **então**
+somente esse registro histórico é alterado e a data-base, a regra e a próxima
+ocorrência da série permanecem iguais.
+
+### CA-20 — Concluir ocorrência histórica sem retroceder a série
+
+**Dado** que uma ocorrência da mesma série foi registrada depois da ocorrência
+histórica, **quando** o usuário a reabre e conclui, **então** nenhuma
+ocorrência duplicada ou retroativa é criada a partir dela.
+
+### CA-21 — Não alterar a série por ocorrência anterior reaberta
+
+**Dado** que uma ocorrência posterior da série já existe, **quando** o usuário
+reabre e altera o prazo de uma ocorrência anterior, **então** somente essa
+tarefa é alterada; a data-base e a regra da série permanecem iguais. O controle
+para alterar ou cancelar a recorrência fica indisponível nessa ocorrência.
 
 ## 10. Dependências e próximos documentos
 

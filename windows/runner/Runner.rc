@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.urutau" "\0"
-            VALUE "FileDescription", "urutau_tasks" "\0"
+            VALUE "FileDescription", "Urutau Tasks" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "urutau_tasks" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.urutau. All rights reserved." "\0"
             VALUE "OriginalFilename", "urutau_tasks.exe" "\0"
-            VALUE "ProductName", "urutau_tasks" "\0"
+            VALUE "ProductName", "Urutau Tasks" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

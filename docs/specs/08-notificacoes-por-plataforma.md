@@ -17,7 +17,9 @@ e respeita o armazenamento do lembrete como instante UTC definido pela
 O produto não terá servidor de aplicação nem serviço de Push no MVP. A entrega
 depende da capacidade e das permissões do sistema e, portanto, será best effort.
 As escolhas arquiteturais estão registradas no
-[ADR de notificações locais](../decisoes/0002-notificacoes-locais.md).
+[ADR de notificações locais](../decisoes/0002-notificacoes-locais.md). A
+escolha do plugin e o tratamento das limitações estão no
+[ADR técnico de implementação](../decisoes/0004-implementacao-notificacoes.md).
 
 ## 2. Objetivo
 
@@ -46,13 +48,19 @@ incluídos em backup, conforme a
 O detalhe da tarefa deverá mostrar um estado compreensível, atualizado quando
 o aplicativo consultar a plataforma:
 
-- **Agendado:** o sistema aceitou o agendamento. Isso não garante que o aviso
-  será exibido no horário pretendido.
+- **Agendado:** há um caminho de entrega preparado para o horário futuro: o
+  sistema aceitou uma notificação agendada ou o aplicativo armou um temporizador
+  local em memória. Isso não garante que o aviso será exibido no horário
+  pretendido. Quando o caminho depender do processo, o app deverá continuar
+  executando; Web e Linux não prometem entrega depois que a página ou o app
+  deixa de executar.
 - **Permissão necessária:** a autorização para notificações do sistema está
   negada ou precisa ser alterada nas configurações do sistema ou navegador. O
   aviso dentro do app continua possível enquanto ele puder executar.
 - **Indisponível nesta plataforma:** a plataforma ou a sessão atual não oferece
   a entrega necessária.
+- **Cancelamento não confirmado:** uma tentativa de remover um aviso anterior
+  falhou; ele ainda poderá aparecer, e o adaptador tentará cancelar novamente.
 - **Vencido:** o instante passou e não será criado um aviso atrasado pelo
   aplicativo.
 - **Pendente de verificação:** a capacidade ainda não foi consultada, ou uma
@@ -131,10 +139,18 @@ solicitada conforme o fluxo da plataforma.
 
 ### RF-01 — Criar lembrete
 
-Ao salvar um lembrete futuro, persistir primeiro sua configuração. Consultar a
-permissão e, no primeiro uso, solicitar autorização conforme a seção 6. Se
-houver suporte e autorização, agendar o aviso; caso contrário, manter a tarefa
-utilizável e exibir o estado correspondente.
+No primeiro uso, explicar e solicitar autorização durante a ação explícita de
+configurar um lembrete, conforme a seção 6. Na Web, fazer isso no botão da
+explicação antes dos seletores assíncronos de data e hora, preservando o gesto
+do usuário exigido pelo navegador. Nas plataformas nativas, salvar primeiro a
+configuração escolhida e solicitar autorização em seguida, antes de agendar o
+aviso. Em qualquer plataforma, salvar o lembrete mesmo se a autorização for
+recusada. Se houver suporte e autorização, agendar o aviso; caso contrário,
+manter a tarefa utilizável e exibir o estado correspondente.
+
+Quando a plataforma não oferece agendamento futuro pelo sistema, armar um
+temporizador local enquanto o app puder executar e tentar exibir um aviso
+imediato do sistema no vencimento se essa integração estiver disponível.
 
 ### RF-02 — Editar ou remover lembrete
 
@@ -168,6 +184,14 @@ A reconciliação deverá considerar como elegíveis somente tarefas existentes,
 ativas, fora da lixeira e com lembrete futuro. Deverá corrigir agendamentos
 ausentes, desatualizados ou órfãos sem duplicar avisos. Reconciliar não deverá
 abrir o pedido de permissão nem alterar os dados do domínio.
+
+Se a plataforma falhar ao cancelar um aviso que deixou de ser elegível, o
+adaptador deverá preservar seu mapeamento local, marcar o **cancelamento não
+confirmado** e tentar novamente na próxima reconciliação. Enquanto o
+cancelamento estiver incerto, não deverá iniciar um temporizador de fallback
+que possa disparar um segundo aviso. Se a configuração do lembrete já tiver
+sido removida, o detalhe da tarefa ainda deverá mostrar esse estado até a
+reconciliação confirmar o cancelamento.
 
 ## 8. Apresentação do aviso e vencimento
 
@@ -208,8 +232,10 @@ decisão técnica antes da implementação.
 ### CA-01 — Pedir permissão no primeiro lembrete
 
 **Dado** que nenhuma permissão foi solicitada e ainda não há lembretes
-configurados, **quando** o usuário salva o primeiro lembrete, **então** o app
-explica e solicita autorização antes de agendar pelo sistema.
+configurados, **quando** o usuário inicia a configuração do primeiro lembrete,
+**então** o app explica e solicita autorização. Na Web, o pedido começa no
+gesto explícito antes dos seletores; nas plataformas nativas, ocorre após
+salvar a configuração e antes do agendamento pelo sistema.
 
 ### CA-02 — Preservar lembrete após negativa
 
@@ -266,23 +292,38 @@ revogada, **quando** o app inicia ou retoma, **então** não são criados avisos
 duplicados, a limitação aparece no estado e a configuração do lembrete é
 preservada.
 
+Se o cancelamento nativo falhar, o mapeamento continua disponível para a
+próxima reconciliação, o estado **Cancelamento não confirmado** fica visível
+mesmo se o lembrete foi removido, e nenhum temporizador concorrente é iniciado.
+
 ### CA-11 — Android sem alarme exato
 
 **Dado** que um lembrete é configurado no Android, **quando** o adaptador
 agenda, **então** utiliza uma opção aproximada sem pedir acesso especial a
 alarmes exatos e informa que o sistema pode atrasar a entrega.
 
-### CA-12 — Permissão concedida
+### CA-12 — Preparar o caminho de entrega disponível
 
-**Dado** que o usuário concede a permissão ao configurar um lembrete futuro,
-**quando** o adaptador registra o agendamento, **então** o sistema aceita um
-aviso e o detalhe da tarefa mostra o estado agendado.
+**Dado** que um lembrete futuro tem autorização para notificações do sistema,
+**quando** o adaptador prepara sua entrega, **então** o sistema aceita o
+agendamento nas plataformas que oferecem essa capacidade, ou o app arma seu
+temporizador local onde o agendamento futuro não existe. O detalhe mostra
+“Agendado” e não promete entrega se o processo precisar continuar executando.
 
 ### CA-13 — App em segundo plano
 
 **Dado** que o app está em segundo plano quando um lembrete elegível vence,
 **quando** a plataforma oferece suporte e a permissão está concedida,
 **então** é apresentada uma notificação do sistema com o título da tarefa.
+
+### CA-14 — Não salvar lembrete após cancelar a seleção
+
+**Dado** que ainda não houve pedido de permissão, **quando** o usuário cancela
+a seleção do lembrete ou escolhe um horário passado, **então** nenhum novo
+lembrete é salvo e a configuração existente permanece inalterada. Nas
+plataformas nativas, o app não solicita permissão nesse caso. Na Web, a
+permissão pode ter sido solicitada durante a ação explícita antes dos
+seletores, para preservar o gesto exigido pelo navegador.
 
 ## 11. Documentos relacionados e fontes
 

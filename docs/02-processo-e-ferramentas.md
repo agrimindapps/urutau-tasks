@@ -120,6 +120,16 @@ Não é necessário registrar cada interação trivial. O nível de detalhe deve
 ser suficiente para explicar decisões importantes e permitir que a comunidade
 entenda como o resultado foi produzido.
 
+### 5.1 Retrospectiva de tokens e custo
+
+Ao encerrar um marco ou o desenvolvimento, quando houver métricas disponíveis,
+registrar o total de tokens por modelo e o custo correspondente. Separar dados
+medidos pelo provedor de estimativas calculadas; informar o período, a origem
+das métricas, o modelo, a tabela de preços e sua data de referência. Não
+apresentar custo estimado por token como valor efetivamente cobrado em uma
+assinatura. Quando o histórico não expuser uso suficiente para uma soma exata,
+explicitar a lacuna e apresentar a estimativa com suas premissas.
+
 ## 6. Evolução do ambiente
 
 Ferramentas, modelos e configurações de IA evoluem rapidamente. Por isso, este

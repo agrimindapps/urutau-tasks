@@ -190,6 +190,11 @@ O prazo será persistido como uma data ISO de calendário, sem horário. O valor
 não deverá ser convertido em timestamp UTC, pois a semântica do prazo é uma
 data local e não um instante.
 
+A validação e a aritmética do prazo deverão operar sobre os campos da data de
+calendário, sem aplicar o fuso local ao valor armazenado. Uma mudança de fuso
+ou uma transição histórica do relógio não poderá normalizar a data persistida
+para outro dia.
+
 Datas passadas continuarão válidas e poderão representar tarefas atrasadas.
 
 ### RF-12 — Lembrete
@@ -256,9 +261,10 @@ para subtarefas, tags, categorias, grupos e listas.
 Listas, grupos, subtarefas, tarefas dentro de uma lista e entradas do My Day
 utilizarão posições inteiras relativas ao seu contexto.
 
-Após reordenação, as posições deverão ser renumeradas de forma determinística
-em uma transação. O processo não deverá deixar posições duplicadas ou lacunas
-que alterem a ordem observada pelo usuário.
+Após reordenação ou remoção de uma entrada do My Day por conclusão, envio à
+lixeira ou remoção manual, as posições deverão ser renumeradas de forma
+determinística em uma transação. O processo não deverá deixar posições
+duplicadas ou lacunas que alterem a ordem observada pelo usuário.
 
 A posição de origem não deverá ser confundida com a posição do My Day. O
 My Day manterá sua própria ordem por data.
