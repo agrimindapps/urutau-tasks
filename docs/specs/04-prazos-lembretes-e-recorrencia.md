@@ -93,6 +93,12 @@ Ao criar ou editar um lembrete para um horário já passado no fuso local, a
 operação deverá ser rejeitada e orientar o usuário a escolher um horário
 futuro. O valor inválido não deverá ser salvo como um lembrete agendável.
 
+Essa rejeição vale para a configuração feita pelo usuário. Um lembrete já
+salvo poderá vencer com o passar do tempo; sua restauração ou importação e a
+herança por uma ocorrência recorrente deverão preservar o dado e tratá-lo como
+vencido, sem emitir um aviso atrasado, conforme as regras de conclusão,
+recorrência e notificações abaixo.
+
 Essa validação não se aplica ao prazo: prazos passados são válidos e
 representam tarefas atrasadas.
 
@@ -177,9 +183,19 @@ A nova ocorrência deverá:
 - receber o próximo prazo calculado pela regra original;
 - começar ativa e não concluída;
 - ser criada sem subtarefas;
-- herdar a configuração de lembrete, recalculando-a para o novo prazo quando
-  o lembrete estiver relacionado temporalmente ao prazo;
+- herdar a configuração de lembrete, preservando o deslocamento de calendário
+  e a hora local em relação ao prazo, conforme a regra abaixo;
 - preservar os demais dados da tarefa conforme as regras gerais do produto.
+
+Para calcular essa relação, a aplicação deverá converter o instante UTC do
+lembrete da ocorrência concluída para a data e hora locais no momento da
+geração. Deverá preservar a diferença em dias de calendário entre a data local
+do lembrete e o prazo da ocorrência anterior, além da hora local do lembrete,
+aplicando ambos ao novo prazo. O resultado será convertido novamente para
+UTC. Assim, por exemplo, um lembrete configurado para as 9h dois dias antes do
+prazo continuará às 9h dois dias antes do prazo seguinte. Se o resultado já
+estiver no passado, a configuração será mantida como vencida e não produzirá
+um aviso imediato, conforme RF-13.
 
 Se uma ou mais datas da série tiverem ficado para trás, não serão criadas
 ocorrências retroativas em lote. Será criada apenas a próxima ocorrência que
@@ -308,8 +324,11 @@ ocorrência é criada, **então** a nova ocorrência não possui essas subtarefa
 ### CA-13 — Herdar lembrete
 
 **Dado** que a ocorrência concluída possui configuração de lembrete, **quando**
-a próxima ocorrência é criada, **então** ela herda a configuração, recalculada
-para o novo prazo quando necessário.
+a próxima ocorrência é criada, **então** ela preserva a diferença em dias de
+calendário e a hora local do lembrete em relação ao prazo anterior, recalcula o
+horário para o novo prazo e o armazena como instante UTC. Se o horário
+resultante já tiver passado, a configuração permanece registrada como vencida,
+sem aviso imediato.
 
 ### CA-14 — Preservar histórico
 

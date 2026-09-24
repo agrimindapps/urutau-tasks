@@ -219,11 +219,16 @@ relevância textual nesta prioridade:
 3. correspondência na descrição de subtarefas.
 
 Dentro do mesmo nível de relevância, a ordem de origem da tarefa será usada
-como desempate.
+como desempate. Em busca global, a ordem de origem será determinística:
+primeiro a ordem dos grupos e, dentro deles, a ordem das listas; depois as
+listas sem grupo, na ordem manual. Dentro de cada lista, será usada a posição
+da tarefa. Tarefas sem lista aparecerão depois das tarefas em listas, em ordem
+de criação crescente, com UUID como desempate final. A ordenação manual das
+listas e grupos seguirá a especificação 02.
 
 Quando a consulta tiver somente filtros, os resultados deverão usar a ordem de
-origem, salvo se a visão ou contexto de apresentação possuir uma ordenação
-específica já documentada.
+origem definida acima, salvo se a visão ou contexto de apresentação possuir
+uma ordenação específica já documentada.
 
 ### RF-17 — Identificação da correspondência
 

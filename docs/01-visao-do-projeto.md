@@ -104,7 +104,7 @@ O Urutau Tasks pretende ser simultaneamente:
 - um estudo prático de desenvolvimento conduzido por agentes de IA;
 - uma demonstração de SDD e Vibe Coding aplicados com responsabilidade;
 - uma referência de organização, arquitetura e evolução de um app Flutter
-  multiplataforma.
+  multiplataforma;
 - uma base aberta que qualquer pessoa possa estudar, modificar e transformar
   em um fork independente.
 

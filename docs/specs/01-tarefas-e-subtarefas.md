@@ -283,10 +283,10 @@ subtarefas originais.
 
 Esta especificação deverá ser usada como entrada para:
 
-- especificação de listas, grupos, categorias e tags;
-- especificação de visões inteligentes e My Day;
-- especificação de recorrência, prazos e lembretes;
-- especificação de busca e filtros;
+- [especificação de listas, grupos, categorias e tags](02-listas-grupos-categorias-tags.md);
+- [especificação de visões inteligentes e My Day](03-visoes-inteligentes-e-my-day.md);
+- [especificação de recorrência, prazos e lembretes](04-prazos-lembretes-e-recorrencia.md);
+- [especificação de busca e filtros](05-busca-e-filtros.md);
 - [especificação de persistência Drift e migrações](06-persistencia-drift-e-migracoes.md);
 - [especificação de backup, restauração e formato aberto](07-backup-restauracao-formato-aberto.md);
 

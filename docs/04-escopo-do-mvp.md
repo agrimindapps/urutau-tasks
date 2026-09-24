@@ -142,8 +142,8 @@ O MVP suportará recorrência essencial para tarefas:
 - mensal;
 - anual.
 
-Regras avançadas de repetição e expressões personalizadas ficarão para uma
-especificação posterior.
+Regras avançadas de repetição e expressões personalizadas ficarão fora do MVP,
+conforme a [especificação de prazos, lembretes e recorrência](specs/04-prazos-lembretes-e-recorrencia.md).
 
 ### 3.9 Busca e filtros
 
@@ -156,10 +156,12 @@ O usuário poderá pesquisar tarefas por texto e combinar a busca com filtros de
 - tags;
 - prioridade;
 - prazo;
+- lembrete;
 - recorrência.
 
 O MVP não interpretará datas, lembretes ou recorrência a partir de linguagem
-natural digitada no título.
+natural digitada no título. As regras estão na
+[especificação de busca e filtros](specs/05-busca-e-filtros.md).
 
 ### 3.10 Lembretes
 
@@ -169,7 +171,7 @@ plataforma, conforme a [especificação de notificações por plataforma](specs/
 ### 3.11 Dados e portabilidade
 
 Os dados serão armazenados localmente com Drift, conforme os princípios
-técnicos do projeto.
+técnicos e a [especificação de persistência](specs/06-persistencia-drift-e-migracoes.md).
 
 O MVP deverá prever:
 
@@ -178,8 +180,10 @@ O MVP deverá prever:
 - importação de formato aberto;
 - preservação de dados durante migrações de versão.
 
-Os detalhes do esquema dos arquivos, compatibilidade, validação e estratégia
-de conflito serão definidos em especificações próprias antes da implementação.
+Os formatos, a compatibilidade e a validação estão definidos na
+[especificação de backup, restauração e formato aberto](specs/07-backup-restauracao-formato-aberto.md).
+Importação e restauração substituem integralmente os dados locais após
+validação e confirmação; mesclagem não faz parte do MVP.
 
 ### 3.12 Internacionalização
 
@@ -235,11 +239,11 @@ O MVP será considerado funcional quando o usuário puder:
 13. executar a experiência principal na Web e manter o projeto preparado para
     Android, iOS, Linux, macOS e Windows.
 
-## 6. Decomposição futura em especificações
+## 6. Especificações SDD do MVP
 
-Este documento define o limite do MVP, mas não substitui as especificações
-detalhadas. As próximas especificações SDD deverão decompor o escopo em
-unidades menores, começando por:
+Este índice reúne as especificações detalhadas que complementam o limite do
+MVP. Elas definem regras, casos-limite e critérios de aceitação para orientar a
+implementação:
 
 1. [modelo, ciclo de vida de tarefas e subtarefas](specs/01-tarefas-e-subtarefas.md);
 2. [listas, grupos, categorias e tags](specs/02-listas-grupos-categorias-tags.md);

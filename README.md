@@ -18,6 +18,9 @@ deverá permanecer aberta para estudo, colaboração e criação de forks.
 - [Processo e ferramentas de desenvolvimento](docs/02-processo-e-ferramentas.md)
 - [Princípios técnicos](docs/03-principios-tecnicos.md)
 - [Escopo do MVP](docs/04-escopo-do-mvp.md)
+- [Índice das especificações SDD](docs/04-escopo-do-mvp.md#6-especificacoes-sdd-do-mvp)
+- [ADR-0001: Backup lógico e formato aberto](docs/decisoes/0001-backup-e-formato-aberto.md)
+- [ADR-0002: Notificações locais por plataforma](docs/decisoes/0002-notificacoes-locais.md)
 
 O projeto está em sua fase inicial de definição e especificação. As decisões
 de produto e arquitetura serão registradas antes da implementação de novas

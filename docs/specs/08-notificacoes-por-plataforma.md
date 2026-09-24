@@ -48,8 +48,9 @@ o aplicativo consultar a plataforma:
 
 - **Agendado:** o sistema aceitou o agendamento. Isso não garante que o aviso
   será exibido no horário pretendido.
-- **Permissão necessária:** a autorização está negada ou precisa ser alterada
-  nas configurações do sistema ou navegador.
+- **Permissão necessária:** a autorização para notificações do sistema está
+  negada ou precisa ser alterada nas configurações do sistema ou navegador. O
+  aviso dentro do app continua possível enquanto ele puder executar.
 - **Indisponível nesta plataforma:** a plataforma ou a sessão atual não oferece
   a entrega necessária.
 - **Vencido:** o instante passou e não será criado um aviso atrasado pelo
@@ -110,9 +111,11 @@ salvo mesmo quando a autorização for recusada.
 Depois de uma negativa, o aplicativo não deverá repetir automaticamente o
 pedido ao criar outro lembrete, editar a tarefa, iniciar ou retomar o app,
 restaurar dados ou executar reconciliação. Deverá preservar e exibir a
-configuração, informar que avisos estão desativados e oferecer orientação ou
-atalho para as configurações do sistema/navegador quando disponível. Uma nova
-tentativa deverá decorrer de ação explícita do usuário.
+configuração, informar que as notificações do sistema estão desativadas e
+oferecer orientação ou atalho para as configurações do sistema/navegador
+quando disponível. A negativa não impedirá um aviso dentro do app enquanto ele
+estiver aberto e puder executar o temporizador. Uma nova tentativa de pedir a
+permissão do sistema deverá decorrer de ação explícita do usuário.
 
 Se a autorização for concedida posteriormente, a próxima consulta ou evento de
 ciclo de vida deverá atualizar o estado e agendar lembretes futuros elegíveis.
@@ -135,9 +138,10 @@ utilizável e exibir o estado correspondente.
 
 ### RF-02 — Editar ou remover lembrete
 
-Ao editar um lembrete, substituir o agendamento anterior pelo novo instante,
-desde que ainda seja futuro e a entrega esteja disponível. Ao remover a
-configuração, cancelar o aviso associado e remover o lembrete da tarefa.
+Ao editar um lembrete, rejeitar a alteração se o novo horário já tiver
+passado, conforme a especificação 04. Se for futuro, substituir o agendamento
+anterior pelo novo instante, desde que a entrega esteja disponível. Ao remover
+a configuração, cancelar o aviso associado e remover o lembrete da tarefa.
 
 ### RF-03 — Concluir, reabrir e enviar à lixeira
 
@@ -172,13 +176,15 @@ um aviso dentro do app. Quando estiver em segundo plano, usar a notificação do
 sistema se houver suporte e permissão. Um mesmo lembrete não deverá produzir
 um aviso dentro do app e outro do sistema para o mesmo disparo.
 
-Se o instante já tiver passado quando o usuário criar, editar, reabrir ou
-restaurar uma tarefa, não agendar e não emitir aviso atrasado; mostrar o estado
-vencido. O app não fará catch-up ao iniciar ou retomar. Uma notificação já
-aceita pelo sistema antes do vencimento ainda pode chegar com atraso dentro das
-limitações documentadas de entrega da plataforma, como Android e Windows; o
-aplicativo não deverá criar um novo aviso de recuperação por causa desse
-atraso.
+Se o instante já tiver passado ao validar uma nova configuração, a criação ou
+edição será rejeitada conforme a especificação 04. Se um lembrete salvo vencer
+antes de ser agendado, ou estiver vencido quando a tarefa for reaberta,
+restaurada, importada ou reconciliada, não agendar nem emitir aviso atrasado e
+mostrar o estado vencido. O app não fará catch-up ao iniciar ou retomar. Uma
+notificação já aceita pelo sistema antes do vencimento ainda pode chegar com
+atraso dentro das limitações documentadas da plataforma, como Android e
+Windows; o aplicativo não deverá criar um novo aviso de recuperação por causa
+desse atraso.
 
 ## 9. Fora do escopo
 
@@ -208,8 +214,10 @@ explica e solicita autorização antes de agendar pelo sistema.
 ### CA-02 — Preservar lembrete após negativa
 
 **Dado** que o usuário nega a permissão, **quando** termina o fluxo, **então**
-o lembrete permanece salvo, a tarefa continua utilizável e o estado de
-permissão necessária fica visível sem novo pedido automático.
+o lembrete permanece salvo, a tarefa continua utilizável, o estado de
+notificação do sistema desativada fica visível e não há novo pedido automático.
+Se o app estiver aberto quando o lembrete vencer, ainda poderá mostrar o aviso
+dentro do app.
 
 ### CA-03 — Atualizar e cancelar agendamento
 
@@ -241,9 +249,9 @@ tarefa e não oferece ações rápidas para concluir ou adiar.
 
 ### CA-08 — Vencimento sem catch-up
 
-**Dado** que o lembrete já passou quando o app inicia, retoma, restaura ou
-reconcilia, **então** o app não cria um novo aviso atrasado e mostra o estado
-vencido.
+**Dado** que o lembrete já passou quando o app inicia, retoma, restaura,
+importa ou reconcilia, **então** o app não cria um novo aviso atrasado e mostra
+o estado vencido.
 
 ### CA-09 — Web e Linux sem execução garantida
 

@@ -18,7 +18,8 @@ permissões ou de o aplicativo continuar em execução. O MVP não terá backend
   e abrir a tarefa ao tocar no aviso.
 - Solicitar autorização ao salvar o primeiro lembrete. Depois de uma negativa,
   não pedir novamente de forma automática; preservar a configuração e exibir
-  seu estado de disponibilidade.
+  o estado das notificações do sistema. A negativa não impede um aviso dentro
+  do app enquanto ele estiver aberto e puder executar o temporizador.
 - Reconciliar de forma idempotente ao iniciar ou retomar o app e após mudanças
   relevantes no lembrete, tarefa ou permissão, sem criar notificações
   duplicadas.
