@@ -1,30 +1,23 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:urutau_tasks/main.dart';
+import 'support/in_memory_task_repository.dart';
+import 'support/pump_app.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('aplicativo inicializa e navega entre áreas (spec 10, RF-01)',
+      (tester) async {
+    final repository = InMemoryTaskRepository();
+    await pumpApp(tester, repository: repository);
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(find.text('Tarefas'), findsWidgets);
+    expect(find.byIcon(Icons.checklist_outlined), findsOneWidget);
+    expect(find.text('Nenhuma tarefa ainda. Crie a primeira!'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    await tapNav(tester, icon: Icons.delete_outline);
+    expect(find.text('A lixeira está vazia.'), findsOneWidget);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    await tapNav(tester, icon: Icons.checklist_outlined);
+    expect(find.text('Nenhuma tarefa ainda. Crie a primeira!'), findsOneWidget);
   });
 }

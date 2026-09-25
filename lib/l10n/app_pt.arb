@@ -1,0 +1,45 @@
+{
+  "@@locale": "pt",
+  "appTitle": "Urutau Tasks",
+  "navTasks": "Tarefas",
+  "navTrash": "Lixeira",
+  "newTaskTooltip": "Nova tarefa",
+  "editTaskTitle": "Editar tarefa",
+  "createTaskTitle": "Nova tarefa",
+  "taskTitleLabel": "Título",
+  "taskNotesLabel": "Notas",
+  "taskTitleHint": "O que precisa ser feito?",
+  "taskNotesHint": "Detalhes (opcional)",
+  "save": "Salvar",
+  "cancel": "Cancelar",
+  "delete": "Excluir",
+  "complete": "Concluir",
+  "reopen": "Reabrir",
+  "restore": "Restaurar",
+  "deleteTaskTitle": "Excluir tarefa?",
+  "deleteTaskMessage": "A tarefa e suas etapas irão para a lixeira. Você pode restaurá-las depois.",
+  "emptyTasks": "Nenhuma tarefa ainda. Crie a primeira!",
+  "emptyTrash": "A lixeira está vazia.",
+  "trashSubtitle": "Tarefas excluídas ficam aqui até serem restauradas.",
+  "errorTitleRequired": "O título não pode ficar vazio.",
+  "errorEditInTrash": "Restaure a tarefa para editá-la.",
+  "subtasksSection": "Etapas",
+  "addSubtaskTooltip": "Adicionar etapa",
+  "subtaskHint": "Título da etapa",
+  "removeSubtaskTooltip": "Remover etapa",
+  "emptySubtasks": "Nenhuma etapa adicionada.",
+  "progressOf": "{completed} de {total}",
+  "@progressOf": {
+    "description": "Progresso de etapas concluídas",
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "taskDetailTitle": "Detalhes da tarefa",
+  "errorUnexpected": "Não foi possível concluir a ação."
+}

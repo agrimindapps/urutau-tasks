@@ -1,0 +1,64 @@
+import 'package:flutter/material.dart';
+
+import '../../../../l10n/gen/app_localizations.dart';
+import 'tasks_list_page.dart';
+import 'trash_page.dart';
+
+/// Navegação adaptativa entre as áreas do MVP (docs/03, princípio 6).
+class TasksShell extends StatefulWidget {
+  const TasksShell({super.key});
+
+  @override
+  State<TasksShell> createState() => _TasksShellState();
+}
+
+class _TasksShellState extends State<TasksShell> {
+  int _index = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final wide = MediaQuery.sizeOf(context).width >= 720;
+    final destinations = [
+      (Icons.checklist_outlined, l10n.navTasks),
+      (Icons.delete_outline, l10n.navTrash),
+    ];
+
+    final body = _index == 0 ? const TasksListPage() : const TrashPage();
+
+    if (wide) {
+      return Scaffold(
+        body: Row(
+          children: [
+            NavigationRail(
+              selectedIndex: _index,
+              onDestinationSelected: (i) => setState(() => _index = i),
+              labelType: NavigationRailLabelType.all,
+              destinations: [
+                for (final (icon, label) in destinations)
+                  NavigationRailDestination(
+                    icon: Icon(icon),
+                    label: Text(label),
+                  ),
+              ],
+            ),
+            const VerticalDivider(width: 1),
+            Expanded(child: body),
+          ],
+        ),
+      );
+    }
+
+    return Scaffold(
+      body: body,
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _index,
+        onDestinationSelected: (i) => setState(() => _index = i),
+        destinations: [
+          for (final (icon, label) in destinations)
+            NavigationDestination(icon: Icon(icon), label: label),
+        ],
+      ),
+    );
+  }
+}

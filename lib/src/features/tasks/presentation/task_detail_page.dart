@@ -1,0 +1,367 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../data/providers.dart';
+import '../../../../l10n/gen/app_localizations.dart';
+import '../domain/task.dart';
+import 'task_confirm.dart';
+import 'task_editor_dialog.dart';
+import 'task_errors.dart';
+
+/// Detalhe da tarefa: dados, etapas, progresso e ações do ciclo
+/// (spec 01, RF-03 a RF-10).
+class TaskDetailPage extends ConsumerWidget {
+  const TaskDetailPage({super.key, required this.taskId});
+
+  final String taskId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final tasks = ref.watch(tasksProvider);
+
+    return tasks.when(
+      loading: () => const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      ),
+      error: (error, _) => Scaffold(
+        appBar: AppBar(),
+        body: Center(child: Text('$error')),
+      ),
+      data: (all) {
+        final task = all.where((t) => t.id == taskId).firstOrNull;
+        if (task == null) {
+          return Scaffold(
+            appBar: AppBar(),
+            body: Center(child: Text(l10n.emptyTasks)),
+          );
+        }
+        return _TaskDetailBody(task: task);
+      },
+    );
+  }
+}
+
+class _TaskDetailBody extends ConsumerWidget {
+  const _TaskDetailBody({required this.task});
+
+  final Task task;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final trashed = task.isTrashed;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l10n.taskDetailTitle),
+        actions: [
+          if (trashed)
+            IconButton(
+              tooltip: l10n.restore,
+              icon: const Icon(Icons.restore),
+              onPressed: () => runTaskAction(context, () async {
+                await ref.read(tasksServiceProvider).restore(task.id);
+                if (context.mounted) Navigator.of(context).pop();
+              }),
+            )
+          else ...[
+            IconButton(
+              tooltip: l10n.editTaskTitle,
+              icon: const Icon(Icons.edit_outlined),
+              onPressed: () => _edit(context, ref),
+            ),
+            IconButton(
+              tooltip: l10n.delete,
+              icon: const Icon(Icons.delete_outline),
+              onPressed: () async {
+                final confirmed = await confirmDeleteTask(context);
+                if (!confirmed || !context.mounted) return;
+                await runTaskAction(context, () async {
+                  await ref.read(tasksServiceProvider).moveToTrash(task.id);
+                  if (context.mounted) Navigator.of(context).pop();
+                });
+              },
+            ),
+          ],
+        ],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          if (trashed)
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(l10n.trashSubtitle),
+              ),
+            ),
+          Text(task.title, style: Theme.of(context).textTheme.headlineSmall),
+          if (task.notes.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(task.notes),
+          ],
+          const SizedBox(height: 16),
+          if (!trashed)
+            CheckboxListTile(
+              value: task.status == TaskStatus.completed,
+              title: Text(
+                task.status == TaskStatus.completed
+                    ? l10n.reopen
+                    : l10n.complete,
+              ),
+              onChanged: (checked) => runTaskAction(context, () async {
+                final service = ref.read(tasksServiceProvider);
+                if (checked ?? false) {
+                  await service.completeTask(task.id);
+                } else {
+                  await service.reopenTask(task.id);
+                }
+              }),
+            ),
+          const Divider(),
+          _SubtasksSection(task: task),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _edit(BuildContext context, WidgetRef ref) async {
+    final draft = await TaskEditorDialog.show(
+      context,
+      initialTitle: task.title,
+      initialNotes: task.notes,
+      isEditing: true,
+    );
+    if (draft == null || !context.mounted) return;
+    await runTaskAction(context, () async {
+      await ref.read(tasksServiceProvider).renameTask(
+            task.id,
+            title: draft.title,
+            notes: draft.notes,
+          );
+    });
+  }
+}
+
+class _SubtasksSection extends ConsumerStatefulWidget {
+  const _SubtasksSection({required this.task});
+
+  final Task task;
+
+  @override
+  ConsumerState<_SubtasksSection> createState() => _SubtasksSectionState();
+}
+
+class _SubtasksSectionState extends ConsumerState<_SubtasksSection> {
+  final _newSubtaskController = TextEditingController();
+
+  @override
+  void dispose() {
+    _newSubtaskController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final task = widget.task;
+    final trashed = task.isTrashed;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              l10n.subtasksSection,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(width: 12),
+            if (task.subtaskCount > 0)
+              Text(
+                l10n.progressOf(
+                  task.completedSubtaskCount,
+                  task.subtaskCount,
+                ),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        if (task.subtaskCount > 0)
+          LinearProgressIndicator(
+            value: task.progress,
+            minHeight: 6,
+            borderRadius: BorderRadius.circular(3),
+          ),
+        if (task.subtasks.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Text(l10n.emptySubtasks),
+          )
+        else
+          ReorderableListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            buildDefaultDragHandles: !trashed,
+            itemCount: task.subtasks.length,
+            onReorderItem: (oldIndex, newIndex) {
+              if (trashed) return;
+              final ids = [
+                for (final s in task.subtasks) s.id,
+              ];
+              final moved = ids.removeAt(oldIndex);
+              ids.insert(newIndex, moved);
+              runTaskAction(context, () async {
+                await ref
+                    .read(tasksServiceProvider)
+                    .reorderSubtasks(task.id, ids);
+              });
+            },
+            itemBuilder: (context, index) {
+              final subtask = task.subtasks[index];
+              return ListTile(
+                key: ValueKey(subtask.id),
+                leading: Checkbox(
+                  value: subtask.isCompleted,
+                  onChanged: trashed
+                      ? null
+                      : (checked) => runTaskAction(context, () async {
+                            await ref
+                                .read(tasksServiceProvider)
+                                .setSubtaskCompleted(
+                                  task.id,
+                                  subtask.id,
+                                  completed: checked ?? false,
+                                );
+                          }),
+                ),
+                title: Text(
+                  subtask.description,
+                  style: subtask.isCompleted
+                      ? const TextStyle(decoration: TextDecoration.lineThrough)
+                      : null,
+                ),
+                onTap: trashed
+                    ? null
+                    : () => _renameSubtask(context, ref, subtask),
+                trailing: trashed
+                    ? null
+                    : IconButton(
+                        tooltip: l10n.removeSubtaskTooltip,
+                        icon: const Icon(Icons.close),
+                        onPressed: () => runTaskAction(context, () async {
+                          await ref
+                              .read(tasksServiceProvider)
+                              .removeSubtask(task.id, subtask.id);
+                        }),
+                      ),
+              );
+            },
+          ),
+        if (!trashed)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    key: const Key('subtask-field'),
+                    controller: _newSubtaskController,
+                    decoration: InputDecoration(hintText: l10n.subtaskHint),
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) => _addSubtask(),
+                  ),
+                ),
+                IconButton(
+                  tooltip: l10n.addSubtaskTooltip,
+                  icon: const Icon(Icons.add),
+                  onPressed: _addSubtask,
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
+  Future<void> _addSubtask() async {
+    final description = _newSubtaskController.text.trim();
+    if (description.isEmpty) return;
+    _newSubtaskController.clear();
+    await runTaskAction(context, () async {
+      await ref
+          .read(tasksServiceProvider)
+          .addSubtask(widget.task.id, description: description);
+    });
+  }
+
+  Future<void> _renameSubtask(
+    BuildContext context,
+    WidgetRef ref,
+    Subtask subtask,
+  ) async {
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) => _SubtaskRenameDialog(initial: subtask.description),
+    );
+    if (result == null || !context.mounted) return;
+    await runTaskAction(context, () async {
+      await ref.read(tasksServiceProvider).renameSubtask(
+            widget.task.id,
+            subtask.id,
+            description: result,
+          );
+    });
+  }
+}
+
+class _SubtaskRenameDialog extends StatefulWidget {
+  const _SubtaskRenameDialog({required this.initial});
+
+  final String initial;
+
+  @override
+  State<_SubtaskRenameDialog> createState() => _SubtaskRenameDialogState();
+}
+
+class _SubtaskRenameDialogState extends State<_SubtaskRenameDialog> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initial);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return AlertDialog(
+      title: Text(l10n.subtasksSection),
+      content: TextField(
+        key: const Key('subtask-title-field'),
+        controller: _controller,
+        autofocus: true,
+        decoration: InputDecoration(hintText: l10n.subtaskHint),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(l10n.cancel),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.of(context).pop(_controller.text),
+          child: Text(l10n.save),
+        ),
+      ],
+    );
+  }
+}
