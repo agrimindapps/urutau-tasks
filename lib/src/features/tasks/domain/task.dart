@@ -35,6 +35,9 @@ enum TaskFailure {
 
   /// Conversão de subtarefa em tarefa principal não é permitida (spec 01, RF-05).
   nestedSubtask,
+
+  /// Tag duplicada equivalente na tarefa (spec 02, RF-09).
+  duplicateTag,
 }
 
 /// Exceção de domínio com a falha associada.
@@ -142,7 +145,11 @@ class Task {
     required this.completedAt,
     required this.position,
     required List<Subtask> subtasks,
-  }) : subtasks = List.unmodifiable(_sorted(subtasks)) {
+    this.listId,
+    this.categoryId,
+    List<String> tagIds = const [],
+  })  : subtasks = List.unmodifiable(_sorted(subtasks)),
+        tagIds = List.unmodifiable(tagIds.toSet().toList(growable: false)) {
     if (subtasks.any((s) => s.taskId != id)) {
       throw const TaskException(TaskFailure.nestedSubtask);
     }
@@ -155,6 +162,9 @@ class Task {
     String notes = '',
     required DateTime createdAt,
     int position = 0,
+    String? listId,
+    String? categoryId,
+    List<String> tagIds = const [],
   }) {
     return Task(
       id: id,
@@ -167,6 +177,9 @@ class Task {
       completedAt: null,
       position: position,
       subtasks: const [],
+      listId: listId,
+      categoryId: categoryId,
+      tagIds: tagIds,
     );
   }
 
@@ -186,6 +199,15 @@ class Task {
 
   /// Posição de ordenação na origem (spec 06, RF-18).
   final int position;
+
+  /// Lista personalizada opcional; nula = inbox implícita (spec 02, RF-03).
+  final String? listId;
+
+  /// Categoria opcional, no máximo uma por tarefa (spec 02, RF-08).
+  final String? categoryId;
+
+  /// Tags associadas, sem duplicatas (spec 02, RF-09).
+  final List<String> tagIds;
 
   /// Subtarefas ordenadas por posição (spec 01, RF-06).
   final List<Subtask> subtasks;
@@ -219,6 +241,11 @@ class Task {
     bool clearCompletedAt = false,
     int? position,
     List<Subtask>? subtasks,
+    String? listId,
+    bool clearList = false,
+    String? categoryId,
+    bool clearCategory = false,
+    List<String>? tagIds,
   }) {
     return Task(
       id: id,
@@ -234,6 +261,9 @@ class Task {
           clearCompletedAt ? null : (completedAt ?? this.completedAt),
       position: position ?? this.position,
       subtasks: subtasks ?? this.subtasks,
+      listId: clearList ? null : (listId ?? this.listId),
+      categoryId: clearCategory ? null : (categoryId ?? this.categoryId),
+      tagIds: tagIds ?? this.tagIds,
     );
   }
 
@@ -358,6 +388,55 @@ class Task {
     return _copyWith(subtasks: reordered, updatedAt: at);
   }
 
+  /// Atribui/remove lista preservando a hierarquia (spec 02, RF-03/RF-07).
+  ///
+  /// [listId] nulo devolve a tarefa à inbox implícita.
+  Task assignList(String? listId, {DateTime? at}) {
+    _ensureEditable(status);
+    return listId == null
+        ? _copyWith(clearList: true, updatedAt: at)
+        : _copyWith(listId: listId, updatedAt: at);
+  }
+
+  /// Define a categoria única (spec 02, RF-08); nulo remove.
+  Task assignCategory(String? categoryId, {DateTime? at}) {
+    _ensureEditable(status);
+    return categoryId == null
+        ? _copyWith(clearCategory: true, updatedAt: at)
+        : _copyWith(categoryId: categoryId, updatedAt: at);
+  }
+
+  /// Associa uma tag (spec 02, RF-09); duplicatas são rejeitadas.
+  Task addTagId(String tagId, {DateTime? at}) {
+    _ensureEditable(status);
+    if (tagIds.contains(tagId)) {
+      throw const TaskException(TaskFailure.duplicateTag);
+    }
+    return _copyWith(tagIds: [...tagIds, tagId], updatedAt: at);
+  }
+
+  /// Remove a associação de uma tag (a tag em si permanece global).
+  Task removeTagId(String tagId, {DateTime? at}) {
+    _ensureEditable(status);
+    return _copyWith(
+      tagIds: tagIds.where((id) => id != tagId).toList(growable: false),
+      updatedAt: at,
+    );
+  }
+
+  /// Substitui o conjunto de tags preservando a ordem informada.
+  Task setTagIds(List<String> newTagIds, {DateTime? at}) {
+    _ensureEditable(status);
+    final unique = newTagIds.toSet();
+    if (unique.length != newTagIds.length) {
+      throw const TaskException(TaskFailure.duplicateTag);
+    }
+    return _copyWith(
+      tagIds: List.unmodifiable(newTagIds),
+      updatedAt: at,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     return other is Task &&
@@ -370,6 +449,9 @@ class Task {
         other.updatedAt == updatedAt &&
         other.completedAt == completedAt &&
         other.position == position &&
+        other.listId == listId &&
+        other.categoryId == categoryId &&
+        _listEquals(other.tagIds, tagIds) &&
         _listEquals(other.subtasks, subtasks);
   }
 
@@ -384,11 +466,14 @@ class Task {
         updatedAt,
         completedAt,
         position,
+        listId,
+        categoryId,
+        Object.hashAll(tagIds),
         Object.hashAll(subtasks),
       );
 }
 
-bool _listEquals(List<Subtask> a, List<Subtask> b) {
+bool _listEquals(List<Object?> a, List<Object?> b) {
   if (a.length != b.length) return false;
   for (var i = 0; i < a.length; i++) {
     if (a[i] != b[i]) return false;

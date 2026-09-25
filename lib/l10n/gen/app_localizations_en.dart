@@ -104,4 +104,136 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorUnexpected => 'The action could not be completed.';
+
+  @override
+  String get errorNameRequired => 'The name cannot be empty.';
+
+  @override
+  String get errorDuplicateName => 'An item with this name already exists.';
+
+  @override
+  String get errorListNotEmpty =>
+      'The list has tasks. Choose a destination list.';
+
+  @override
+  String get errorSameDestination => 'Choose a different destination list.';
+
+  @override
+  String get navLists => 'Lists';
+
+  @override
+  String get listsTitle => 'Lists and groups';
+
+  @override
+  String get categoriesSection => 'Categories';
+
+  @override
+  String get tagsSection => 'Tags';
+
+  @override
+  String get groupsSection => 'Groups';
+
+  @override
+  String get newListTooltip => 'New list';
+
+  @override
+  String get newGroupTooltip => 'New group';
+
+  @override
+  String get newCategoryTooltip => 'New category';
+
+  @override
+  String get newTagTooltip => 'New tag';
+
+  @override
+  String get nameLabel => 'Name';
+
+  @override
+  String get emptyLists => 'No lists created.';
+
+  @override
+  String get emptyCategories => 'No categories created.';
+
+  @override
+  String get emptyTags => 'No tags created.';
+
+  @override
+  String get deleteListTitle => 'Delete list?';
+
+  @override
+  String get deleteListEmptyMessage => 'The list will be deleted.';
+
+  @override
+  String get deleteListDestinationTitle => 'Choose the destination list';
+
+  @override
+  String deleteListDestinationMessage(String name) {
+    return 'Tasks from \"$name\" will be moved to the chosen list, preserving subtasks and classifications.';
+  }
+
+  @override
+  String get deleteGroupTitle => 'Delete group?';
+
+  @override
+  String get deleteGroupMessage =>
+      'The group\'s lists remain, without a group.';
+
+  @override
+  String get deleteCategoryTitle => 'Delete category?';
+
+  @override
+  String get deleteCategoryMessage => 'Tasks will no longer have a category.';
+
+  @override
+  String get deleteTagTitle => 'Delete tag?';
+
+  @override
+  String get deleteTagMessage => 'Associations will be removed from tasks.';
+
+  @override
+  String get semLista => 'No list';
+
+  @override
+  String get listLabel => 'List';
+
+  @override
+  String get categoryLabel => 'Category';
+
+  @override
+  String get tagsLabel => 'Tags';
+
+  @override
+  String get noCategory => 'No category';
+
+  @override
+  String get addTagTooltip => 'Add tag';
+
+  @override
+  String get removeTagTooltip => 'Remove tag';
+
+  @override
+  String get tagHint => 'Tag name';
+
+  @override
+  String get organizationSection => 'Organization';
+
+  @override
+  String tasksCount(int count) {
+    return '$count tasks';
+  }
+
+  @override
+  String get moveUp => 'Move up';
+
+  @override
+  String get moveDown => 'Move down';
+
+  @override
+  String get moveToGroup => 'Move to group';
+
+  @override
+  String get semGrupo => 'No group';
+
+  @override
+  String get rename => 'Rename';
 }

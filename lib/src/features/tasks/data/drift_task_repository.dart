@@ -13,8 +13,7 @@ class DriftTaskRepository implements TaskRepository {
   @override
   Future<List<Task>> fetchAll() async {
     final taskRows = await _db.select(_db.tasks).get();
-    final subtaskRows = await _db.select(_db.subtasks).get();
-    return _assemble(taskRows, subtaskRows);
+    return _assemble(taskRows, await _loadSubtasks(), await _loadTags());
   }
 
   @override
@@ -26,31 +25,46 @@ class DriftTaskRepository implements TaskRepository {
         _db.subtasks.taskId.equalsExp(_db.tasks.id),
       ),
     ]);
-    return query.watch().map((rows) {
-      final byTask = <String, List<Subtask>>{};
+    return query.watch().asyncMap((rows) async {
       final taskById = <String, TaskRow>{};
       for (final row in rows) {
-        final task = row.readTable(_db.tasks);
-        taskById[task.id] = task;
-        final subtask = row.readTableOrNull(_db.subtasks);
-        if (subtask != null) {
-          (byTask[task.id] ??= []).add(_toSubtask(subtask));
-        }
+        taskById[row.readTable(_db.tasks).id] = row.readTable(_db.tasks);
       }
-      return [
-        for (final task in taskById.values)
-          _toTask(task, byTask[task.id] ?? const []),
-      ]..sort((a, b) => a.position.compareTo(b.position));
+      return _assemble(taskById.values.toList(), await _loadSubtasks(),
+          await _loadTags());
     });
   }
 
-  List<Task> _assemble(List<TaskRow> taskRows, List<SubtaskRow> subtaskRows) {
+  Future<Map<String, List<Subtask>>> _loadSubtasks() async {
+    final rows = await _db.select(_db.subtasks).get();
     final byTask = <String, List<Subtask>>{};
-    for (final row in subtaskRows) {
+    for (final row in rows) {
       (byTask[row.taskId] ??= []).add(_toSubtask(row));
     }
+    return byTask;
+  }
+
+  Future<Map<String, List<String>>> _loadTags() async {
+    final rows = await _db.select(_db.taskTags).get();
+    final byTask = <String, List<String>>{};
+    for (final row in rows) {
+      (byTask[row.taskId] ??= []).add(row.tagId);
+    }
+    return byTask;
+  }
+
+  List<Task> _assemble(
+    List<TaskRow> taskRows,
+    Map<String, List<Subtask>> subtasksByTask,
+    Map<String, List<String>> tagsByTask,
+  ) {
     return [
-      for (final row in taskRows) _toTask(row, byTask[row.id] ?? const []),
+      for (final row in taskRows)
+        _toTask(
+          row,
+          subtasksByTask[row.id] ?? const [],
+          tagsByTask[row.id] ?? const [],
+        ),
     ]..sort((a, b) => a.position.compareTo(b.position));
   }
 
@@ -63,12 +77,19 @@ class DriftTaskRepository implements TaskRepository {
     final subtaskRows = await (_db.select(_db.subtasks)
           ..where((s) => s.taskId.equals(id)))
         .get();
-    return _toTask(row, subtaskRows.map(_toSubtask).toList());
+    final tagRows = await (_db.select(_db.taskTags)
+          ..where((t) => t.taskId.equals(id)))
+        .get();
+    return _toTask(
+      row,
+      subtaskRows.map(_toSubtask).toList(),
+      tagRows.map((r) => r.tagId).toList(),
+    );
   }
 
   @override
   Future<void> saveTask(Task task) async {
-    // Escrita composta atômica (spec 06, RF-04): tarefa + subtarefas.
+    // Escrita composta atômica (spec 06, RF-04): tarefa + subtarefas + tags.
     await _db.transaction(() async {
       await _db.into(_db.tasks).insertOnConflictUpdate(_toCompanion(task));
       final existing = await (_db.select(_db.subtasks)
@@ -87,6 +108,14 @@ class DriftTaskRepository implements TaskRepository {
             .into(_db.subtasks)
             .insertOnConflictUpdate(_toSubtaskCompanion(subtask));
       }
+      await (_db.delete(_db.taskTags)
+            ..where((t) => t.taskId.equals(task.id)))
+          .go();
+      for (final tagId in task.tagIds) {
+        await _db.into(_db.taskTags).insertOnConflictUpdate(
+              TaskTagsCompanion.insert(taskId: task.id, tagId: tagId),
+            );
+      }
     });
   }
 
@@ -99,7 +128,7 @@ class DriftTaskRepository implements TaskRepository {
     });
   }
 
-  Task _toTask(TaskRow row, List<Subtask> subtasks) {
+  Task _toTask(TaskRow row, List<Subtask> subtasks, List<String> tagIds) {
     return Task(
       id: row.id,
       title: row.title,
@@ -113,6 +142,9 @@ class DriftTaskRepository implements TaskRepository {
       completedAt: row.completedAt,
       position: row.position,
       subtasks: subtasks,
+      listId: row.listId,
+      categoryId: row.categoryId,
+      tagIds: tagIds,
     );
   }
 
@@ -137,6 +169,8 @@ class DriftTaskRepository implements TaskRepository {
       updatedAt: task.updatedAt,
       completedAt: Value(task.completedAt),
       position: Value(task.position),
+      listId: Value(task.listId),
+      categoryId: Value(task.categoryId),
     );
   }
 

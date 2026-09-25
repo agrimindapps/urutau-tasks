@@ -285,6 +285,258 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Não foi possível concluir a ação.'**
   String get errorUnexpected;
+
+  /// No description provided for @errorNameRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'O nome não pode ficar vazio.'**
+  String get errorNameRequired;
+
+  /// No description provided for @errorDuplicateName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Já existe um item com esse nome.'**
+  String get errorDuplicateName;
+
+  /// No description provided for @errorListNotEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'A lista tem tarefas. Escolha uma lista de destino.'**
+  String get errorListNotEmpty;
+
+  /// No description provided for @errorSameDestination.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha uma lista de destino diferente.'**
+  String get errorSameDestination;
+
+  /// No description provided for @navLists.
+  ///
+  /// In pt, this message translates to:
+  /// **'Listas'**
+  String get navLists;
+
+  /// No description provided for @listsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Listas e grupos'**
+  String get listsTitle;
+
+  /// No description provided for @categoriesSection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Categorias'**
+  String get categoriesSection;
+
+  /// No description provided for @tagsSection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tags'**
+  String get tagsSection;
+
+  /// No description provided for @groupsSection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Grupos'**
+  String get groupsSection;
+
+  /// No description provided for @newListTooltip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nova lista'**
+  String get newListTooltip;
+
+  /// No description provided for @newGroupTooltip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Novo grupo'**
+  String get newGroupTooltip;
+
+  /// No description provided for @newCategoryTooltip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nova categoria'**
+  String get newCategoryTooltip;
+
+  /// No description provided for @newTagTooltip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nova tag'**
+  String get newTagTooltip;
+
+  /// No description provided for @nameLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome'**
+  String get nameLabel;
+
+  /// No description provided for @emptyLists.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma lista criada.'**
+  String get emptyLists;
+
+  /// No description provided for @emptyCategories.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma categoria criada.'**
+  String get emptyCategories;
+
+  /// No description provided for @emptyTags.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma tag criada.'**
+  String get emptyTags;
+
+  /// No description provided for @deleteListTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir lista?'**
+  String get deleteListTitle;
+
+  /// No description provided for @deleteListEmptyMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'A lista será excluída.'**
+  String get deleteListEmptyMessage;
+
+  /// No description provided for @deleteListDestinationTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha a lista de destino'**
+  String get deleteListDestinationTitle;
+
+  /// Aviso de migração de tarefas ao excluir lista
+  ///
+  /// In pt, this message translates to:
+  /// **'As tarefas de \"{name}\" serão movidas para a lista escolhida, preservando subtarefas e classificações.'**
+  String deleteListDestinationMessage(String name);
+
+  /// No description provided for @deleteGroupTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir grupo?'**
+  String get deleteGroupTitle;
+
+  /// No description provided for @deleteGroupMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'As listas do grupo permanecem, sem grupo.'**
+  String get deleteGroupMessage;
+
+  /// No description provided for @deleteCategoryTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir categoria?'**
+  String get deleteCategoryTitle;
+
+  /// No description provided for @deleteCategoryMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'As tarefas deixam de ter categoria.'**
+  String get deleteCategoryMessage;
+
+  /// No description provided for @deleteTagTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir tag?'**
+  String get deleteTagTitle;
+
+  /// No description provided for @deleteTagMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'As associações serão removidas das tarefas.'**
+  String get deleteTagMessage;
+
+  /// No description provided for @semLista.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem lista'**
+  String get semLista;
+
+  /// No description provided for @listLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lista'**
+  String get listLabel;
+
+  /// No description provided for @categoryLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Categoria'**
+  String get categoryLabel;
+
+  /// No description provided for @tagsLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tags'**
+  String get tagsLabel;
+
+  /// No description provided for @noCategory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem categoria'**
+  String get noCategory;
+
+  /// No description provided for @addTagTooltip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar tag'**
+  String get addTagTooltip;
+
+  /// No description provided for @removeTagTooltip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Remover tag'**
+  String get removeTagTooltip;
+
+  /// No description provided for @tagHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome da tag'**
+  String get tagHint;
+
+  /// No description provided for @organizationSection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Organização'**
+  String get organizationSection;
+
+  /// Contagem de tarefas de uma lista
+  ///
+  /// In pt, this message translates to:
+  /// **'{count} tarefas'**
+  String tasksCount(int count);
+
+  /// No description provided for @moveUp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Subir'**
+  String get moveUp;
+
+  /// No description provided for @moveDown.
+  ///
+  /// In pt, this message translates to:
+  /// **'Descer'**
+  String get moveDown;
+
+  /// No description provided for @moveToGroup.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mover para grupo'**
+  String get moveToGroup;
+
+  /// No description provided for @semGrupo.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem grupo'**
+  String get semGrupo;
+
+  /// No description provided for @rename.
+  ///
+  /// In pt, this message translates to:
+  /// **'Renomear'**
+  String get rename;
 }
 
 class _AppLocalizationsDelegate

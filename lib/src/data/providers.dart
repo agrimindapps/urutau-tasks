@@ -1,6 +1,9 @@
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../features/organization/application/organization_service.dart';
+import '../features/organization/data/drift_organization_repository.dart';
+import '../features/organization/domain/organization_repository.dart';
 import '../features/tasks/application/tasks_service.dart';
 import '../features/tasks/data/drift_task_repository.dart';
 import '../features/tasks/domain/task.dart';
@@ -32,6 +35,22 @@ final taskRepositoryProvider = Provider<TaskRepository>((ref) {
 
 final tasksServiceProvider = Provider<TasksService>((ref) {
   return TasksService(ref.watch(taskRepositoryProvider));
+});
+
+final organizationRepositoryProvider = Provider<OrganizationRepository>((ref) {
+  return DriftOrganizationRepository(ref.watch(databaseProvider));
+});
+
+final organizationServiceProvider = Provider<OrganizationService>((ref) {
+  return OrganizationService(
+    ref.watch(organizationRepositoryProvider),
+    ref.watch(taskRepositoryProvider),
+  );
+});
+
+/// Organização observável: listas, grupos, categorias e tags.
+final organizationProvider = StreamProvider<OrganizationSnapshot>((ref) {
+  return ref.watch(organizationRepositoryProvider).watchSnapshot();
 });
 
 /// Lista observável de tarefas (inclusive lixeira).

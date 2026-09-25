@@ -1,5 +1,7 @@
 import 'package:drift/drift.dart';
 
+import '../../organization/data/organization_tables.dart';
+
 /// Tabelas de tarefas e subtarefas (esquema v1; spec 06, RF-05/RF-06).
 @DataClassName('TaskRow')
 class Tasks extends Table {
@@ -22,6 +24,13 @@ class Tasks extends Table {
   DateTimeColumn get completedAt => dateTime().nullable()();
 
   IntColumn get position => integer().withDefault(const Constant(0))();
+
+  /// Lista personalizada opcional; nula = inbox implícita (spec 02, RF-03).
+  TextColumn get listId => text().nullable().references(TaskLists, #id)();
+
+  /// Categoria opcional única (spec 02, RF-08).
+  TextColumn get categoryId =>
+      text().nullable().references(Categories, #id)();
 
   @override
   Set<Column> get primaryKey => {id};

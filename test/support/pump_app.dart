@@ -3,15 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:urutau_tasks/src/app/app.dart';
 import 'package:urutau_tasks/src/data/providers.dart';
+import 'package:urutau_tasks/src/features/organization/domain/organization_repository.dart';
 import 'package:urutau_tasks/src/features/tasks/domain/task_repository.dart';
 
-/// Bombeia o aplicativo com repositório isolado para testes de widget.
+/// Bombeia o aplicativo com repositórios isolados para testes de widget.
 ///
 /// O tamanho da superfície é fixado em 800x600 para a navegação
 /// adaptativa usar `NavigationRail` de forma determinística.
 Future<void> pumpApp(
   WidgetTester tester, {
   required TaskRepository repository,
+  OrganizationRepository? organization,
 }) async {
   tester.view.physicalSize = const Size(800, 600);
   tester.view.devicePixelRatio = 1.0;
@@ -23,6 +25,8 @@ Future<void> pumpApp(
     ProviderScope(
       overrides: [
         taskRepositoryProvider.overrideWithValue(repository),
+        if (organization != null)
+          organizationRepositoryProvider.overrideWithValue(organization),
       ],
       child: const UrutauApp(),
     ),

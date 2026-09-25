@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/providers.dart';
 import '../../../../l10n/gen/app_localizations.dart';
+import '../../organization/domain/organization_repository.dart';
 import '../domain/task.dart';
 import 'task_confirm.dart';
 import 'task_editor_dialog.dart';
@@ -119,6 +120,8 @@ class _TaskDetailBody extends ConsumerWidget {
                 }
               }),
             ),
+          const Divider(),
+          _OrganizationSection(task: task),
           const Divider(),
           _SubtasksSection(task: task),
         ],
@@ -363,5 +366,151 @@ class _SubtaskRenameDialogState extends State<_SubtaskRenameDialog> {
         ),
       ],
     );
+  }
+}
+
+/// Seção de organização: lista, categoria e tags (spec 02, RF-03/RF-08/RF-09).
+class _OrganizationSection extends ConsumerStatefulWidget {
+  const _OrganizationSection({required this.task});
+
+  final Task task;
+
+  @override
+  ConsumerState<_OrganizationSection> createState() =>
+      _OrganizationSectionState();
+}
+
+class _OrganizationSectionState extends ConsumerState<_OrganizationSection> {
+  final _tagController = TextEditingController();
+
+  @override
+  void dispose() {
+    _tagController.dispose();
+    super.dispose();
+  }
+
+  Task get task => widget.task;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final organization = ref.watch(organizationProvider);
+    final trashed = task.isTrashed;
+
+    return organization.when(
+      loading: () => const SizedBox.shrink(),
+      error: (error, _) => const SizedBox.shrink(),
+      data: (snapshot) {
+        final service = ref.read(organizationServiceProvider);
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.organizationSection,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<String?>(
+              key: ValueKey('list-picker-${task.id}'),
+              initialValue: task.listId,
+              decoration: InputDecoration(labelText: l10n.listLabel),
+              items: [
+                DropdownMenuItem<String?>(
+                  value: null,
+                  child: Text(l10n.semLista),
+                ),
+                for (final list in snapshot.lists)
+                  DropdownMenuItem<String?>(
+                    value: list.id,
+                    child: Text(list.name),
+                  ),
+              ],
+              onChanged: trashed
+                  ? null
+                  : (value) => runTaskAction(context, () async {
+                        await service.assignListToTask(task.id, value);
+                      }),
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String?>(
+              key: ValueKey('category-picker-${task.id}'),
+              initialValue: task.categoryId,
+              decoration: InputDecoration(labelText: l10n.categoryLabel),
+              items: [
+                DropdownMenuItem<String?>(
+                  value: null,
+                  child: Text(l10n.noCategory),
+                ),
+                for (final category in snapshot.categories)
+                  DropdownMenuItem<String?>(
+                    value: category.id,
+                    child: Text(category.name),
+                  ),
+              ],
+              onChanged: trashed
+                  ? null
+                  : (value) => runTaskAction(context, () async {
+                        await service.assignCategoryToTask(task.id, value);
+                      }),
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                for (final tagId in task.tagIds)
+                  Chip(
+                    key: ValueKey('tag-chip-$tagId'),
+                    label: Text(_tagName(snapshot, tagId)),
+                    deleteButtonTooltipMessage: l10n.removeTagTooltip,
+                    onDeleted: trashed
+                        ? null
+                        : () => runTaskAction(context, () async {
+                              await service.removeTagFromTask(task.id, tagId);
+                            }),
+                  ),
+              ],
+            ),
+            if (!trashed)
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      key: const Key('tag-input'),
+                      controller: _tagController,
+                      decoration: InputDecoration(hintText: l10n.tagHint),
+                      textInputAction: TextInputAction.done,
+                      onSubmitted: (_) => _addTag(context),
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: l10n.addTagTooltip,
+                    icon: const Icon(Icons.add),
+                    onPressed: () => _addTag(context),
+                  ),
+                ],
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  String _tagName(OrganizationSnapshot snapshot, String tagId) {
+    for (final tag in snapshot.tags) {
+      if (tag.id == tagId) return tag.name;
+    }
+    return tagId;
+  }
+
+  Future<void> _addTag(BuildContext context) async {
+    final name = _tagController.text.trim();
+    if (name.isEmpty) return;
+    _tagController.clear();
+    await runTaskAction(context, () async {
+      await ref
+          .read(organizationServiceProvider)
+          .addTagToTaskByName(task.id, name);
+    });
   }
 }

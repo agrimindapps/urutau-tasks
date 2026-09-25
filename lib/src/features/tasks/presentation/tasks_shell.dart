@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/gen/app_localizations.dart';
+import '../../organization/presentation/lists_page.dart';
 import 'tasks_list_page.dart';
 import 'trash_page.dart';
 
@@ -21,10 +22,15 @@ class _TasksShellState extends State<TasksShell> {
     final wide = MediaQuery.sizeOf(context).width >= 720;
     final destinations = [
       (Icons.checklist_outlined, l10n.navTasks),
+      (Icons.list_alt_outlined, l10n.navLists),
       (Icons.delete_outline, l10n.navTrash),
     ];
 
-    final body = _index == 0 ? const TasksListPage() : const TrashPage();
+    final body = switch (_index) {
+      0 => const TasksListPage(),
+      1 => const ListsPage(),
+      _ => const TrashPage(),
+    };
 
     if (wide) {
       return Scaffold(

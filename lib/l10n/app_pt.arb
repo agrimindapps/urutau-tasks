@@ -41,5 +41,63 @@
     }
   },
   "taskDetailTitle": "Detalhes da tarefa",
-  "errorUnexpected": "Não foi possível concluir a ação."
+  "errorUnexpected": "Não foi possível concluir a ação.",
+  "errorNameRequired": "O nome não pode ficar vazio.",
+  "errorDuplicateName": "Já existe um item com esse nome.",
+  "errorListNotEmpty": "A lista tem tarefas. Escolha uma lista de destino.",
+  "errorSameDestination": "Escolha uma lista de destino diferente.",
+  "navLists": "Listas",
+  "listsTitle": "Listas e grupos",
+  "categoriesSection": "Categorias",
+  "tagsSection": "Tags",
+  "groupsSection": "Grupos",
+  "newListTooltip": "Nova lista",
+  "newGroupTooltip": "Novo grupo",
+  "newCategoryTooltip": "Nova categoria",
+  "newTagTooltip": "Nova tag",
+  "nameLabel": "Nome",
+  "emptyLists": "Nenhuma lista criada.",
+  "emptyCategories": "Nenhuma categoria criada.",
+  "emptyTags": "Nenhuma tag criada.",
+  "deleteListTitle": "Excluir lista?",
+  "deleteListEmptyMessage": "A lista será excluída.",
+  "deleteListDestinationTitle": "Escolha a lista de destino",
+  "deleteListDestinationMessage": "As tarefas de \"{name}\" serão movidas para a lista escolhida, preservando subtarefas e classificações.",
+  "deleteGroupTitle": "Excluir grupo?",
+  "deleteGroupMessage": "As listas do grupo permanecem, sem grupo.",
+  "deleteCategoryTitle": "Excluir categoria?",
+  "deleteCategoryMessage": "As tarefas deixam de ter categoria.",
+  "deleteTagTitle": "Excluir tag?",
+  "deleteTagMessage": "As associações serão removidas das tarefas.",
+  "semLista": "Sem lista",
+  "listLabel": "Lista",
+  "categoryLabel": "Categoria",
+  "tagsLabel": "Tags",
+  "noCategory": "Sem categoria",
+  "addTagTooltip": "Adicionar tag",
+  "removeTagTooltip": "Remover tag",
+  "tagHint": "Nome da tag",
+  "organizationSection": "Organização",
+  "tasksCount": "{count} tarefas",
+  "@deleteListDestinationMessage": {
+    "description": "Aviso de migração de tarefas ao excluir lista",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@tasksCount": {
+    "description": "Contagem de tarefas de uma lista",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "moveUp": "Subir",
+  "moveDown": "Descer",
+  "moveToGroup": "Mover para grupo",
+  "semGrupo": "Sem grupo",
+  "rename": "Renomear"
 }

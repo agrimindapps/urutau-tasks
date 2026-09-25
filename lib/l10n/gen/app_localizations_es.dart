@@ -105,4 +105,136 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get errorUnexpected => 'No se pudo completar la acción.';
+
+  @override
+  String get errorNameRequired => 'El nombre no puede estar vacío.';
+
+  @override
+  String get errorDuplicateName => 'Ya existe un elemento con ese nombre.';
+
+  @override
+  String get errorListNotEmpty =>
+      'La lista tiene tareas. Elige una lista de destino.';
+
+  @override
+  String get errorSameDestination => 'Elige una lista de destino diferente.';
+
+  @override
+  String get navLists => 'Listas';
+
+  @override
+  String get listsTitle => 'Listas y grupos';
+
+  @override
+  String get categoriesSection => 'Categorías';
+
+  @override
+  String get tagsSection => 'Etiquetas';
+
+  @override
+  String get groupsSection => 'Grupos';
+
+  @override
+  String get newListTooltip => 'Nueva lista';
+
+  @override
+  String get newGroupTooltip => 'Nuevo grupo';
+
+  @override
+  String get newCategoryTooltip => 'Nueva categoría';
+
+  @override
+  String get newTagTooltip => 'Nueva etiqueta';
+
+  @override
+  String get nameLabel => 'Nombre';
+
+  @override
+  String get emptyLists => 'Ninguna lista creada.';
+
+  @override
+  String get emptyCategories => 'Ninguna categoría creada.';
+
+  @override
+  String get emptyTags => 'Ninguna etiqueta creada.';
+
+  @override
+  String get deleteListTitle => '¿Eliminar lista?';
+
+  @override
+  String get deleteListEmptyMessage => 'La lista será eliminada.';
+
+  @override
+  String get deleteListDestinationTitle => 'Elige la lista de destino';
+
+  @override
+  String deleteListDestinationMessage(String name) {
+    return 'Las tareas de \"$name\" se moverán a la lista elegida, preservando subtareas y clasificaciones.';
+  }
+
+  @override
+  String get deleteGroupTitle => '¿Eliminar grupo?';
+
+  @override
+  String get deleteGroupMessage =>
+      'Las listas del grupo permanecen, sin grupo.';
+
+  @override
+  String get deleteCategoryTitle => '¿Eliminar categoría?';
+
+  @override
+  String get deleteCategoryMessage => 'Las tareas dejarán de tener categoría.';
+
+  @override
+  String get deleteTagTitle => '¿Eliminar etiqueta?';
+
+  @override
+  String get deleteTagMessage => 'Las asociaciones se quitarán de las tareas.';
+
+  @override
+  String get semLista => 'Sin lista';
+
+  @override
+  String get listLabel => 'Lista';
+
+  @override
+  String get categoryLabel => 'Categoría';
+
+  @override
+  String get tagsLabel => 'Etiquetas';
+
+  @override
+  String get noCategory => 'Sin categoría';
+
+  @override
+  String get addTagTooltip => 'Añadir etiqueta';
+
+  @override
+  String get removeTagTooltip => 'Quitar etiqueta';
+
+  @override
+  String get tagHint => 'Nombre de la etiqueta';
+
+  @override
+  String get organizationSection => 'Organización';
+
+  @override
+  String tasksCount(int count) {
+    return '$count tareas';
+  }
+
+  @override
+  String get moveUp => 'Subir';
+
+  @override
+  String get moveDown => 'Bajar';
+
+  @override
+  String get moveToGroup => 'Mover a grupo';
+
+  @override
+  String get semGrupo => 'Sin grupo';
+
+  @override
+  String get rename => 'Renombrar';
 }
