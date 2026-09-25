@@ -511,4 +511,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get close => 'Close';
+
+  @override
+  String get reminderStateScheduled => 'Scheduled';
+
+  @override
+  String get reminderStatePermission => 'Permission needed';
+
+  @override
+  String get reminderStateUnavailable => 'Unavailable on this platform';
+
+  @override
+  String get reminderStateExpired => 'Expired';
+
+  @override
+  String get reminderStatePending => 'Pending verification';
+
+  @override
+  String get reminderPermissionTitle => 'Allow notifications';
+
+  @override
+  String get reminderPermissionMessage =>
+      'To show reminders, the app needs system authorization. You can decline: the reminder stays saved, without alerts.';
+
+  @override
+  String get reminderPermissionConfirm => 'Got it';
+
+  @override
+  String get reminderNotificationsDisabled =>
+      'Notifications disabled. Enable permission in system or browser settings.';
+
+  @override
+  String get openTask => 'Open task';
 }

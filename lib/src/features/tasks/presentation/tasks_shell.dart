@@ -7,7 +7,9 @@ import 'package:urutau_tasks/l10n/gen/app_localizations.dart';
 import '../../../data/providers.dart';
 
 import '../../my_day/presentation/my_day_page.dart';
+import '../../notifications/application/reminder_coordinator.dart';
 import '../../organization/presentation/lists_page.dart';
+import 'task_detail_page.dart';
 import 'tasks_list_page.dart';
 import 'trash_page.dart';
 
@@ -26,6 +28,8 @@ class _TasksShellState extends ConsumerState<TasksShell>
     with WidgetsBindingObserver {
   int _index = 0;
   Timer? _midnightTimer;
+  StreamSubscription? _reminderSub;
+  late final ReminderCoordinator _coordinator;
 
   static const _breakpoint = 800.0;
 
@@ -34,17 +38,56 @@ class _TasksShellState extends ConsumerState<TasksShell>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _runRollover();
+
+    // Spec 08, RF-05: reconcilia ao iniciar; reage a retomadas.
+    // O coordenador fica em um campo: `ref` não pode ser usado em dispose
+    // (Riverpod) — guardado durante o initState.
+    _coordinator = ref.read(reminderCoordinatorProvider);
+    unawaited(_coordinator.reconcile());
+    // Spec 08, CA-06: toque na notificação do sistema abre o detalhe.
+    _coordinator.onNotificationOpened = _openTaskFromNotification;
+    // Spec 08, CA-05: aviso em primeiro plano com ação para abrir.
+    _reminderSub = _coordinator.inAppReminders.listen((reminder) {
+      if (!mounted) return;
+      final l10n = AppLocalizations.of(context);
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(reminder.title),
+            duration: const Duration(seconds: 8),
+            action: SnackBarAction(
+              label: l10n.openTask,
+              onPressed: () => _openTaskFromNotification(reminder.taskId),
+            ),
+          ),
+        );
+    });
+  }
+
+  void _openTaskFromNotification(String taskId) {
+    if (!mounted) return;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => TaskDetailPage(taskId: taskId),
+      ),
+    );
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _midnightTimer?.cancel();
+    _reminderSub?.cancel();
+    _coordinator.onNotificationOpened = null;
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Spec 08, RF-05: retomar reconcilia; transições alternam camada de
+    // sistema x aviso em primeiro plano sem duplicar o disparo.
+    _coordinator.setPhase(state);
     if (state == AppLifecycleState.resumed) {
       _runRollover();
     }

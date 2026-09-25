@@ -1,5 +1,6 @@
 import 'package:urutau_tasks/src/core/ids.dart';
 import 'package:urutau_tasks/src/features/my_day/domain/my_day_repository.dart';
+import 'package:urutau_tasks/src/features/notifications/application/reminder_coordinator.dart';
 import 'package:urutau_tasks/src/features/recurrence/domain/recurrence.dart';
 import 'package:urutau_tasks/src/features/recurrence/domain/recurrence_repository.dart';
 import 'package:urutau_tasks/src/features/organization/domain/organization.dart';
@@ -17,6 +18,7 @@ class TasksService {
     OrganizationRepository? organizationRepository,
     MyDayRepository? myDayRepository,
     RecurrenceRepository? recurrenceRepository,
+    this._reminders,
     DateTime Function()? now,
     String Function()? generateId,
   })  : _organization = organizationRepository,
@@ -29,8 +31,15 @@ class TasksService {
   final OrganizationRepository? _organization;
   final MyDayRepository? _myDay;
   final RecurrenceRepository? _recurrence;
+  final ReminderCoordinator? _reminders;
   final DateTime Function() _now;
   final String Function() _generateId;
+
+  /// RF-05 (spec 08): reconcilia após mudanças relevantes de lembrete ou
+  /// estado da tarefa — operação idempotente que não pede permissão.
+  Future<void> _reconcileReminders() async {
+    await _reminders?.reconcile();
+  }
 
   Future<String> createTask({
     required String title,
@@ -58,6 +67,7 @@ class TasksService {
       categoryId: categoryId,
     );
     await _repository.insertTask(task);
+    await _reconcileReminders();
     return task.id;
   }
 
@@ -138,6 +148,7 @@ class TasksService {
         updatedAt: _now(),
       ),
     );
+    await _reconcileReminders();
   }
 
   /// RF-04/CA-05: lembrete no passado é rejeitado; prazos passados são
@@ -187,6 +198,7 @@ class TasksService {
         await recurrence.saveSeries(
           series.copyWith(frequency: frequency, anchorDate: anchor),
         );
+        await _reconcileReminders();
         return;
       }
     }
@@ -198,6 +210,7 @@ class TasksService {
     );
     await recurrence.insertSeries(series);
     await _repository.saveTask(task.copyWith(seriesId: series.id));
+    await _reconcileReminders();
   }
 
   Future<void> toggleCompletion(String id) async {
@@ -211,6 +224,9 @@ class TasksService {
       // RF-11 (spec 04): gera a próxima ocorrência da série ativa.
       await _createNextOccurrence(updated);
     }
+    // Spec 08, RF-03/RF-04: concluir cancela o aviso; reabrir só
+    // reagenda lembretes futuros (reconciliação idempotente).
+    await _reconcileReminders();
   }
 
   /// RF-11/CA-11 a CA-15: a ocorrência concluída fica no histórico e apenas
@@ -276,11 +292,13 @@ class TasksService {
     await _repository.saveTask(trashTask(task, _now()));
     // RF-05/CA-08: sai de todas as visões, incluindo My Day.
     await _myDay?.removeEntriesForTask(id);
+    await _reconcileReminders();
   }
 
   Future<void> restoreFromTrash(String id) async {
     final task = await _requireTask(id);
     await _repository.saveTask(restoreTask(task, _now()));
+    await _reconcileReminders();
   }
 
   /// RF-05: subtarefas só em tarefas ativas ou concluídas, nunca na

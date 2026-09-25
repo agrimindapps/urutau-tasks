@@ -1089,6 +1089,66 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Fechar'**
   String get close;
+
+  /// No description provided for @reminderStateScheduled.
+  ///
+  /// In pt, this message translates to:
+  /// **'Agendado'**
+  String get reminderStateScheduled;
+
+  /// No description provided for @reminderStatePermission.
+  ///
+  /// In pt, this message translates to:
+  /// **'Permissão necessária'**
+  String get reminderStatePermission;
+
+  /// No description provided for @reminderStateUnavailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Indisponível nesta plataforma'**
+  String get reminderStateUnavailable;
+
+  /// No description provided for @reminderStateExpired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vencido'**
+  String get reminderStateExpired;
+
+  /// No description provided for @reminderStatePending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pendente de verificação'**
+  String get reminderStatePending;
+
+  /// No description provided for @reminderPermissionTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Permitir avisos'**
+  String get reminderPermissionTitle;
+
+  /// No description provided for @reminderPermissionMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Para exibir lembretes, o aplicativo precisa da autorização do sistema. Você pode recusar: o lembrete continuará salvo, mas sem avisos.'**
+  String get reminderPermissionMessage;
+
+  /// No description provided for @reminderPermissionConfirm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entendi'**
+  String get reminderPermissionConfirm;
+
+  /// No description provided for @reminderNotificationsDisabled.
+  ///
+  /// In pt, this message translates to:
+  /// **'Avisos desativados. Ative a permissão nas configurações do sistema ou navegador.'**
+  String get reminderNotificationsDisabled;
+
+  /// No description provided for @openTask.
+  ///
+  /// In pt, this message translates to:
+  /// **'Abrir tarefa'**
+  String get openTask;
 }
 
 class _AppLocalizationsDelegate

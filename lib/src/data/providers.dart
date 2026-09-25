@@ -12,6 +12,10 @@ import '../features/data_transfer/application/data_transfer_service.dart';
 import '../features/data_transfer/data/drift_snapshot_repository.dart';
 import '../features/data_transfer/domain/snapshot_repository.dart';
 import '../app/locale_preference.dart';
+import '../features/notifications/application/reminder_coordinator.dart';
+import '../features/notifications/domain/reminder_delivery.dart';
+import '../features/notifications/platform/adapter_selector.dart';
+import '../features/notifications/platform/reminder_permission_store.dart';
 import '../features/organization/application/organization_service.dart';
 import '../features/organization/data/drift_organization_repository.dart';
 import '../features/organization/domain/organization.dart';
@@ -73,12 +77,35 @@ final allSeriesProvider = StreamProvider<List<RecurrenceSeries>>((ref) {
   return ref.watch(recurrenceRepositoryProvider).watchAll();
 });
 
+/// Adaptador de notificação da plataforma (spec 08, ADR-0004).
+final notificationAdapterProvider = Provider<NotificationAdapter>((ref) {
+  final adapter = createNotificationAdapter();
+  ref.onDispose(() => adapter.setOnOpened(null));
+  return adapter;
+});
+
+/// Coordena entrega de lembretes (spec 08, RF-01 a RF-05).
+final reminderCoordinatorProvider = Provider<ReminderCoordinator>((ref) {
+  final coordinator = ReminderCoordinator(
+    adapter: ref.watch(notificationAdapterProvider),
+    tasks: ref.watch(taskRepositoryProvider),
+  );
+  ref.onDispose(coordinator.dispose);
+  return coordinator;
+});
+
+final reminderPermissionStoreProvider =
+    Provider<ReminderPermissionStore>((ref) {
+  return SharedPrefsReminderPermissionStore();
+});
+
 final tasksServiceProvider = Provider<TasksService>((ref) {
   return TasksService(
     ref.watch(taskRepositoryProvider),
     organizationRepository: ref.watch(organizationRepositoryProvider),
     myDayRepository: ref.watch(myDayRepositoryProvider),
     recurrenceRepository: ref.watch(recurrenceRepositoryProvider),
+    reminders: ref.watch(reminderCoordinatorProvider),
   );
 });
 

@@ -3,6 +3,7 @@ import 'package:urutau_tasks/l10n/gen/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/providers.dart';
+import '../../notifications/domain/reminder_delivery.dart';
 import '../../organization/domain/organization.dart';
 import '../application/tasks_service.dart';
 import '../domain/task.dart';
@@ -120,6 +121,7 @@ class _TaskDetailPageState extends ConsumerState<TaskDetailPage> {
                 ),
               ],
               _OrganizationSummary(task: task),
+              if (task.reminder != null) _ReminderStateChip(task: task),
               const SizedBox(height: 24),
               Row(
                 children: [
@@ -346,6 +348,71 @@ class _OrganizationSummary extends ConsumerWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+/// Estado de entrega do lembrete (spec 08, seção 3.2).
+class _ReminderStateChip extends ConsumerWidget {
+  const _ReminderStateChip({required this.task});
+
+  final Task task;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context);
+    final coordinator = ref.watch(reminderCoordinatorProvider);
+
+    return FutureBuilder<ReminderDeliveryState>(
+      future: coordinator.deliveryState(task),
+      builder: (context, snapshot) {
+        final state = snapshot.data ?? ReminderDeliveryState.pending;
+        final (label, icon) = switch (state) {
+          ReminderDeliveryState.scheduled => (
+              l10n.reminderStateScheduled,
+              Icons.schedule,
+            ),
+          ReminderDeliveryState.permissionNeeded => (
+              l10n.reminderStatePermission,
+              Icons.notifications_off_outlined,
+            ),
+          ReminderDeliveryState.unavailable => (
+              l10n.reminderStateUnavailable,
+              Icons.phonelink_lock_outlined,
+            ),
+          ReminderDeliveryState.expired => (
+              l10n.reminderStateExpired,
+              Icons.timer_off_outlined,
+            ),
+          ReminderDeliveryState.pending => (
+              l10n.reminderStatePending,
+              Icons.hourglass_empty,
+            ),
+        };
+        final attention = state == ReminderDeliveryState.permissionNeeded ||
+            state == ReminderDeliveryState.unavailable;
+        return Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Chip(
+                avatar: Icon(icon, size: 18),
+                label: Text(label),
+                visualDensity: VisualDensity.compact,
+              ),
+              if (attention && state == ReminderDeliveryState.permissionNeeded)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    l10n.reminderNotificationsDisabled,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

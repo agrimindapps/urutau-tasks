@@ -4,11 +4,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:urutau_tasks/main.dart';
+import 'package:urutau_tasks/src/data/app_database.dart';
 import 'package:urutau_tasks/src/data/providers.dart';
 
-import 'package:urutau_tasks/src/data/app_database.dart';
-
+import 'fake_notification_adapter.dart';
 import 'test_database.dart';
+
+/// Adaptador falso do teste em execução (spec 08).
+FakeNotificationAdapter? lastFakeNotificationAdapter;
 
 /// Banco em memória do teste em execução — permitido reutilizá-lo ao
 /// simular reinícios da árvore sem cair no banco real.
@@ -32,9 +35,14 @@ Future<AppDatabase> urutauWidgetTest(
 
   final database = createMemoryDatabase();
   currentTestDatabase = database;
+  final fakeAdapter = FakeNotificationAdapter();
+  lastFakeNotificationAdapter = fakeAdapter;
   await tester.pumpWidget(
     ProviderScope(
-      overrides: [databaseProvider.overrideWithValue(database)],
+      overrides: [
+        databaseProvider.overrideWithValue(database),
+        notificationAdapterProvider.overrideWithValue(fakeAdapter),
+      ],
       child: const UrutauApp(),
     ),
   );

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/device_format.dart';
 import '../../../data/providers.dart';
+import '../../notifications/presentation/permission_flow.dart';
 import '../../organization/domain/organization.dart';
 import '../../recurrence/domain/recurrence.dart';
 import '../../organization/presentation/name_dialog.dart';
@@ -87,6 +88,12 @@ class _TaskEditorDialogState extends ConsumerState<_TaskEditorDialog> {
   Future<void> _save() async {
     final l10n = AppLocalizations.of(context);
     final tasksService = ref.read(tasksServiceProvider);
+    // Spec 08, CA-01: primeiro lembrete explica e pede autorização
+    // antes de agendar; depois disso nenhum pedido automático (CA-02).
+    if (_reminder != null && widget.task?.reminder == null && mounted) {
+      await runFirstReminderPermissionFlow(context, ref);
+    }
+    if (!mounted) return;
     try {
       if (_isEditing) {
         final task = widget.task!;

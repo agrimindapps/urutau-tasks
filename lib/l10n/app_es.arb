@@ -164,5 +164,15 @@
   "languageEn": "English",
   "languageEs": "Español",
   "languageUpdated": "Idioma actualizado.",
-  "close": "Cerrar"
+  "close": "Cerrar",
+  "reminderStateScheduled": "Programado",
+  "reminderStatePermission": "Permiso necesario",
+  "reminderStateUnavailable": "No disponible en esta plataforma",
+  "reminderStateExpired": "Vencido",
+  "reminderStatePending": "Pendiente de verificación",
+  "reminderPermissionTitle": "Permitir avisos",
+  "reminderPermissionMessage": "Para mostrar recordatorios, la app necesita la autorización del sistema. Puedes rechazarlo: el recordatorio seguirá guardado, sin avisos.",
+  "reminderPermissionConfirm": "Entendido",
+  "reminderNotificationsDisabled": "Avisos desactivados. Activa el permiso en la configuración del sistema o del navegador.",
+  "openTask": "Abrir tarea"
 }

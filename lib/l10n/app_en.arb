@@ -164,5 +164,15 @@
   "languageEn": "English",
   "languageEs": "Español",
   "languageUpdated": "Language updated.",
-  "close": "Close"
+  "close": "Close",
+  "reminderStateScheduled": "Scheduled",
+  "reminderStatePermission": "Permission needed",
+  "reminderStateUnavailable": "Unavailable on this platform",
+  "reminderStateExpired": "Expired",
+  "reminderStatePending": "Pending verification",
+  "reminderPermissionTitle": "Allow notifications",
+  "reminderPermissionMessage": "To show reminders, the app needs system authorization. You can decline: the reminder stays saved, without alerts.",
+  "reminderPermissionConfirm": "Got it",
+  "reminderNotificationsDisabled": "Notifications disabled. Enable permission in system or browser settings.",
+  "openTask": "Open task"
 }

@@ -164,5 +164,15 @@
   "languageEn": "English",
   "languageEs": "Español",
   "languageUpdated": "Idioma atualizado.",
-  "close": "Fechar"
+  "close": "Fechar",
+  "reminderStateScheduled": "Agendado",
+  "reminderStatePermission": "Permissão necessária",
+  "reminderStateUnavailable": "Indisponível nesta plataforma",
+  "reminderStateExpired": "Vencido",
+  "reminderStatePending": "Pendente de verificação",
+  "reminderPermissionTitle": "Permitir avisos",
+  "reminderPermissionMessage": "Para exibir lembretes, o aplicativo precisa da autorização do sistema. Você pode recusar: o lembrete continuará salvo, mas sem avisos.",
+  "reminderPermissionConfirm": "Entendi",
+  "reminderNotificationsDisabled": "Avisos desativados. Ative a permissão nas configurações do sistema ou navegador.",
+  "openTask": "Abrir tarefa"
 }
