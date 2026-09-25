@@ -176,5 +176,10 @@
   "errorWrongPassword": "Wrong password or corrupted file.",
   "errorInvalidFile": "Invalid or incompatible file.",
   "typeBackup": "Encrypted backup",
-  "typeJson": "Readable JSON"
+  "typeJson": "Readable JSON",
+  "settingsTitle": "Settings",
+  "languageSystem": "Automatic (system)",
+  "languagePt": "Português (Brasil)",
+  "languageEn": "English",
+  "languageEs": "Español"
 }

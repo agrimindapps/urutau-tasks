@@ -1,6 +1,7 @@
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../app/locale_preference.dart';
 import '../features/data_transfer/application/data_transfer_service.dart';
 import '../features/data_transfer/data/drift_snapshot_repository.dart';
 import '../features/my_day/application/my_day_service.dart';
@@ -74,6 +75,34 @@ final allSeriesProvider = FutureProvider<List<RecurringSeries>>((ref) {
 final snapshotRepositoryProvider = Provider<DriftSnapshotRepository>((ref) {
   return DriftSnapshotRepository(ref.watch(databaseProvider));
 });
+
+/// Persistência local da preferência de idioma (spec 09, RF-03).
+final localePreferenceStoreProvider = Provider<LocalePreferenceStore>((ref) {
+  return SharedPrefsLocalePreferenceStore();
+});
+
+/// Preferência efetiva: `system` ou `pt-BR`/`en`/`es`.
+final localePreferenceProvider =
+    NotifierProvider<LocalePreferenceNotifier, String>(
+  LocalePreferenceNotifier.new,
+);
+
+class LocalePreferenceNotifier extends Notifier<String> {
+  @override
+  String build() {
+    Future.microtask(() async {
+      final value = await ref.read(localePreferenceStoreProvider).read();
+      state = value;
+    });
+    return kLocaleSystem;
+  }
+
+  /// Aplica imediatamente, sem reinício (spec 09, RF-03).
+  Future<void> set(String value) async {
+    state = value;
+    await ref.read(localePreferenceStoreProvider).write(value);
+  }
+}
 
 final dataTransferServiceProvider = Provider<DataTransferService>((ref) {
   return DataTransferService(ref.watch(snapshotRepositoryProvider));

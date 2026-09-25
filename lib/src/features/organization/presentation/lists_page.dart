@@ -5,6 +5,7 @@ import '../../../data/providers.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../domain/organization.dart';
 import '../domain/organization_repository.dart';
+import '../../../app/presentation/settings_dialog.dart';
 import '../../data_transfer/presentation/data_transfer_page.dart';
 import '../../tasks/presentation/task_errors.dart';
 import 'name_dialog.dart';
@@ -28,6 +29,11 @@ class ListsPage extends ConsumerWidget {
       appBar: AppBar(
         title: Text(l10n.listsTitle),
         actions: [
+          IconButton(
+            tooltip: l10n.settingsTitle,
+            icon: const Icon(Icons.settings),
+            onPressed: () => SettingsDialog.show(context),
+          ),
           IconButton(
             tooltip: l10n.backupTooltip,
             icon: const Icon(Icons.settings_backup_restore),

@@ -553,4 +553,19 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get typeJson => 'JSON legível';
+
+  @override
+  String get settingsTitle => 'Configurações';
+
+  @override
+  String get languageSystem => 'Automático (sistema)';
+
+  @override
+  String get languagePt => 'Português (Brasil)';
+
+  @override
+  String get languageEn => 'English';
+
+  @override
+  String get languageEs => 'Español';
 }

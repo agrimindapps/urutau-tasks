@@ -203,5 +203,10 @@
   "errorWrongPassword": "Senha incorreta ou arquivo corrompido.",
   "errorInvalidFile": "Arquivo inválido ou incompatível.",
   "typeBackup": "Backup criptografado",
-  "typeJson": "JSON legível"
+  "typeJson": "JSON legível",
+  "settingsTitle": "Configurações",
+  "languageSystem": "Automático (sistema)",
+  "languagePt": "Português (Brasil)",
+  "languageEn": "English",
+  "languageEs": "Español"
 }

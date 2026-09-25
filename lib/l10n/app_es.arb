@@ -176,5 +176,10 @@
   "errorWrongPassword": "Contraseña incorrecta o archivo dañado.",
   "errorInvalidFile": "Archivo inválido o incompatible.",
   "typeBackup": "Copia cifrada",
-  "typeJson": "JSON legible"
+  "typeJson": "JSON legible",
+  "settingsTitle": "Configuración",
+  "languageSystem": "Automático (sistema)",
+  "languagePt": "Português (Brasil)",
+  "languageEn": "English",
+  "languageEs": "Español"
 }

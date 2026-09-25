@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:urutau_tasks/src/app/app.dart';
+import 'package:urutau_tasks/src/app/locale_preference.dart';
 import 'package:urutau_tasks/src/data/providers.dart';
 import 'package:urutau_tasks/src/features/my_day/domain/my_day_repository.dart';
 import 'package:urutau_tasks/src/features/organization/domain/organization_repository.dart';
@@ -18,6 +19,7 @@ Future<void> pumpApp(
   required TaskRepository repository,
   OrganizationRepository? organization,
   MyDayRepository? myDay,
+  LocalePreferenceStore? localeStore,
 }) async {
   tester.view.physicalSize = const Size(800, 600);
   tester.view.devicePixelRatio = 1.0;
@@ -33,6 +35,9 @@ Future<void> pumpApp(
           organizationRepositoryProvider.overrideWithValue(organization),
         myDayRepositoryProvider.overrideWithValue(
           myDay ?? InMemoryMyDayRepository(),
+        ),
+        localePreferenceStoreProvider.overrideWithValue(
+          localeStore ?? InMemoryLocalePreferenceStore(),
         ),
       ],
       child: const UrutauApp(),
@@ -60,6 +65,7 @@ Future<void> restartApp(
   required TaskRepository repository,
   OrganizationRepository? organization,
   MyDayRepository? myDay,
+  LocalePreferenceStore? localeStore,
 }) async {
   await tester.pumpWidget(const SizedBox.shrink());
   await tester.pump();
@@ -68,5 +74,6 @@ Future<void> restartApp(
     repository: repository,
     organization: organization,
     myDay: myDay,
+    localeStore: localeStore,
   );
 }

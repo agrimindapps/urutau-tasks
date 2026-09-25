@@ -1161,6 +1161,36 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'JSON legível'**
   String get typeJson;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Configurações'**
+  String get settingsTitle;
+
+  /// No description provided for @languageSystem.
+  ///
+  /// In pt, this message translates to:
+  /// **'Automático (sistema)'**
+  String get languageSystem;
+
+  /// No description provided for @languagePt.
+  ///
+  /// In pt, this message translates to:
+  /// **'Português (Brasil)'**
+  String get languagePt;
+
+  /// No description provided for @languageEn.
+  ///
+  /// In pt, this message translates to:
+  /// **'English'**
+  String get languageEn;
+
+  /// No description provided for @languageEs.
+  ///
+  /// In pt, this message translates to:
+  /// **'Español'**
+  String get languageEs;
 }
 
 class _AppLocalizationsDelegate

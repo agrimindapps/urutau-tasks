@@ -553,4 +553,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get typeJson => 'Readable JSON';
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get languageSystem => 'Automatic (system)';
+
+  @override
+  String get languagePt => 'Português (Brasil)';
+
+  @override
+  String get languageEn => 'English';
+
+  @override
+  String get languageEs => 'Español';
 }
