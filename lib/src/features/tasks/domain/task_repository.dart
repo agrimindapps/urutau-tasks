@@ -13,6 +13,10 @@ abstract class TaskRepository {
 
   Future<Task?> fetchById(String id);
 
+  /// Upsert atômico de várias tarefas em uma única transação
+  /// (spec 06, RF-04: concluir ocorrência + criar próxima).
+  Future<void> saveTasks(Iterable<Task> tasks);
+
   /// Upsert atômico da tarefa e de seu conjunto de subtarefas.
   ///
   /// Subtarefas ausentes em [task] são removidas fisicamente;

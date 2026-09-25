@@ -5,6 +5,7 @@ import 'package:urutau_tasks/src/features/tasks/application/tasks_service.dart';
 import 'package:urutau_tasks/src/features/tasks/domain/task.dart';
 
 import '../../../support/in_memory_my_day_repository.dart';
+import '../../../support/in_memory_recurrence_repository.dart';
 import '../../../support/in_memory_organization_repository.dart';
 import '../../../support/in_memory_task_repository.dart';
 import '../../../support/pump_app.dart';
@@ -27,7 +28,7 @@ void main() {
 
   testWidgets('adiciona tarefa existente e remove sem alterar a tarefa '
       '(CA-09 a CA-12)', (tester) async {
-    final taskService = TasksService(taskStore, myDayStore);
+    final taskService = TasksService(taskStore, myDayStore, InMemoryRecurrenceRepository());
     final task = await taskService.createTask(title: 'Revisar relatório');
 
     await pump(tester);
@@ -76,7 +77,7 @@ void main() {
 
   testWidgets('rollover remove entradas pendentes de dias anteriores (CA-14)',
       (tester) async {
-    final taskService = TasksService(taskStore, myDayStore);
+    final taskService = TasksService(taskStore, myDayStore, InMemoryRecurrenceRepository());
     final old = await taskService.createTask(title: 'De ontem');
     await myDayStore.saveEntry(MyDayEntry.create(
       id: 'old-entry',

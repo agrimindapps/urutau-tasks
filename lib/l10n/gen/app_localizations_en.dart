@@ -299,4 +299,57 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get emptyView => 'Nothing here yet.';
+
+  @override
+  String get recurrenceLabel => 'Recurrence';
+
+  @override
+  String get noRecurrence => 'No recurrence';
+
+  @override
+  String get freqDaily => 'Daily';
+
+  @override
+  String get freqWeekdays => 'Weekdays';
+
+  @override
+  String get freqWeekly => 'Weekly';
+
+  @override
+  String get freqMonthly => 'Monthly';
+
+  @override
+  String get freqAnnual => 'Yearly';
+
+  @override
+  String get cancelSeries => 'Cancel recurrence';
+
+  @override
+  String get cancelSeriesTitle => 'Cancel recurrence?';
+
+  @override
+  String get cancelSeriesMessage =>
+      'New occurrences will not be created. History is preserved.';
+
+  @override
+  String get seriesCancelledNote => 'Recurrence cancelled.';
+
+  @override
+  String get reminderLabel => 'Reminder';
+
+  @override
+  String get noReminder => 'No reminder';
+
+  @override
+  String get clearReminder => 'Remove reminder';
+
+  @override
+  String get setReminder => 'Set reminder';
+
+  @override
+  String get errorReminderPast => 'Choose a time in the future.';
+
+  @override
+  String get errorDueDateRequired =>
+      'Set a due date before enabling recurrence.';
 }

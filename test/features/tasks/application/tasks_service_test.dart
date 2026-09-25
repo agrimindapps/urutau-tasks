@@ -3,6 +3,7 @@ import 'package:urutau_tasks/src/features/tasks/application/tasks_service.dart';
 import 'package:urutau_tasks/src/features/tasks/domain/task.dart';
 
 import '../../../support/in_memory_my_day_repository.dart';
+import '../../../support/in_memory_recurrence_repository.dart';
 import '../../../support/in_memory_task_repository.dart';
 import '../../../support/task_fixtures.dart';
 
@@ -15,7 +16,12 @@ void main() {
   setUp(() {
     repository = InMemoryTaskRepository();
     myDay = InMemoryMyDayRepository();
-    service = TasksService(repository, myDay, clock: () => kTestNow);
+    service = TasksService(
+      repository,
+      myDay,
+      InMemoryRecurrenceRepository(),
+      clock: () => kTestNow,
+    );
   });
 
   test('cria tarefa com posição incremental e título validado', () async {

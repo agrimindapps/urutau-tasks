@@ -172,6 +172,7 @@ class Task {
     this.priority,
     this.dueDate,
     this.reminder,
+    this.seriesId,
   })  : subtasks = List.unmodifiable(_sorted(subtasks)),
         tagIds = List.unmodifiable(tagIds.toSet().toList(growable: false)) {
     if (subtasks.any((s) => s.taskId != id)) {
@@ -192,6 +193,7 @@ class Task {
     TaskPriority? priority,
     String? dueDate,
     DateTime? reminder,
+    String? seriesId,
   }) {
     return Task(
       id: id,
@@ -210,6 +212,7 @@ class Task {
       priority: priority,
       dueDate: dueDate == null ? null : _validateDueDate(dueDate),
       reminder: reminder,
+      seriesId: seriesId,
     );
   }
 
@@ -248,6 +251,9 @@ class Task {
   /// Lembrete como instante UTC (spec 06, RF-12); semântica completa na
   /// fatia da spec 04.
   final DateTime? reminder;
+
+  /// Série recorrente à qual a ocorrência pertence (spec 06, RF-09).
+  final String? seriesId;
 
   /// Subtarefas ordenadas por posição (spec 01, RF-06).
   final List<Subtask> subtasks;
@@ -292,6 +298,8 @@ class Task {
     bool clearDueDate = false,
     DateTime? reminder,
     bool clearReminder = false,
+    String? seriesId,
+    bool clearSeries = false,
   }) {
     return Task(
       id: id,
@@ -313,6 +321,7 @@ class Task {
       priority: clearPriority ? null : (priority ?? this.priority),
       dueDate: clearDueDate ? null : (dueDate ?? this.dueDate),
       reminder: clearReminder ? null : (reminder ?? this.reminder),
+      seriesId: clearSeries ? null : (seriesId ?? this.seriesId),
     );
   }
 
@@ -497,6 +506,14 @@ class Task {
         : _copyWith(reminder: reminder.toUtc(), updatedAt: at);
   }
 
+  /// Associa/remove a série recorrente (spec 04, RF-07/RF-10).
+  Task setSeries(String? seriesId, {DateTime? at}) {
+    _ensureEditable(status);
+    return seriesId == null
+        ? _copyWith(clearSeries: true, updatedAt: at)
+        : _copyWith(seriesId: seriesId, updatedAt: at);
+  }
+
   /// Substitui o conjunto de tags preservando a ordem informada.
   Task setTagIds(List<String> newTagIds, {DateTime? at}) {
     _ensureEditable(status);
@@ -528,6 +545,7 @@ class Task {
         other.priority == priority &&
         other.dueDate == dueDate &&
         other.reminder == reminder &&
+        other.seriesId == seriesId &&
         _listEquals(other.subtasks, subtasks);
   }
 
@@ -548,6 +566,7 @@ class Task {
         priority,
         dueDate,
         reminder,
+        seriesId,
         Object.hashAll(subtasks),
       );
 }

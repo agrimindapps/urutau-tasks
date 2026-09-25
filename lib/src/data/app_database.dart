@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../features/my_day/data/my_day_tables.dart';
+import '../features/recurrence/data/recurrence_tables.dart';
 import '../features/organization/data/organization_tables.dart';
 import '../features/tasks/data/task_tables.dart';
 
@@ -20,6 +21,7 @@ part 'app_database.g.dart';
   Tags,
   TaskTags,
   MyDayEntries,
+  Series,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase(super.executor);
@@ -27,7 +29,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -55,6 +57,11 @@ class AppDatabase extends _$AppDatabase {
             await m.addColumn(tasks, tasks.dueDate);
             await m.addColumn(tasks, tasks.reminder);
             await _createMyDayIndex();
+          }
+          if (from < 4) {
+            // v3 → v4: séries recorrentes (spec 04).
+            await m.createTable(series);
+            await m.addColumn(tasks, tasks.seriesId);
           }
         },
         beforeOpen: (details) async {

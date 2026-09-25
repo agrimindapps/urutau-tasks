@@ -93,5 +93,22 @@
   "dueDateLabel": "Due date",
   "noDueDate": "No due date",
   "clearDueDate": "Remove due date",
-  "emptyView": "Nothing here yet."
+  "emptyView": "Nothing here yet.",
+  "recurrenceLabel": "Recurrence",
+  "noRecurrence": "No recurrence",
+  "freqDaily": "Daily",
+  "freqWeekdays": "Weekdays",
+  "freqWeekly": "Weekly",
+  "freqMonthly": "Monthly",
+  "freqAnnual": "Yearly",
+  "cancelSeries": "Cancel recurrence",
+  "cancelSeriesTitle": "Cancel recurrence?",
+  "cancelSeriesMessage": "New occurrences will not be created. History is preserved.",
+  "seriesCancelledNote": "Recurrence cancelled.",
+  "reminderLabel": "Reminder",
+  "noReminder": "No reminder",
+  "clearReminder": "Remove reminder",
+  "setReminder": "Set reminder",
+  "errorReminderPast": "Choose a time in the future.",
+  "errorDueDateRequired": "Set a due date before enabling recurrence."
 }

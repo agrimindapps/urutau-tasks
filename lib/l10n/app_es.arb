@@ -93,5 +93,22 @@
   "dueDateLabel": "Fecha límite",
   "noDueDate": "Sin fecha límite",
   "clearDueDate": "Quitar fecha límite",
-  "emptyView": "Nada aquí todavía."
+  "emptyView": "Nada aquí todavía.",
+  "recurrenceLabel": "Recurrencia",
+  "noRecurrence": "Sin recurrencia",
+  "freqDaily": "Diaria",
+  "freqWeekdays": "Días laborables",
+  "freqWeekly": "Semanal",
+  "freqMonthly": "Mensual",
+  "freqAnnual": "Anual",
+  "cancelSeries": "Cancelar recurrencia",
+  "cancelSeriesTitle": "¿Cancelar recurrencia?",
+  "cancelSeriesMessage": "No se crearán nuevas ocurrencias. El historial se preserva.",
+  "seriesCancelledNote": "Recurrencia cancelada.",
+  "reminderLabel": "Recordatorio",
+  "noReminder": "Sin recordatorio",
+  "clearReminder": "Quitar recordatorio",
+  "setReminder": "Definir recordatorio",
+  "errorReminderPast": "Elige una hora en el futuro.",
+  "errorDueDateRequired": "Define una fecha límite antes de activar la recurrencia."
 }

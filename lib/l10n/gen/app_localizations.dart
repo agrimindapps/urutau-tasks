@@ -663,6 +663,108 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Nada por aqui ainda.'**
   String get emptyView;
+
+  /// No description provided for @recurrenceLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recorrência'**
+  String get recurrenceLabel;
+
+  /// No description provided for @noRecurrence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem recorrência'**
+  String get noRecurrence;
+
+  /// No description provided for @freqDaily.
+  ///
+  /// In pt, this message translates to:
+  /// **'Diária'**
+  String get freqDaily;
+
+  /// No description provided for @freqWeekdays.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dias úteis'**
+  String get freqWeekdays;
+
+  /// No description provided for @freqWeekly.
+  ///
+  /// In pt, this message translates to:
+  /// **'Semanal'**
+  String get freqWeekly;
+
+  /// No description provided for @freqMonthly.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mensal'**
+  String get freqMonthly;
+
+  /// No description provided for @freqAnnual.
+  ///
+  /// In pt, this message translates to:
+  /// **'Anual'**
+  String get freqAnnual;
+
+  /// No description provided for @cancelSeries.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cancelar recorrência'**
+  String get cancelSeries;
+
+  /// No description provided for @cancelSeriesTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cancelar recorrência?'**
+  String get cancelSeriesTitle;
+
+  /// No description provided for @cancelSeriesMessage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Novas ocorrências não serão criadas. O histórico é preservado.'**
+  String get cancelSeriesMessage;
+
+  /// No description provided for @seriesCancelledNote.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recorrência cancelada.'**
+  String get seriesCancelledNote;
+
+  /// No description provided for @reminderLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lembrete'**
+  String get reminderLabel;
+
+  /// No description provided for @noReminder.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem lembrete'**
+  String get noReminder;
+
+  /// No description provided for @clearReminder.
+  ///
+  /// In pt, this message translates to:
+  /// **'Remover lembrete'**
+  String get clearReminder;
+
+  /// No description provided for @setReminder.
+  ///
+  /// In pt, this message translates to:
+  /// **'Definir lembrete'**
+  String get setReminder;
+
+  /// No description provided for @errorReminderPast.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha um horário no futuro.'**
+  String get errorReminderPast;
+
+  /// No description provided for @errorDueDateRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Defina um prazo antes de ativar a recorrência.'**
+  String get errorDueDateRequired;
 }
 
 class _AppLocalizationsDelegate

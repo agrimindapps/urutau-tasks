@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../../organization/data/organization_tables.dart';
+import '../../recurrence/data/recurrence_tables.dart';
 
 /// Tabelas de tarefas e subtarefas (esquema v1; spec 06, RF-05/RF-06).
 @DataClassName('TaskRow')
@@ -40,6 +41,9 @@ class Tasks extends Table {
 
   /// Lembrete como instante UTC (spec 06, RF-12).
   DateTimeColumn get reminder => dateTime().nullable()();
+
+  /// Série recorrente da ocorrência (spec 06, RF-09).
+  TextColumn get seriesId => text().nullable().references(Series, #id)();
 
   @override
   Set<Column> get primaryKey => {id};

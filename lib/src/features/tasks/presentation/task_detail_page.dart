@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/providers.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../my_day/domain/my_day.dart';
+import '../../recurrence/domain/recurrence.dart';
 import '../../organization/domain/organization_repository.dart';
 import '../domain/task.dart';
 import 'task_confirm.dart';
@@ -89,10 +89,11 @@ class _TaskDetailBody extends ConsumerWidget {
           ],
         ],
       ),
-      body: ListView(
-        scrollCacheExtent: const ScrollCacheExtent.pixels(1200),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        children: [
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           if (trashed)
             Card(
               child: Padding(
@@ -128,8 +129,9 @@ class _TaskDetailBody extends ConsumerWidget {
           const Divider(),
           _OrganizationSection(task: task),
           const Divider(),
-          _SubtasksSection(task: task),
-        ],
+            _SubtasksSection(task: task),
+          ],
+        ),
       ),
     );
   }
@@ -374,7 +376,8 @@ class _SubtaskRenameDialogState extends State<_SubtaskRenameDialog> {
   }
 }
 
-/// Seção de prioridade e prazo (escopo MVP 3.3; spec 06, RF-11).
+/// Seção de prioridade, prazo, lembrete e recorrência
+/// (escopo MVP 3.3; spec 04, RF-01 a RF-13).
 class _ScheduleSection extends ConsumerWidget {
   const _ScheduleSection({required this.task});
 
@@ -385,6 +388,7 @@ class _ScheduleSection extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final trashed = task.isTrashed;
     final service = ref.read(tasksServiceProvider);
+    final recurrence = ref.watch(recurrenceServiceProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -421,6 +425,7 @@ class _ScheduleSection extends ConsumerWidget {
               ),
             ),
             TextButton(
+              key: const Key('due-date-button'),
               onPressed: trashed
                   ? null
                   : () async {
@@ -451,8 +456,167 @@ class _ScheduleSection extends ConsumerWidget {
               ),
           ],
         ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                task.reminder == null
+                    ? l10n.noReminder
+                    : '${l10n.reminderLabel}: ${_formatReminder(task.reminder!)}',
+              ),
+            ),
+            TextButton(
+              key: const Key('reminder-button'),
+              onPressed: trashed
+                  ? null
+                  : () async {
+                      final reminder =
+                          await _pickReminder(context, task.reminder);
+                      if (reminder == null || !context.mounted) return;
+                      await runTaskAction(context, () async {
+                        await service.setReminder(task.id, reminder);
+                      });
+                    },
+              child: Text(l10n.setReminder),
+            ),
+            if (task.reminder != null)
+              IconButton(
+                tooltip: l10n.clearReminder,
+                icon: const Icon(Icons.notifications_off_outlined),
+                onPressed: trashed
+                    ? null
+                    : () => runTaskAction(context, () async {
+                          await service.setReminder(task.id, null);
+                        }),
+              ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        FutureBuilder<RecurringSeries?>(
+          future: task.seriesId == null
+              ? Future<RecurringSeries?>.value(null)
+              : recurrence.fetchSeries(task.seriesId!),
+          builder: (context, snapshot) {
+            final series = snapshot.data;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DropdownButtonFormField<RecurrenceFrequency?>(
+                  key: ValueKey('recurrence-picker-${task.id}'),
+                  initialValue: series?.frequency,
+                  decoration: InputDecoration(labelText: l10n.recurrenceLabel),
+                  items: [
+                    DropdownMenuItem<RecurrenceFrequency?>(
+                      value: null,
+                      child: Text(l10n.noRecurrence),
+                    ),
+                    for (final frequency in RecurrenceFrequency.values)
+                      DropdownMenuItem<RecurrenceFrequency?>(
+                        value: frequency,
+                        child: Text(_frequencyLabel(l10n, frequency)),
+                      ),
+                  ],
+                  onChanged: trashed
+                      ? null
+                      : (value) => runTaskAction(context, () async {
+                            if (value == null) return;
+                            if (task.seriesId == null) {
+                              await ref
+                                  .read(recurrenceServiceProvider)
+                                  .createSeries(
+                                    task.id,
+                                    frequency: value,
+                                  );
+                            } else {
+                              await ref
+                                  .read(recurrenceServiceProvider)
+                                  .changeFrequency(
+                                    task.seriesId!,
+                                    frequency: value,
+                                  );
+                            }
+                          }),
+                ),
+                if (series != null && series.cancelled)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(l10n.seriesCancelledNote),
+                  ),
+                if (series != null && !series.cancelled)
+                  TextButton(
+                    key: const Key('cancel-series-button'),
+                    onPressed: () async {
+                      final confirmed = await _confirmCancelSeries(context);
+                      if (!confirmed || !context.mounted) return;
+                      await runTaskAction(context, () async {
+                        await ref
+                            .read(recurrenceServiceProvider)
+                            .cancelSeries(series.id);
+                      });
+                    },
+                    child: Text(l10n.cancelSeries),
+                  ),
+              ],
+            );
+          },
+        ),
       ],
     );
+  }
+
+  String _formatReminder(DateTime instant) {
+    final local = instant.toLocal();
+    final y = local.year.toString().padLeft(4, '0');
+    final m = local.month.toString().padLeft(2, '0');
+    final d = local.day.toString().padLeft(2, '0');
+    final h = local.hour.toString().padLeft(2, '0');
+    final min = local.minute.toString().padLeft(2, '0');
+    return '$y-$m-$d $h:$min';
+  }
+
+  Future<DateTime?> _pickReminder(
+    BuildContext context,
+    DateTime? current,
+  ) async {
+    final now = DateTime.now();
+    final initialDate = current?.toLocal() ?? now;
+    final date = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(now.year - 1),
+      lastDate: DateTime(now.year + 5),
+    );
+    if (date == null || !context.mounted) return null;
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(initialDate),
+    );
+    if (time == null) return null;
+    return DateTime(date.year, date.month, date.day, time.hour, time.minute)
+        .toUtc();
+  }
+
+  Future<bool> _confirmCancelSeries(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.cancelSeriesTitle),
+        content: Text(l10n.cancelSeriesMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(l10n.cancelSeries),
+          ),
+        ],
+      ),
+    );
+    return confirmed ?? false;
   }
 
   String _priorityLabel(AppLocalizations l10n, TaskPriority priority) {
@@ -461,6 +625,19 @@ class _ScheduleSection extends ConsumerWidget {
       TaskPriority.medium => l10n.priorityMedium,
       TaskPriority.high => l10n.priorityHigh,
       TaskPriority.urgent => l10n.priorityUrgent,
+    };
+  }
+
+  String _frequencyLabel(
+    AppLocalizations l10n,
+    RecurrenceFrequency frequency,
+  ) {
+    return switch (frequency) {
+      RecurrenceFrequency.daily => l10n.freqDaily,
+      RecurrenceFrequency.weekdays => l10n.freqWeekdays,
+      RecurrenceFrequency.weekly => l10n.freqWeekly,
+      RecurrenceFrequency.monthly => l10n.freqMonthly,
+      RecurrenceFrequency.annual => l10n.freqAnnual,
     };
   }
 }

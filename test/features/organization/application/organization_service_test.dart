@@ -4,6 +4,7 @@ import 'package:urutau_tasks/src/features/organization/domain/organization.dart'
 import 'package:urutau_tasks/src/features/tasks/application/tasks_service.dart';
 
 import '../../../support/in_memory_my_day_repository.dart';
+import '../../../support/in_memory_recurrence_repository.dart';
 import '../../../support/in_memory_organization_repository.dart';
 import '../../../support/in_memory_task_repository.dart';
 import '../../../support/task_fixtures.dart';
@@ -25,6 +26,7 @@ void main() {
     tasksService = TasksService(
       tasks,
       InMemoryMyDayRepository(),
+      InMemoryRecurrenceRepository(),
       clock: () => kTestNow,
     );
   });

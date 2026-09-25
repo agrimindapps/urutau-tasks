@@ -1,5 +1,8 @@
 import '../../../core/ids.dart';
+import '../../my_day/domain/my_day.dart';
 import '../../my_day/domain/my_day_repository.dart';
+import '../../recurrence/domain/recurrence.dart';
+import '../../recurrence/domain/recurrence_repository.dart';
 import '../domain/task.dart';
 import '../domain/task_repository.dart';
 
@@ -7,12 +10,19 @@ import '../domain/task_repository.dart';
 ///
 /// Regras de transição no domínio; orquestração e persistência aqui.
 /// Concluir/excluir remove as entradas do My Day (spec 03, RF-05/RF-09).
+/// Concluir ocorrência recorrente cria a próxima em uma transação
+/// (spec 04, RF-11).
 class TasksService {
-  TasksService(this._repository, this._myDay, {DateTime Function()? clock})
-      : _clock = clock ?? DateTime.now;
+  TasksService(
+    this._repository,
+    this._myDay,
+    this._recurrence, {
+    DateTime Function()? clock,
+  }) : _clock = clock ?? DateTime.now;
 
   final TaskRepository _repository;
   final MyDayRepository _myDay;
+  final RecurrenceRepository _recurrence;
   final DateTime Function() _clock;
 
   Future<List<Task>> fetchTasks() => _repository.fetchAll();
@@ -46,12 +56,36 @@ class TasksService {
   }
 
   /// Conclui sem alterar subtarefas (spec 01, RF-04). Pendências não bloqueiam.
-  /// Sai do My Day (spec 03, RF-09).
+  /// Sai do My Day (spec 03, RF-09) e, se recorrente, gera a próxima
+  /// ocorrência futura na mesma transação (spec 04, RF-11).
   Future<Task> completeTask(String id) async {
     final task = await _require(id);
     final updated = task.complete(at: _clock());
-    await _repository.saveTask(updated);
     await _myDay.removeForTask(id);
+
+    Task? next;
+    final seriesId = task.seriesId;
+    if (seriesId != null) {
+      final series = await _recurrence.fetchSeries(seriesId);
+      if (series != null) {
+        final existing = await _repository.fetchAll();
+        next = buildNextOccurrence(
+          completed: updated,
+          series: series,
+          today: localDateKey(_clock()),
+          now: _clock(),
+          id: newId(),
+          position: _nextPosition(existing),
+        );
+      }
+    }
+
+    if (next != null) {
+      // Concluir ocorrência + criar próxima é atômico (spec 06, RF-04).
+      await _repository.saveTasks([updated, next]);
+    } else {
+      await _repository.saveTask(updated);
+    }
     return updated;
   }
 
@@ -145,16 +179,32 @@ class TasksService {
   }
 
   /// Define o prazo como data ISO de calendário local (spec 06, RF-11).
+  ///
+  /// Em ocorrência recorrente, a série passa a valer da ocorrência atual
+  /// em diante, sem reescrever o histórico (spec 04, RF-12).
   Future<Task> setDueDate(String id, String? dueDate) async {
     final task = await _require(id);
     final updated = task.setDueDate(dueDate, at: _clock());
+    final seriesId = task.seriesId;
+    if (seriesId != null) {
+      final series = await _recurrence.fetchSeries(seriesId);
+      if (series != null && dueDate != null) {
+        await _recurrence.saveSeries(series.copyWith(baseDate: dueDate));
+      }
+    }
     await _repository.saveTask(updated);
     return updated;
   }
 
   /// Define o lembrete como instante UTC (spec 06, RF-12).
+  ///
+  /// Lembrete no passado é rejeitado (spec 04, RF-04); lembretes já
+  /// vencidos preservados não são revalidados (RF-05).
   Future<Task> setReminder(String id, DateTime? reminder) async {
     final task = await _require(id);
+    if (reminder != null && !reminder.isAfter(_clock())) {
+      throw const RecurrenceException(RecurrenceFailure.reminderInPast);
+    }
     final updated = task.setReminder(reminder, at: _clock());
     await _repository.saveTask(updated);
     return updated;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../organization/domain/organization.dart';
+import '../../recurrence/domain/recurrence.dart';
 import '../domain/task.dart';
 
 /// Executa uma ação de serviço traduzindo falhas de domínio em avisos.
@@ -37,6 +38,16 @@ Future<void> runTaskAction(
       OrganizationFailure.unknownGroup ||
       OrganizationFailure.unknownCategory ||
       OrganizationFailure.unknownTag =>
+        l10n.errorUnexpected,
+    };
+    _showError(context, message);
+  } on RecurrenceException catch (error) {
+    if (!context.mounted) return;
+    final message = switch (error.failure) {
+      RecurrenceFailure.reminderInPast => l10n.errorReminderPast,
+      RecurrenceFailure.dueDateRequired => l10n.errorDueDateRequired,
+      RecurrenceFailure.unknownSeries ||
+      RecurrenceFailure.seriesCancelled =>
         l10n.errorUnexpected,
     };
     _showError(context, message);

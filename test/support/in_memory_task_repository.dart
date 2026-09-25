@@ -35,6 +35,14 @@ class InMemoryTaskRepository implements TaskRepository {
   }
 
   @override
+  Future<void> saveTasks(Iterable<Task> tasks) async {
+    for (final task in tasks) {
+      _tasks[task.id] = task;
+    }
+    _notify();
+  }
+
+  @override
   Future<void> removeSubtask(String subtaskId) async {
     for (final entry in _tasks.entries.toList()) {
       final task = entry.value;

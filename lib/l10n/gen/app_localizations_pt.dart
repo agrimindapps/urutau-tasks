@@ -299,4 +299,57 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get emptyView => 'Nada por aqui ainda.';
+
+  @override
+  String get recurrenceLabel => 'Recorrência';
+
+  @override
+  String get noRecurrence => 'Sem recorrência';
+
+  @override
+  String get freqDaily => 'Diária';
+
+  @override
+  String get freqWeekdays => 'Dias úteis';
+
+  @override
+  String get freqWeekly => 'Semanal';
+
+  @override
+  String get freqMonthly => 'Mensal';
+
+  @override
+  String get freqAnnual => 'Anual';
+
+  @override
+  String get cancelSeries => 'Cancelar recorrência';
+
+  @override
+  String get cancelSeriesTitle => 'Cancelar recorrência?';
+
+  @override
+  String get cancelSeriesMessage =>
+      'Novas ocorrências não serão criadas. O histórico é preservado.';
+
+  @override
+  String get seriesCancelledNote => 'Recorrência cancelada.';
+
+  @override
+  String get reminderLabel => 'Lembrete';
+
+  @override
+  String get noReminder => 'Sem lembrete';
+
+  @override
+  String get clearReminder => 'Remover lembrete';
+
+  @override
+  String get setReminder => 'Definir lembrete';
+
+  @override
+  String get errorReminderPast => 'Escolha um horário no futuro.';
+
+  @override
+  String get errorDueDateRequired =>
+      'Defina um prazo antes de ativar a recorrência.';
 }

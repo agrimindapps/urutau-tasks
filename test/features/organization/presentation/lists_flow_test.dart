@@ -4,6 +4,7 @@ import 'package:urutau_tasks/src/features/organization/application/organization_
 import 'package:urutau_tasks/src/features/tasks/application/tasks_service.dart';
 
 import '../../../support/in_memory_my_day_repository.dart';
+import '../../../support/in_memory_recurrence_repository.dart';
 import '../../../support/in_memory_organization_repository.dart';
 import '../../../support/in_memory_task_repository.dart';
 import '../../../support/pump_app.dart';
@@ -60,7 +61,7 @@ void main() {
   testWidgets('excluir lista com tarefas exige destino e migra '
       '(CA-07, CA-08)', (tester) async {
     final orgService = OrganizationService(orgStore, taskStore);
-    final taskService = TasksService(taskStore, InMemoryMyDayRepository());
+    final taskService = TasksService(taskStore, InMemoryMyDayRepository(), InMemoryRecurrenceRepository());
     final source = await orgService.createList(name: 'Origem');
     await orgService.createList(name: 'Destino');
     var task = await taskService.createTask(title: 'Migrada');
@@ -92,7 +93,7 @@ void main() {
   testWidgets('sem outra lista a exclusão fica bloqueada (RF-06)',
       (tester) async {
     final orgService = OrganizationService(orgStore, taskStore);
-    final taskService = TasksService(taskStore, InMemoryMyDayRepository());
+    final taskService = TasksService(taskStore, InMemoryMyDayRepository(), InMemoryRecurrenceRepository());
     final list = await orgService.createList(name: 'Única');
     final task = await taskService.createTask(title: 'T');
     await orgService.assignListToTask(task.id, list.id);
@@ -133,6 +134,7 @@ void main() {
     final taskService = TasksService(
       taskStore,
       InMemoryMyDayRepository(),
+      InMemoryRecurrenceRepository(),
       clock: () => kTestNow,
     );
     await orgService.createCategory(name: 'Trabalho');

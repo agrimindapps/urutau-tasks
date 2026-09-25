@@ -2,6 +2,9 @@ import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../features/my_day/application/my_day_service.dart';
+import '../features/recurrence/application/recurrence_service.dart';
+import '../features/recurrence/data/drift_recurrence_repository.dart';
+import '../features/recurrence/domain/recurrence_repository.dart';
 import '../features/my_day/data/drift_my_day_repository.dart';
 import '../features/my_day/domain/my_day.dart';
 import '../features/my_day/domain/my_day_repository.dart';
@@ -41,10 +44,22 @@ final myDayRepositoryProvider = Provider<MyDayRepository>((ref) {
   return DriftMyDayRepository(ref.watch(databaseProvider));
 });
 
+final recurrenceRepositoryProvider = Provider<RecurrenceRepository>((ref) {
+  return DriftRecurrenceRepository(ref.watch(databaseProvider));
+});
+
 final tasksServiceProvider = Provider<TasksService>((ref) {
   return TasksService(
     ref.watch(taskRepositoryProvider),
     ref.watch(myDayRepositoryProvider),
+    ref.watch(recurrenceRepositoryProvider),
+  );
+});
+
+final recurrenceServiceProvider = Provider<RecurrenceService>((ref) {
+  return RecurrenceService(
+    ref.watch(recurrenceRepositoryProvider),
+    ref.watch(taskRepositoryProvider),
   );
 });
 

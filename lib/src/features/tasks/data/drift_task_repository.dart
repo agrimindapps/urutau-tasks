@@ -88,35 +88,46 @@ class DriftTaskRepository implements TaskRepository {
   }
 
   @override
+  Future<void> saveTasks(Iterable<Task> tasks) async {
+    await _db.transaction(() async {
+      for (final task in tasks) {
+        await _saveTaskInCurrentTransaction(task);
+      }
+    });
+  }
+
+  @override
   Future<void> saveTask(Task task) async {
     // Escrita composta atômica (spec 06, RF-04): tarefa + subtarefas + tags.
     await _db.transaction(() async {
-      await _db.into(_db.tasks).insertOnConflictUpdate(_toCompanion(task));
-      final existing = await (_db.select(_db.subtasks)
-            ..where((s) => s.taskId.equals(task.id)))
-          .get();
-      final keep = {for (final s in task.subtasks) s.id};
-      for (final row in existing) {
-        if (!keep.contains(row.id)) {
-          await (_db.delete(_db.subtasks)
-                ..where((s) => s.id.equals(row.id)))
-              .go();
-        }
-      }
-      for (final subtask in task.subtasks) {
-        await _db
-            .into(_db.subtasks)
-            .insertOnConflictUpdate(_toSubtaskCompanion(subtask));
-      }
-      await (_db.delete(_db.taskTags)
-            ..where((t) => t.taskId.equals(task.id)))
-          .go();
-      for (final tagId in task.tagIds) {
-        await _db.into(_db.taskTags).insertOnConflictUpdate(
-              TaskTagsCompanion.insert(taskId: task.id, tagId: tagId),
-            );
-      }
+      await _saveTaskInCurrentTransaction(task);
     });
+  }
+
+  Future<void> _saveTaskInCurrentTransaction(Task task) async {
+    await _db.into(_db.tasks).insertOnConflictUpdate(_toCompanion(task));
+    final existing = await (_db.select(_db.subtasks)
+          ..where((s) => s.taskId.equals(task.id)))
+        .get();
+    final keep = {for (final s in task.subtasks) s.id};
+    for (final row in existing) {
+      if (!keep.contains(row.id)) {
+        await (_db.delete(_db.subtasks)..where((s) => s.id.equals(row.id)))
+            .go();
+      }
+    }
+    for (final subtask in task.subtasks) {
+      await _db
+          .into(_db.subtasks)
+          .insertOnConflictUpdate(_toSubtaskCompanion(subtask));
+    }
+    await (_db.delete(_db.taskTags)..where((t) => t.taskId.equals(task.id)))
+        .go();
+    for (final tagId in task.tagIds) {
+      await _db.into(_db.taskTags).insertOnConflictUpdate(
+            TaskTagsCompanion.insert(taskId: task.id, tagId: tagId),
+          );
+    }
   }
 
   @override
@@ -145,6 +156,11 @@ class DriftTaskRepository implements TaskRepository {
       listId: row.listId,
       categoryId: row.categoryId,
       tagIds: tagIds,
+      priority: _priorityFromName(row.priority),
+      dueDate: row.dueDate,
+      // Instante UTC (spec 06, RF-12), independente do fuso do dispositivo.
+      reminder: row.reminder?.toUtc(),
+      seriesId: row.seriesId,
     );
   }
 
@@ -171,6 +187,10 @@ class DriftTaskRepository implements TaskRepository {
       position: Value(task.position),
       listId: Value(task.listId),
       categoryId: Value(task.categoryId),
+      priority: Value(task.priority?.name),
+      dueDate: Value(task.dueDate),
+      reminder: Value(task.reminder),
+      seriesId: Value(task.seriesId),
     );
   }
 
@@ -181,6 +201,14 @@ class DriftTaskRepository implements TaskRepository {
       description: subtask.description,
       isCompleted: Value(subtask.isCompleted),
       position: Value(subtask.position),
+    );
+  }
+
+  TaskPriority? _priorityFromName(String? name) {
+    if (name == null) return null;
+    return TaskPriority.values.firstWhere(
+      (p) => p.name == name,
+      orElse: () => throw StateError('Prioridade desconhecida: $name'),
     );
   }
 
