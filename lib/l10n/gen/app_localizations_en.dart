@@ -454,4 +454,103 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noTags => 'No tags';
+
+  @override
+  String get backupTooltip => 'Backup and data';
+
+  @override
+  String get backupTitle => 'Backup and data';
+
+  @override
+  String get exportBackup => 'Export encrypted backup';
+
+  @override
+  String get exportJson => 'Export readable JSON';
+
+  @override
+  String get restoreBackup => 'Restore backup';
+
+  @override
+  String get importJson => 'Import JSON';
+
+  @override
+  String get passwordLabel => 'Password';
+
+  @override
+  String get confirmPasswordLabel => 'Confirm password';
+
+  @override
+  String get passwordRequired => 'Enter a password.';
+
+  @override
+  String get passwordMismatch => 'Passwords do not match.';
+
+  @override
+  String get backupWarning =>
+      'The password is not stored. Without it, the backup is inaccessible.';
+
+  @override
+  String get jsonWarning =>
+      'The readable file contains your personal data unprotected.';
+
+  @override
+  String get replaceWarning =>
+      'All current data will be replaced. This action cannot be undone.';
+
+  @override
+  String get confirmReplace => 'Replace everything';
+
+  @override
+  String get summaryTitle => 'File summary';
+
+  @override
+  String get summaryExportedAt => 'Exported at';
+
+  @override
+  String get summaryTasks => 'Tasks';
+
+  @override
+  String get summaryActive => 'Active';
+
+  @override
+  String get summaryCompleted => 'Completed';
+
+  @override
+  String get summaryTrash => 'In trash';
+
+  @override
+  String get summarySubtasks => 'Steps';
+
+  @override
+  String get summaryLists => 'Lists';
+
+  @override
+  String get summaryGroups => 'Groups';
+
+  @override
+  String get summaryCategories => 'Categories';
+
+  @override
+  String get summaryTags => 'Tags';
+
+  @override
+  String get summarySeries => 'Series';
+
+  @override
+  String get summaryMyDay => 'My Day entries';
+
+  @override
+  String get fileSaved => 'File saved.';
+
+  @override
+  String get errorWrongPassword => 'Wrong password or corrupted file.';
+
+  @override
+  String get errorInvalidFile => 'Invalid or incompatible file.';
+
+  @override
+  String get typeBackup => 'Encrypted backup';
+
+  @override
+  String get typeJson => 'Readable JSON';
 }

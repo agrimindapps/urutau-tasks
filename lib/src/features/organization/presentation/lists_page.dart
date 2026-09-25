@@ -5,6 +5,7 @@ import '../../../data/providers.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../domain/organization.dart';
 import '../domain/organization_repository.dart';
+import '../../data_transfer/presentation/data_transfer_page.dart';
 import '../../tasks/presentation/task_errors.dart';
 import 'name_dialog.dart';
 
@@ -24,7 +25,20 @@ class ListsPage extends ConsumerWidget {
     final organization = ref.watch(organizationProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.listsTitle)),
+      appBar: AppBar(
+        title: Text(l10n.listsTitle),
+        actions: [
+          IconButton(
+            tooltip: l10n.backupTooltip,
+            icon: const Icon(Icons.settings_backup_restore),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => const DataTransferPage(),
+              ),
+            ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         tooltip: l10n.newListTooltip,
         onPressed: () => _showCreateMenu(context, ref),

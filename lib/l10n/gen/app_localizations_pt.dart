@@ -454,4 +454,103 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get noTags => 'Sem tags';
+
+  @override
+  String get backupTooltip => 'Backup e dados';
+
+  @override
+  String get backupTitle => 'Backup e dados';
+
+  @override
+  String get exportBackup => 'Exportar backup criptografado';
+
+  @override
+  String get exportJson => 'Exportar JSON legível';
+
+  @override
+  String get restoreBackup => 'Restaurar backup';
+
+  @override
+  String get importJson => 'Importar JSON';
+
+  @override
+  String get passwordLabel => 'Senha';
+
+  @override
+  String get confirmPasswordLabel => 'Confirmar senha';
+
+  @override
+  String get passwordRequired => 'Digite uma senha.';
+
+  @override
+  String get passwordMismatch => 'As senhas não conferem.';
+
+  @override
+  String get backupWarning =>
+      'A senha não é armazenada. Sem ela, o backup é inacessível.';
+
+  @override
+  String get jsonWarning =>
+      'O arquivo legível contém seus dados pessoais sem proteção.';
+
+  @override
+  String get replaceWarning =>
+      'Todos os dados atuais serão substituídos. Esta ação não pode ser desfeita.';
+
+  @override
+  String get confirmReplace => 'Substituir tudo';
+
+  @override
+  String get summaryTitle => 'Resumo do arquivo';
+
+  @override
+  String get summaryExportedAt => 'Exportado em';
+
+  @override
+  String get summaryTasks => 'Tarefas';
+
+  @override
+  String get summaryActive => 'Ativas';
+
+  @override
+  String get summaryCompleted => 'Concluídas';
+
+  @override
+  String get summaryTrash => 'Na lixeira';
+
+  @override
+  String get summarySubtasks => 'Etapas';
+
+  @override
+  String get summaryLists => 'Listas';
+
+  @override
+  String get summaryGroups => 'Grupos';
+
+  @override
+  String get summaryCategories => 'Categorias';
+
+  @override
+  String get summaryTags => 'Tags';
+
+  @override
+  String get summarySeries => 'Séries';
+
+  @override
+  String get summaryMyDay => 'Entradas do Meu dia';
+
+  @override
+  String get fileSaved => 'Arquivo salvo.';
+
+  @override
+  String get errorWrongPassword => 'Senha incorreta ou arquivo corrompido.';
+
+  @override
+  String get errorInvalidFile => 'Arquivo inválido ou incompatível.';
+
+  @override
+  String get typeBackup => 'Backup criptografado';
+
+  @override
+  String get typeJson => 'JSON legível';
 }

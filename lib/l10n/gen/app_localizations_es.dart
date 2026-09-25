@@ -455,4 +455,103 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get noTags => 'Sin etiquetas';
+
+  @override
+  String get backupTooltip => 'Copia de seguridad y datos';
+
+  @override
+  String get backupTitle => 'Copia de seguridad y datos';
+
+  @override
+  String get exportBackup => 'Exportar copia cifrada';
+
+  @override
+  String get exportJson => 'Exportar JSON legible';
+
+  @override
+  String get restoreBackup => 'Restaurar copia';
+
+  @override
+  String get importJson => 'Importar JSON';
+
+  @override
+  String get passwordLabel => 'Contraseña';
+
+  @override
+  String get confirmPasswordLabel => 'Confirmar contraseña';
+
+  @override
+  String get passwordRequired => 'Introduce una contraseña.';
+
+  @override
+  String get passwordMismatch => 'Las contraseñas no coinciden.';
+
+  @override
+  String get backupWarning =>
+      'La contraseña no se guarda. Sin ella, la copia es inaccesible.';
+
+  @override
+  String get jsonWarning =>
+      'El archivo legible contiene tus datos personales sin protección.';
+
+  @override
+  String get replaceWarning =>
+      'Todos los datos actuales serán reemplazados. Esta acción no se puede deshacer.';
+
+  @override
+  String get confirmReplace => 'Reemplazar todo';
+
+  @override
+  String get summaryTitle => 'Resumen del archivo';
+
+  @override
+  String get summaryExportedAt => 'Exportado el';
+
+  @override
+  String get summaryTasks => 'Tareas';
+
+  @override
+  String get summaryActive => 'Activas';
+
+  @override
+  String get summaryCompleted => 'Completadas';
+
+  @override
+  String get summaryTrash => 'En la papelera';
+
+  @override
+  String get summarySubtasks => 'Pasos';
+
+  @override
+  String get summaryLists => 'Listas';
+
+  @override
+  String get summaryGroups => 'Grupos';
+
+  @override
+  String get summaryCategories => 'Categorías';
+
+  @override
+  String get summaryTags => 'Etiquetas';
+
+  @override
+  String get summarySeries => 'Series';
+
+  @override
+  String get summaryMyDay => 'Entradas de Mi día';
+
+  @override
+  String get fileSaved => 'Archivo guardado.';
+
+  @override
+  String get errorWrongPassword => 'Contraseña incorrecta o archivo dañado.';
+
+  @override
+  String get errorInvalidFile => 'Archivo inválido o incompatible.';
+
+  @override
+  String get typeBackup => 'Copia cifrada';
+
+  @override
+  String get typeJson => 'JSON legible';
 }

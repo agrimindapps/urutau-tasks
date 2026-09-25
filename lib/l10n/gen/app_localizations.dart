@@ -969,6 +969,198 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Sem tags'**
   String get noTags;
+
+  /// No description provided for @backupTooltip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Backup e dados'**
+  String get backupTooltip;
+
+  /// No description provided for @backupTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Backup e dados'**
+  String get backupTitle;
+
+  /// No description provided for @exportBackup.
+  ///
+  /// In pt, this message translates to:
+  /// **'Exportar backup criptografado'**
+  String get exportBackup;
+
+  /// No description provided for @exportJson.
+  ///
+  /// In pt, this message translates to:
+  /// **'Exportar JSON legível'**
+  String get exportJson;
+
+  /// No description provided for @restoreBackup.
+  ///
+  /// In pt, this message translates to:
+  /// **'Restaurar backup'**
+  String get restoreBackup;
+
+  /// No description provided for @importJson.
+  ///
+  /// In pt, this message translates to:
+  /// **'Importar JSON'**
+  String get importJson;
+
+  /// No description provided for @passwordLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Senha'**
+  String get passwordLabel;
+
+  /// No description provided for @confirmPasswordLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar senha'**
+  String get confirmPasswordLabel;
+
+  /// No description provided for @passwordRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Digite uma senha.'**
+  String get passwordRequired;
+
+  /// No description provided for @passwordMismatch.
+  ///
+  /// In pt, this message translates to:
+  /// **'As senhas não conferem.'**
+  String get passwordMismatch;
+
+  /// No description provided for @backupWarning.
+  ///
+  /// In pt, this message translates to:
+  /// **'A senha não é armazenada. Sem ela, o backup é inacessível.'**
+  String get backupWarning;
+
+  /// No description provided for @jsonWarning.
+  ///
+  /// In pt, this message translates to:
+  /// **'O arquivo legível contém seus dados pessoais sem proteção.'**
+  String get jsonWarning;
+
+  /// No description provided for @replaceWarning.
+  ///
+  /// In pt, this message translates to:
+  /// **'Todos os dados atuais serão substituídos. Esta ação não pode ser desfeita.'**
+  String get replaceWarning;
+
+  /// No description provided for @confirmReplace.
+  ///
+  /// In pt, this message translates to:
+  /// **'Substituir tudo'**
+  String get confirmReplace;
+
+  /// No description provided for @summaryTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Resumo do arquivo'**
+  String get summaryTitle;
+
+  /// No description provided for @summaryExportedAt.
+  ///
+  /// In pt, this message translates to:
+  /// **'Exportado em'**
+  String get summaryExportedAt;
+
+  /// No description provided for @summaryTasks.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tarefas'**
+  String get summaryTasks;
+
+  /// No description provided for @summaryActive.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ativas'**
+  String get summaryActive;
+
+  /// No description provided for @summaryCompleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Concluídas'**
+  String get summaryCompleted;
+
+  /// No description provided for @summaryTrash.
+  ///
+  /// In pt, this message translates to:
+  /// **'Na lixeira'**
+  String get summaryTrash;
+
+  /// No description provided for @summarySubtasks.
+  ///
+  /// In pt, this message translates to:
+  /// **'Etapas'**
+  String get summarySubtasks;
+
+  /// No description provided for @summaryLists.
+  ///
+  /// In pt, this message translates to:
+  /// **'Listas'**
+  String get summaryLists;
+
+  /// No description provided for @summaryGroups.
+  ///
+  /// In pt, this message translates to:
+  /// **'Grupos'**
+  String get summaryGroups;
+
+  /// No description provided for @summaryCategories.
+  ///
+  /// In pt, this message translates to:
+  /// **'Categorias'**
+  String get summaryCategories;
+
+  /// No description provided for @summaryTags.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tags'**
+  String get summaryTags;
+
+  /// No description provided for @summarySeries.
+  ///
+  /// In pt, this message translates to:
+  /// **'Séries'**
+  String get summarySeries;
+
+  /// No description provided for @summaryMyDay.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entradas do Meu dia'**
+  String get summaryMyDay;
+
+  /// No description provided for @fileSaved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Arquivo salvo.'**
+  String get fileSaved;
+
+  /// No description provided for @errorWrongPassword.
+  ///
+  /// In pt, this message translates to:
+  /// **'Senha incorreta ou arquivo corrompido.'**
+  String get errorWrongPassword;
+
+  /// No description provided for @errorInvalidFile.
+  ///
+  /// In pt, this message translates to:
+  /// **'Arquivo inválido ou incompatível.'**
+  String get errorInvalidFile;
+
+  /// No description provided for @typeBackup.
+  ///
+  /// In pt, this message translates to:
+  /// **'Backup criptografado'**
+  String get typeBackup;
+
+  /// No description provided for @typeJson.
+  ///
+  /// In pt, this message translates to:
+  /// **'JSON legível'**
+  String get typeJson;
 }
 
 class _AppLocalizationsDelegate

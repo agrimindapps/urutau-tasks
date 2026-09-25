@@ -1,6 +1,8 @@
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../features/data_transfer/application/data_transfer_service.dart';
+import '../features/data_transfer/data/drift_snapshot_repository.dart';
 import '../features/my_day/application/my_day_service.dart';
 import '../features/recurrence/application/recurrence_service.dart';
 import '../features/recurrence/data/drift_recurrence_repository.dart';
@@ -67,6 +69,14 @@ final recurrenceServiceProvider = Provider<RecurrenceService>((ref) {
 /// Séries para contexto de busca (estado de cancelamento).
 final allSeriesProvider = FutureProvider<List<RecurringSeries>>((ref) {
   return ref.watch(recurrenceRepositoryProvider).fetchAll();
+});
+
+final snapshotRepositoryProvider = Provider<DriftSnapshotRepository>((ref) {
+  return DriftSnapshotRepository(ref.watch(databaseProvider));
+});
+
+final dataTransferServiceProvider = Provider<DataTransferService>((ref) {
+  return DataTransferService(ref.watch(snapshotRepositoryProvider));
 });
 
 final myDayServiceProvider = Provider<MyDayService>((ref) {
