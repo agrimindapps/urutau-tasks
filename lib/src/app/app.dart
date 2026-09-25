@@ -7,6 +7,9 @@ import '../data/providers.dart';
 import '../features/tasks/presentation/tasks_shell.dart';
 import 'locale_preference.dart';
 
+/// Chave global usada para navegar ao tocar em uma notificação (CA-06).
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
+
 /// Raiz do aplicativo: tema Material 3 e i18n (docs/03, princípios 6-7).
 class UrutauApp extends ConsumerWidget {
   const UrutauApp({super.key});
@@ -17,6 +20,7 @@ class UrutauApp extends ConsumerWidget {
     final deviceLocales = View.of(context).platformDispatcher.locales;
 
     return MaterialApp(
+      navigatorKey: rootNavigatorKey,
       title: 'Urutau Tasks',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF2E6B4F)),

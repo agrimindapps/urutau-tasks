@@ -1191,6 +1191,60 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Español'**
   String get languageEs;
+
+  /// No description provided for @deliveryScheduled.
+  ///
+  /// In pt, this message translates to:
+  /// **'Agendado'**
+  String get deliveryScheduled;
+
+  /// No description provided for @deliveryPermissionNeeded.
+  ///
+  /// In pt, this message translates to:
+  /// **'Permissão necessária'**
+  String get deliveryPermissionNeeded;
+
+  /// No description provided for @deliveryUnsupported.
+  ///
+  /// In pt, this message translates to:
+  /// **'Indisponível nesta plataforma'**
+  String get deliveryUnsupported;
+
+  /// No description provided for @deliveryOverdue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vencido'**
+  String get deliveryOverdue;
+
+  /// No description provided for @deliveryPending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pendente de verificação'**
+  String get deliveryPending;
+
+  /// No description provided for @allowNotifications.
+  ///
+  /// In pt, this message translates to:
+  /// **'Permitir notificações'**
+  String get allowNotifications;
+
+  /// No description provided for @permissionTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Notificações de lembrete'**
+  String get permissionTitle;
+
+  /// No description provided for @permissionExplanation.
+  ///
+  /// In pt, this message translates to:
+  /// **'O Urutau Tasks usa notificações locais para avisar sobre lembretes. Nada é enviado a servidores.'**
+  String get permissionExplanation;
+
+  /// No description provided for @reminderNoticeTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lembrete'**
+  String get reminderNoticeTitle;
 }
 
 class _AppLocalizationsDelegate

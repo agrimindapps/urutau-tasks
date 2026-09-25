@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/providers.dart';
 import '../../../../l10n/gen/app_localizations.dart';
 import '../../my_day/domain/my_day.dart';
+import '../../notifications/domain/reminder_delivery.dart';
+import '../../notifications/presentation/permission_flow.dart';
 import '../../recurrence/domain/recurrence.dart';
 import '../../organization/domain/organization_repository.dart';
 import '../domain/task.dart';
@@ -492,6 +496,8 @@ class _ScheduleSection extends ConsumerWidget {
               ),
           ],
         ),
+        if (task.reminder != null && !trashed)
+          _DeliveryStatusRow(task: task),
         const SizedBox(height: 12),
         FutureBuilder<RecurringSeries?>(
           future: task.seriesId == null
@@ -639,6 +645,64 @@ class _ScheduleSection extends ConsumerWidget {
       RecurrenceFrequency.monthly => l10n.freqMonthly,
       RecurrenceFrequency.annual => l10n.freqAnnual,
     };
+  }
+}
+
+/// Estado de entrega do lembrete e fluxo de permissão (spec 08, §3/§6).
+class _DeliveryStatusRow extends ConsumerStatefulWidget {
+  const _DeliveryStatusRow({required this.task});
+
+  final Task task;
+
+  @override
+  ConsumerState<_DeliveryStatusRow> createState() => _DeliveryStatusRowState();
+}
+
+class _DeliveryStatusRowState extends ConsumerState<_DeliveryStatusRow> {
+  StreamSubscription<String>? _subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    final coordinator = ref.read(reminderCoordinatorProvider);
+    _subscription = coordinator.stateChanges.listen((_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final coordinator = ref.watch(reminderCoordinatorProvider);
+    final state = coordinator.stateOf(widget.task.id);
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              deliveryStateLabel(l10n, state),
+              key: const Key('delivery-state'),
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+          if (state == DeliveryState.permissionNeeded)
+            TextButton(
+              key: const Key('allow-notifications'),
+              onPressed: () =>
+                  requestReminderPermission(context, ref, widget.task),
+              child: Text(l10n.allowNotifications),
+            ),
+        ],
+      ),
+    );
   }
 }
 

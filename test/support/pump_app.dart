@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:urutau_tasks/src/app/app.dart';
 import 'package:urutau_tasks/src/app/locale_preference.dart';
+import 'package:urutau_tasks/src/features/notifications/application/reminder_coordinator.dart';
+import 'package:urutau_tasks/src/features/notifications/domain/reminder_delivery.dart';
 import 'package:urutau_tasks/src/data/providers.dart';
 import 'package:urutau_tasks/src/features/my_day/domain/my_day_repository.dart';
 import 'package:urutau_tasks/src/features/organization/domain/organization_repository.dart';
@@ -20,6 +22,9 @@ Future<void> pumpApp(
   OrganizationRepository? organization,
   MyDayRepository? myDay,
   LocalePreferenceStore? localeStore,
+  ReminderAdapter? reminderAdapter,
+  ReminderPermissionStore? permissionStore,
+  ForegroundScheduler? foregroundScheduler,
 }) async {
   tester.view.physicalSize = const Size(800, 600);
   tester.view.devicePixelRatio = 1.0;
@@ -39,6 +44,12 @@ Future<void> pumpApp(
         localePreferenceStoreProvider.overrideWithValue(
           localeStore ?? InMemoryLocalePreferenceStore(),
         ),
+        if (reminderAdapter != null)
+          reminderAdapterProvider.overrideWithValue(reminderAdapter),
+        if (permissionStore != null)
+          reminderPermissionStoreProvider.overrideWithValue(permissionStore),
+        if (foregroundScheduler != null)
+          foregroundSchedulerProvider.overrideWithValue(foregroundScheduler),
       ],
       child: const UrutauApp(),
     ),
@@ -66,6 +77,9 @@ Future<void> restartApp(
   OrganizationRepository? organization,
   MyDayRepository? myDay,
   LocalePreferenceStore? localeStore,
+  ReminderAdapter? reminderAdapter,
+  ReminderPermissionStore? permissionStore,
+  ForegroundScheduler? foregroundScheduler,
 }) async {
   await tester.pumpWidget(const SizedBox.shrink());
   await tester.pump();

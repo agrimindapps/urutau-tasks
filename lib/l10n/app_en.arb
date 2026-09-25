@@ -181,5 +181,14 @@
   "languageSystem": "Automatic (system)",
   "languagePt": "Português (Brasil)",
   "languageEn": "English",
-  "languageEs": "Español"
+  "languageEs": "Español",
+  "deliveryScheduled": "Scheduled",
+  "deliveryPermissionNeeded": "Permission needed",
+  "deliveryUnsupported": "Unavailable on this platform",
+  "deliveryOverdue": "Overdue",
+  "deliveryPending": "Pending verification",
+  "allowNotifications": "Allow notifications",
+  "permissionTitle": "Reminder notifications",
+  "permissionExplanation": "Urutau Tasks uses local notifications to alert about reminders. Nothing is sent to servers.",
+  "reminderNoticeTitle": "Reminder"
 }

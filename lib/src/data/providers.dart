@@ -1,10 +1,18 @@
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:flutter/material.dart';
+
+import '../app/app.dart';
 import '../app/locale_preference.dart';
 import '../features/data_transfer/application/data_transfer_service.dart';
 import '../features/data_transfer/data/drift_snapshot_repository.dart';
 import '../features/my_day/application/my_day_service.dart';
+import '../features/notifications/application/reminder_coordinator.dart';
+import '../features/notifications/domain/reminder_delivery.dart';
+import '../features/notifications/platform/adapter_selector.dart';
+import '../features/tasks/presentation/task_detail_page.dart';
+import '../features/notifications/platform/reminder_permission_store.dart';
 import '../features/recurrence/application/recurrence_service.dart';
 import '../features/recurrence/data/drift_recurrence_repository.dart';
 import '../features/recurrence/domain/recurrence.dart';
@@ -70,6 +78,52 @@ final recurrenceServiceProvider = Provider<RecurrenceService>((ref) {
 /// Séries para contexto de busca (estado de cancelamento).
 final allSeriesProvider = FutureProvider<List<RecurringSeries>>((ref) {
   return ref.watch(recurrenceRepositoryProvider).fetchAll();
+});
+
+/// Adaptador de notificação da plataforma (spec 08, §5).
+final reminderAdapterProvider = Provider<ReminderAdapter>((ref) {
+  return createReminderAdapter();
+});
+
+/// Roteamento ao tocar no aviso: navega para o detalhe da tarefa
+/// (spec 08, CA-06). Registrado na inicialização do shell.
+final reminderOpenRoutingProvider = Provider<void>((ref) {
+  ref.watch(reminderAdapterProvider).setOnOpenTask((taskId) {
+    final navigator = rootNavigatorKey.currentState;
+    if (navigator == null) return;
+    navigator.push(
+      MaterialPageRoute<void>(
+        builder: (_) => TaskDetailPage(taskId: taskId),
+      ),
+    );
+  });
+});
+
+final reminderPermissionStoreProvider =
+    Provider<ReminderPermissionStore>((ref) {
+  return SharedPrefsReminderPermissionStore();
+});
+
+/// Agendador de avisos de primeiro plano (spec 08, §8).
+final foregroundSchedulerProvider = Provider<ForegroundScheduler>((ref) {
+  return TimerForegroundScheduler();
+});
+
+/// Coordenador de lembretes: reconcilia com as tarefas em cada mudança.
+final reminderCoordinatorProvider = Provider<ReminderCoordinator>((ref) {
+  final coordinator = ReminderCoordinator(
+    ref.watch(reminderAdapterProvider),
+    ref.watch(reminderPermissionStoreProvider),
+    foreground: ref.watch(foregroundSchedulerProvider),
+  );
+  coordinator.bindTo(ref.watch(taskRepositoryProvider).watchAll());
+  ref.onDispose(coordinator.dispose);
+  return coordinator;
+});
+
+/// Avisos de primeiro plano (spec 08, §8).
+final reminderNoticesProvider = StreamProvider<Task>((ref) {
+  return ref.watch(reminderCoordinatorProvider).foregroundNotices;
 });
 
 final snapshotRepositoryProvider = Provider<DriftSnapshotRepository>((ref) {

@@ -568,4 +568,32 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get languageEs => 'Español';
+
+  @override
+  String get deliveryScheduled => 'Agendado';
+
+  @override
+  String get deliveryPermissionNeeded => 'Permissão necessária';
+
+  @override
+  String get deliveryUnsupported => 'Indisponível nesta plataforma';
+
+  @override
+  String get deliveryOverdue => 'Vencido';
+
+  @override
+  String get deliveryPending => 'Pendente de verificação';
+
+  @override
+  String get allowNotifications => 'Permitir notificações';
+
+  @override
+  String get permissionTitle => 'Notificações de lembrete';
+
+  @override
+  String get permissionExplanation =>
+      'O Urutau Tasks usa notificações locais para avisar sobre lembretes. Nada é enviado a servidores.';
+
+  @override
+  String get reminderNoticeTitle => 'Lembrete';
 }
