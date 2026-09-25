@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/gen/app_localizations.dart';
+import '../../my_day/presentation/my_day_page.dart';
 import '../../organization/presentation/lists_page.dart';
 import 'tasks_list_page.dart';
 import 'trash_page.dart';
@@ -21,14 +22,16 @@ class _TasksShellState extends State<TasksShell> {
     final l10n = AppLocalizations.of(context)!;
     final wide = MediaQuery.sizeOf(context).width >= 720;
     final destinations = [
+      (Icons.wb_sunny_outlined, l10n.navMyDay),
       (Icons.checklist_outlined, l10n.navTasks),
       (Icons.list_alt_outlined, l10n.navLists),
       (Icons.delete_outline, l10n.navTrash),
     ];
 
     final body = switch (_index) {
-      0 => const TasksListPage(),
-      1 => const ListsPage(),
+      0 => const MyDayPage(),
+      1 => const TasksListPage(),
+      2 => const ListsPage(),
       _ => const TrashPage(),
     };
 

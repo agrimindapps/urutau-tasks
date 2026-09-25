@@ -236,4 +236,67 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rename => 'Rename';
+
+  @override
+  String get navMyDay => 'My Day';
+
+  @override
+  String get myDayTitle => 'My Day';
+
+  @override
+  String get myDayEmpty => 'No tasks in your day yet.';
+
+  @override
+  String get addToMyDay => 'Add to My Day';
+
+  @override
+  String get removeFromMyDay => 'Remove from My Day';
+
+  @override
+  String get addExistingTask => 'Choose existing task';
+
+  @override
+  String get noTasksToAdd => 'No tasks available to add.';
+
+  @override
+  String get viewAll => 'All';
+
+  @override
+  String get viewImportant => 'Important';
+
+  @override
+  String get viewPlanned => 'Planned';
+
+  @override
+  String get viewCompleted => 'Completed';
+
+  @override
+  String get priorityLabel => 'Priority';
+
+  @override
+  String get priorityNone => 'No priority';
+
+  @override
+  String get priorityLow => 'Low';
+
+  @override
+  String get priorityMedium => 'Medium';
+
+  @override
+  String get priorityHigh => 'High';
+
+  @override
+  String get priorityUrgent => 'Urgent';
+
+  @override
+  String get dueDateLabel => 'Due date';
+
+  @override
+  String get noDueDate => 'No due date';
+
+  @override
+  String get clearDueDate => 'Remove due date';
+
+  @override
+  String get emptyView => 'Nothing here yet.';
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/providers.dart';
 import '../../../../l10n/gen/app_localizations.dart';
+import '../../my_day/domain/my_day.dart';
 import '../../organization/domain/organization_repository.dart';
 import '../domain/task.dart';
 import 'task_confirm.dart';
@@ -88,6 +90,7 @@ class _TaskDetailBody extends ConsumerWidget {
         ],
       ),
       body: ListView(
+        scrollCacheExtent: const ScrollCacheExtent.pixels(1200),
         padding: const EdgeInsets.all(16),
         children: [
           if (trashed)
@@ -120,6 +123,8 @@ class _TaskDetailBody extends ConsumerWidget {
                 }
               }),
             ),
+          const Divider(),
+          _ScheduleSection(task: task),
           const Divider(),
           _OrganizationSection(task: task),
           const Divider(),
@@ -366,6 +371,97 @@ class _SubtaskRenameDialogState extends State<_SubtaskRenameDialog> {
         ),
       ],
     );
+  }
+}
+
+/// Seção de prioridade e prazo (escopo MVP 3.3; spec 06, RF-11).
+class _ScheduleSection extends ConsumerWidget {
+  const _ScheduleSection({required this.task});
+
+  final Task task;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final trashed = task.isTrashed;
+    final service = ref.read(tasksServiceProvider);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        DropdownButtonFormField<TaskPriority?>(
+          key: ValueKey('priority-picker-${task.id}'),
+          initialValue: task.priority,
+          decoration: InputDecoration(labelText: l10n.priorityLabel),
+          items: [
+            DropdownMenuItem<TaskPriority?>(
+              value: null,
+              child: Text(l10n.priorityNone),
+            ),
+            for (final priority in TaskPriority.values)
+              DropdownMenuItem<TaskPriority?>(
+                value: priority,
+                child: Text(_priorityLabel(l10n, priority)),
+              ),
+          ],
+          onChanged: trashed
+              ? null
+              : (value) => runTaskAction(context, () async {
+                    await service.setPriority(task.id, value);
+                  }),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                task.dueDate == null
+                    ? l10n.noDueDate
+                    : '${l10n.dueDateLabel}: ${task.dueDate}',
+              ),
+            ),
+            TextButton(
+              onPressed: trashed
+                  ? null
+                  : () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: task.dueDate == null
+                            ? DateTime.now()
+                            : DateTime.parse(task.dueDate!),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (picked == null || !context.mounted) return;
+                      await runTaskAction(context, () async {
+                        await service.setDueDate(task.id, localDateKey(picked));
+                      });
+                    },
+              child: Text(l10n.dueDateLabel),
+            ),
+            if (task.dueDate != null)
+              IconButton(
+                tooltip: l10n.clearDueDate,
+                icon: const Icon(Icons.event_busy),
+                onPressed: trashed
+                    ? null
+                    : () => runTaskAction(context, () async {
+                          await service.setDueDate(task.id, null);
+                        }),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  String _priorityLabel(AppLocalizations l10n, TaskPriority priority) {
+    return switch (priority) {
+      TaskPriority.low => l10n.priorityLow,
+      TaskPriority.medium => l10n.priorityMedium,
+      TaskPriority.high => l10n.priorityHigh,
+      TaskPriority.urgent => l10n.priorityUrgent,
+    };
   }
 }
 

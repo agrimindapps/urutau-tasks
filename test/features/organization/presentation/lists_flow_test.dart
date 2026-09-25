@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:urutau_tasks/src/features/organization/application/organization_service.dart';
 import 'package:urutau_tasks/src/features/tasks/application/tasks_service.dart';
 
+import '../../../support/in_memory_my_day_repository.dart';
 import '../../../support/in_memory_organization_repository.dart';
 import '../../../support/in_memory_task_repository.dart';
 import '../../../support/pump_app.dart';
@@ -59,7 +60,7 @@ void main() {
   testWidgets('excluir lista com tarefas exige destino e migra '
       '(CA-07, CA-08)', (tester) async {
     final orgService = OrganizationService(orgStore, taskStore);
-    final taskService = TasksService(taskStore);
+    final taskService = TasksService(taskStore, InMemoryMyDayRepository());
     final source = await orgService.createList(name: 'Origem');
     await orgService.createList(name: 'Destino');
     var task = await taskService.createTask(title: 'Migrada');
@@ -91,7 +92,7 @@ void main() {
   testWidgets('sem outra lista a exclusão fica bloqueada (RF-06)',
       (tester) async {
     final orgService = OrganizationService(orgStore, taskStore);
-    final taskService = TasksService(taskStore);
+    final taskService = TasksService(taskStore, InMemoryMyDayRepository());
     final list = await orgService.createList(name: 'Única');
     final task = await taskService.createTask(title: 'T');
     await orgService.assignListToTask(task.id, list.id);
@@ -129,13 +130,18 @@ void main() {
 
   testWidgets('categoria e tags na tarefa (CA-10 a CA-13)', (tester) async {
     final orgService = OrganizationService(orgStore, taskStore);
-    final taskService = TasksService(taskStore, clock: () => kTestNow);
+    final taskService = TasksService(
+      taskStore,
+      InMemoryMyDayRepository(),
+      clock: () => kTestNow,
+    );
     await orgService.createCategory(name: 'Trabalho');
     final task = await taskService.createTask(title: 'Revisar');
 
     await pump(tester);
 
     // Atribui categoria pelo detalhe.
+    await tapNav(tester, icon: Icons.checklist_outlined);
     await tester.tap(find.text('Revisar'));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(ValueKey('category-picker-${task.id}')));

@@ -4,29 +4,40 @@ import 'package:urutau_tasks/src/features/tasks/domain/task.dart';
 /// Data fixa para testes determinísticos.
 final DateTime kTestNow = DateTime.utc(2026, 9, 25, 12);
 
-/// Cria uma tarefa ativa com [title] e [notes] opcionais.
+/// Cria uma tarefa com [title], [status] e campos opcionais.
 Task buildTask({
   String? id,
   String title = 'Tarefa',
   String notes = '',
   TaskStatus status = TaskStatus.active,
+  TaskPriority? priority,
+  String? dueDate,
+  DateTime? reminder,
   int position = 0,
   DateTime? createdAt,
+  DateTime? completedAt,
   List<Subtask> subtasks = const [],
 }) {
-  final task = Task.create(
+  var result = Task.create(
     id: id ?? newId(),
     title: title,
     notes: notes,
     createdAt: createdAt ?? kTestNow,
     position: position,
+    priority: priority,
+    dueDate: dueDate,
+    reminder: reminder,
   );
-  var result = task;
   for (final subtask in subtasks) {
     result = result.addSubtask(
       id: subtask.id,
       description: subtask.description,
     );
+  }
+  if (status == TaskStatus.completed) {
+    result = result.complete(at: completedAt ?? kTestNow);
+  } else if (status == TaskStatus.trash) {
+    result = result.moveToTrash(at: kTestNow);
   }
   return result;
 }

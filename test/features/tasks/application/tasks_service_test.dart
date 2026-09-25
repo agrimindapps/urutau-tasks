@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:urutau_tasks/src/features/tasks/application/tasks_service.dart';
 import 'package:urutau_tasks/src/features/tasks/domain/task.dart';
 
+import '../../../support/in_memory_my_day_repository.dart';
 import '../../../support/in_memory_task_repository.dart';
 import '../../../support/task_fixtures.dart';
 
@@ -9,9 +10,12 @@ void main() {
   late InMemoryTaskRepository repository;
   late TasksService service;
 
+  late InMemoryMyDayRepository myDay;
+
   setUp(() {
     repository = InMemoryTaskRepository();
-    service = TasksService(repository, clock: () => kTestNow);
+    myDay = InMemoryMyDayRepository();
+    service = TasksService(repository, myDay, clock: () => kTestNow);
   });
 
   test('cria tarefa com posição incremental e título validado', () async {

@@ -15,8 +15,10 @@ void main() {
       (tester) async {
     await _pumpApp(tester);
 
-    // RF-01: inicialização e navegação.
-    expect(find.text('Nenhuma tarefa ainda. Crie a primeira!'), findsOneWidget);
+    // RF-01: inicialização e navegação entre as áreas.
+    expect(find.text('Nenhuma tarefa no seu dia ainda.'), findsOneWidget);
+    await _tapNav(tester, Icons.checklist_outlined);
+    expect(find.text('Nada por aqui ainda.'), findsOneWidget);
     await _tapNav(tester, Icons.delete_outline);
     expect(find.text('A lixeira está vazia.'), findsOneWidget);
     await _tapNav(tester, Icons.checklist_outlined);
@@ -24,7 +26,10 @@ void main() {
     // RF-02: ciclo básico — criar, editar, concluir e reabrir.
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byKey(const Key('task-title-field')), 'Tarefa do smoke');
+    await tester.enterText(
+      find.byKey(const Key('task-title-field')),
+      'Tarefa do smoke',
+    );
     await tester.tap(find.widgetWithText(FilledButton, 'Salvar'));
     await tester.pumpAndSettle();
     expect(find.text('Tarefa do smoke'), findsOneWidget);
@@ -33,25 +38,39 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Editar tarefa'));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byKey(const Key('task-title-field')), 'Tarefa editada');
+    await tester.enterText(
+      find.byKey(const Key('task-title-field')),
+      'Tarefa editada',
+    );
     await tester.tap(find.widgetWithText(FilledButton, 'Salvar'));
     await tester.pumpAndSettle();
     expect(find.text('Tarefa editada'), findsOneWidget);
 
-    await tester.tap(find.byType(Checkbox).first);
-    await tester.pumpAndSettle();
-    expect(tester.widget<Checkbox>(find.byType(Checkbox).first).value, isTrue);
-    await tester.tap(find.byType(Checkbox).first);
-    await tester.pumpAndSettle();
-    expect(tester.widget<Checkbox>(find.byType(Checkbox).first).value, isFalse);
-
     await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
+
+    // Concluir na visão "Todas" e reabrir na visão "Concluídas".
+    await tester.tap(find.byType(Checkbox).first);
+    await tester.pumpAndSettle();
+    expect(find.text('Tarefa editada'), findsNothing);
+    await tester.tap(find.text('Concluídas'));
+    await tester.pumpAndSettle();
+    expect(find.text('Tarefa editada'), findsOneWidget);
+    await tester.tap(find.byType(Checkbox).first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Todas'));
+    await tester.pumpAndSettle();
+    expect(find.text('Tarefa editada'), findsOneWidget);
 
     // RF-04: layout e interação utilizáveis (etapas + progresso).
     await tester.tap(find.text('Tarefa editada'));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byKey(const Key('subtask-field')), 'Etapa do smoke');
+    await tester.enterText(
+      find.byKey(const Key('subtask-field')),
+      'Etapa do smoke',
+    );
+    await tester.ensureVisible(find.byTooltip('Adicionar etapa'));
+    await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Adicionar etapa'));
     await tester.pumpAndSettle();
     expect(find.text('Etapa do smoke'), findsOneWidget);
@@ -64,9 +83,13 @@ void main() {
       (tester) async {
     await _pumpApp(tester);
 
+    await _tapNav(tester, Icons.checklist_outlined);
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byKey(const Key('task-title-field')), 'Persistente');
+    await tester.enterText(
+      find.byKey(const Key('task-title-field')),
+      'Persistente',
+    );
     await tester.tap(find.widgetWithText(FilledButton, 'Salvar'));
     await tester.pumpAndSettle();
     expect(find.text('Persistente'), findsOneWidget);
@@ -76,7 +99,9 @@ void main() {
     await tester.pump();
     await _pumpApp(tester);
 
+    await _tapNav(tester, Icons.checklist_outlined);
     expect(find.text('Persistente'), findsOneWidget);
+    expect(find.text('Tarefa editada'), findsOneWidget);
   });
 }
 
@@ -87,16 +112,16 @@ Future<void> _pumpApp(WidgetTester tester) async {
 }
 
 Future<void> _tapNav(WidgetTester tester, IconData icon) async {
-  final nav = find.descendant(
-    of: find.byType(NavigationBar),
+  final rail = find.descendant(
+    of: find.byType(NavigationRail),
     matching: find.byIcon(icon),
   );
-  if (nav.evaluate().isNotEmpty) {
-    await tester.tap(nav);
+  if (rail.evaluate().isNotEmpty) {
+    await tester.tap(rail);
   } else {
     await tester.tap(
       find.descendant(
-        of: find.byType(NavigationRail),
+        of: find.byType(NavigationBar),
         matching: find.byIcon(icon),
       ),
     );

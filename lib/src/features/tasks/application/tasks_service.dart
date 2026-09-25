@@ -1,15 +1,18 @@
 import '../../../core/ids.dart';
+import '../../my_day/domain/my_day_repository.dart';
 import '../domain/task.dart';
 import '../domain/task_repository.dart';
 
 /// Casos de uso do ciclo de tarefas e subtarefas (spec 01).
 ///
 /// Regras de transição no domínio; orquestração e persistência aqui.
+/// Concluir/excluir remove as entradas do My Day (spec 03, RF-05/RF-09).
 class TasksService {
-  TasksService(this._repository, {DateTime Function()? clock})
+  TasksService(this._repository, this._myDay, {DateTime Function()? clock})
       : _clock = clock ?? DateTime.now;
 
   final TaskRepository _repository;
+  final MyDayRepository _myDay;
   final DateTime Function() _clock;
 
   Future<List<Task>> fetchTasks() => _repository.fetchAll();
@@ -43,10 +46,12 @@ class TasksService {
   }
 
   /// Conclui sem alterar subtarefas (spec 01, RF-04). Pendências não bloqueiam.
+  /// Sai do My Day (spec 03, RF-09).
   Future<Task> completeTask(String id) async {
     final task = await _require(id);
     final updated = task.complete(at: _clock());
     await _repository.saveTask(updated);
+    await _myDay.removeForTask(id);
     return updated;
   }
 
@@ -59,10 +64,12 @@ class TasksService {
   }
 
   /// Exclusão lógica da hierarquia preservando dados (spec 01, RF-09).
+  /// Sai de todas as visões, incluindo My Day (spec 03, RF-05).
   Future<Task> moveToTrash(String id) async {
     final task = await _require(id);
     final updated = task.moveToTrash(at: _clock());
     await _repository.saveTask(updated);
+    await _myDay.removeForTask(id);
     return updated;
   }
 
@@ -125,6 +132,30 @@ class TasksService {
   ) async {
     final task = await _require(taskId);
     final updated = task.reorderSubtasks(orderedIds);
+    await _repository.saveTask(updated);
+    return updated;
+  }
+
+  /// Define a prioridade (escopo do MVP 3.3); nula remove.
+  Future<Task> setPriority(String id, TaskPriority? priority) async {
+    final task = await _require(id);
+    final updated = task.setPriority(priority, at: _clock());
+    await _repository.saveTask(updated);
+    return updated;
+  }
+
+  /// Define o prazo como data ISO de calendário local (spec 06, RF-11).
+  Future<Task> setDueDate(String id, String? dueDate) async {
+    final task = await _require(id);
+    final updated = task.setDueDate(dueDate, at: _clock());
+    await _repository.saveTask(updated);
+    return updated;
+  }
+
+  /// Define o lembrete como instante UTC (spec 06, RF-12).
+  Future<Task> setReminder(String id, DateTime? reminder) async {
+    final task = await _require(id);
+    final updated = task.setReminder(reminder, at: _clock());
     await _repository.saveTask(updated);
     return updated;
   }

@@ -537,6 +537,132 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Renomear'**
   String get rename;
+
+  /// No description provided for @navMyDay.
+  ///
+  /// In pt, this message translates to:
+  /// **'Meu dia'**
+  String get navMyDay;
+
+  /// No description provided for @myDayTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Meu dia'**
+  String get myDayTitle;
+
+  /// No description provided for @myDayEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma tarefa no seu dia ainda.'**
+  String get myDayEmpty;
+
+  /// No description provided for @addToMyDay.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar ao Meu dia'**
+  String get addToMyDay;
+
+  /// No description provided for @removeFromMyDay.
+  ///
+  /// In pt, this message translates to:
+  /// **'Remover do Meu dia'**
+  String get removeFromMyDay;
+
+  /// No description provided for @addExistingTask.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolher tarefa existente'**
+  String get addExistingTask;
+
+  /// No description provided for @noTasksToAdd.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não há tarefas disponíveis para adicionar.'**
+  String get noTasksToAdd;
+
+  /// No description provided for @viewAll.
+  ///
+  /// In pt, this message translates to:
+  /// **'Todas'**
+  String get viewAll;
+
+  /// No description provided for @viewImportant.
+  ///
+  /// In pt, this message translates to:
+  /// **'Importante'**
+  String get viewImportant;
+
+  /// No description provided for @viewPlanned.
+  ///
+  /// In pt, this message translates to:
+  /// **'Planejado'**
+  String get viewPlanned;
+
+  /// No description provided for @viewCompleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Concluídas'**
+  String get viewCompleted;
+
+  /// No description provided for @priorityLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Prioridade'**
+  String get priorityLabel;
+
+  /// No description provided for @priorityNone.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem prioridade'**
+  String get priorityNone;
+
+  /// No description provided for @priorityLow.
+  ///
+  /// In pt, this message translates to:
+  /// **'Baixa'**
+  String get priorityLow;
+
+  /// No description provided for @priorityMedium.
+  ///
+  /// In pt, this message translates to:
+  /// **'Média'**
+  String get priorityMedium;
+
+  /// No description provided for @priorityHigh.
+  ///
+  /// In pt, this message translates to:
+  /// **'Alta'**
+  String get priorityHigh;
+
+  /// No description provided for @priorityUrgent.
+  ///
+  /// In pt, this message translates to:
+  /// **'Urgente'**
+  String get priorityUrgent;
+
+  /// No description provided for @dueDateLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Prazo'**
+  String get dueDateLabel;
+
+  /// No description provided for @noDueDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem prazo'**
+  String get noDueDate;
+
+  /// No description provided for @clearDueDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Remover prazo'**
+  String get clearDueDate;
+
+  /// No description provided for @emptyView.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nada por aqui ainda.'**
+  String get emptyView;
 }
 
 class _AppLocalizationsDelegate

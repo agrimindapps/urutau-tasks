@@ -898,6 +898,39 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, TaskRow> {
       'REFERENCES categories (id)',
     ),
   );
+  static const VerificationMeta _priorityMeta = const VerificationMeta(
+    'priority',
+  );
+  @override
+  late final GeneratedColumn<String> priority = GeneratedColumn<String>(
+    'priority',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dueDateMeta = const VerificationMeta(
+    'dueDate',
+  );
+  @override
+  late final GeneratedColumn<String> dueDate = GeneratedColumn<String>(
+    'due_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _reminderMeta = const VerificationMeta(
+    'reminder',
+  );
+  @override
+  late final GeneratedColumn<DateTime> reminder = GeneratedColumn<DateTime>(
+    'reminder',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -911,6 +944,9 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, TaskRow> {
     position,
     listId,
     categoryId,
+    priority,
+    dueDate,
+    reminder,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1003,6 +1039,24 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, TaskRow> {
         categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
       );
     }
+    if (data.containsKey('priority')) {
+      context.handle(
+        _priorityMeta,
+        priority.isAcceptableOrUnknown(data['priority']!, _priorityMeta),
+      );
+    }
+    if (data.containsKey('due_date')) {
+      context.handle(
+        _dueDateMeta,
+        dueDate.isAcceptableOrUnknown(data['due_date']!, _dueDateMeta),
+      );
+    }
+    if (data.containsKey('reminder')) {
+      context.handle(
+        _reminderMeta,
+        reminder.isAcceptableOrUnknown(data['reminder']!, _reminderMeta),
+      );
+    }
     return context;
   }
 
@@ -1056,6 +1110,18 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, TaskRow> {
         DriftSqlType.string,
         data['${effectivePrefix}category_id'],
       ),
+      priority: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}priority'],
+      ),
+      dueDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}due_date'],
+      ),
+      reminder: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}reminder'],
+      ),
     );
   }
 
@@ -1088,6 +1154,15 @@ class TaskRow extends DataClass implements Insertable<TaskRow> {
 
   /// Categoria opcional única (spec 02, RF-08).
   final String? categoryId;
+
+  /// Prioridade: `low` | `medium` | `high` | `urgent` (escopo MVP 3.3).
+  final String? priority;
+
+  /// Prazo como data ISO `YYYY-MM-DD` de calendário local (spec 06, RF-11).
+  final String? dueDate;
+
+  /// Lembrete como instante UTC (spec 06, RF-12).
+  final DateTime? reminder;
   const TaskRow({
     required this.id,
     required this.title,
@@ -1100,6 +1175,9 @@ class TaskRow extends DataClass implements Insertable<TaskRow> {
     required this.position,
     this.listId,
     this.categoryId,
+    this.priority,
+    this.dueDate,
+    this.reminder,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1122,6 +1200,15 @@ class TaskRow extends DataClass implements Insertable<TaskRow> {
     }
     if (!nullToAbsent || categoryId != null) {
       map['category_id'] = Variable<String>(categoryId);
+    }
+    if (!nullToAbsent || priority != null) {
+      map['priority'] = Variable<String>(priority);
+    }
+    if (!nullToAbsent || dueDate != null) {
+      map['due_date'] = Variable<String>(dueDate);
+    }
+    if (!nullToAbsent || reminder != null) {
+      map['reminder'] = Variable<DateTime>(reminder);
     }
     return map;
   }
@@ -1147,6 +1234,15 @@ class TaskRow extends DataClass implements Insertable<TaskRow> {
       categoryId: categoryId == null && nullToAbsent
           ? const Value.absent()
           : Value(categoryId),
+      priority: priority == null && nullToAbsent
+          ? const Value.absent()
+          : Value(priority),
+      dueDate: dueDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dueDate),
+      reminder: reminder == null && nullToAbsent
+          ? const Value.absent()
+          : Value(reminder),
     );
   }
 
@@ -1169,6 +1265,9 @@ class TaskRow extends DataClass implements Insertable<TaskRow> {
       position: serializer.fromJson<int>(json['position']),
       listId: serializer.fromJson<String?>(json['listId']),
       categoryId: serializer.fromJson<String?>(json['categoryId']),
+      priority: serializer.fromJson<String?>(json['priority']),
+      dueDate: serializer.fromJson<String?>(json['dueDate']),
+      reminder: serializer.fromJson<DateTime?>(json['reminder']),
     );
   }
   @override
@@ -1186,6 +1285,9 @@ class TaskRow extends DataClass implements Insertable<TaskRow> {
       'position': serializer.toJson<int>(position),
       'listId': serializer.toJson<String?>(listId),
       'categoryId': serializer.toJson<String?>(categoryId),
+      'priority': serializer.toJson<String?>(priority),
+      'dueDate': serializer.toJson<String?>(dueDate),
+      'reminder': serializer.toJson<DateTime?>(reminder),
     };
   }
 
@@ -1201,6 +1303,9 @@ class TaskRow extends DataClass implements Insertable<TaskRow> {
     int? position,
     Value<String?> listId = const Value.absent(),
     Value<String?> categoryId = const Value.absent(),
+    Value<String?> priority = const Value.absent(),
+    Value<String?> dueDate = const Value.absent(),
+    Value<DateTime?> reminder = const Value.absent(),
   }) => TaskRow(
     id: id ?? this.id,
     title: title ?? this.title,
@@ -1215,6 +1320,9 @@ class TaskRow extends DataClass implements Insertable<TaskRow> {
     position: position ?? this.position,
     listId: listId.present ? listId.value : this.listId,
     categoryId: categoryId.present ? categoryId.value : this.categoryId,
+    priority: priority.present ? priority.value : this.priority,
+    dueDate: dueDate.present ? dueDate.value : this.dueDate,
+    reminder: reminder.present ? reminder.value : this.reminder,
   );
   TaskRow copyWithCompanion(TasksCompanion data) {
     return TaskRow(
@@ -1235,6 +1343,9 @@ class TaskRow extends DataClass implements Insertable<TaskRow> {
       categoryId: data.categoryId.present
           ? data.categoryId.value
           : this.categoryId,
+      priority: data.priority.present ? data.priority.value : this.priority,
+      dueDate: data.dueDate.present ? data.dueDate.value : this.dueDate,
+      reminder: data.reminder.present ? data.reminder.value : this.reminder,
     );
   }
 
@@ -1251,7 +1362,10 @@ class TaskRow extends DataClass implements Insertable<TaskRow> {
           ..write('completedAt: $completedAt, ')
           ..write('position: $position, ')
           ..write('listId: $listId, ')
-          ..write('categoryId: $categoryId')
+          ..write('categoryId: $categoryId, ')
+          ..write('priority: $priority, ')
+          ..write('dueDate: $dueDate, ')
+          ..write('reminder: $reminder')
           ..write(')'))
         .toString();
   }
@@ -1269,6 +1383,9 @@ class TaskRow extends DataClass implements Insertable<TaskRow> {
     position,
     listId,
     categoryId,
+    priority,
+    dueDate,
+    reminder,
   );
   @override
   bool operator ==(Object other) =>
@@ -1284,7 +1401,10 @@ class TaskRow extends DataClass implements Insertable<TaskRow> {
           other.completedAt == this.completedAt &&
           other.position == this.position &&
           other.listId == this.listId &&
-          other.categoryId == this.categoryId);
+          other.categoryId == this.categoryId &&
+          other.priority == this.priority &&
+          other.dueDate == this.dueDate &&
+          other.reminder == this.reminder);
 }
 
 class TasksCompanion extends UpdateCompanion<TaskRow> {
@@ -1299,6 +1419,9 @@ class TasksCompanion extends UpdateCompanion<TaskRow> {
   final Value<int> position;
   final Value<String?> listId;
   final Value<String?> categoryId;
+  final Value<String?> priority;
+  final Value<String?> dueDate;
+  final Value<DateTime?> reminder;
   final Value<int> rowid;
   const TasksCompanion({
     this.id = const Value.absent(),
@@ -1312,6 +1435,9 @@ class TasksCompanion extends UpdateCompanion<TaskRow> {
     this.position = const Value.absent(),
     this.listId = const Value.absent(),
     this.categoryId = const Value.absent(),
+    this.priority = const Value.absent(),
+    this.dueDate = const Value.absent(),
+    this.reminder = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   TasksCompanion.insert({
@@ -1326,6 +1452,9 @@ class TasksCompanion extends UpdateCompanion<TaskRow> {
     this.position = const Value.absent(),
     this.listId = const Value.absent(),
     this.categoryId = const Value.absent(),
+    this.priority = const Value.absent(),
+    this.dueDate = const Value.absent(),
+    this.reminder = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        title = Value(title),
@@ -1344,6 +1473,9 @@ class TasksCompanion extends UpdateCompanion<TaskRow> {
     Expression<int>? position,
     Expression<String>? listId,
     Expression<String>? categoryId,
+    Expression<String>? priority,
+    Expression<String>? dueDate,
+    Expression<DateTime>? reminder,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1358,6 +1490,9 @@ class TasksCompanion extends UpdateCompanion<TaskRow> {
       if (position != null) 'position': position,
       if (listId != null) 'list_id': listId,
       if (categoryId != null) 'category_id': categoryId,
+      if (priority != null) 'priority': priority,
+      if (dueDate != null) 'due_date': dueDate,
+      if (reminder != null) 'reminder': reminder,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1374,6 +1509,9 @@ class TasksCompanion extends UpdateCompanion<TaskRow> {
     Value<int>? position,
     Value<String?>? listId,
     Value<String?>? categoryId,
+    Value<String?>? priority,
+    Value<String?>? dueDate,
+    Value<DateTime?>? reminder,
     Value<int>? rowid,
   }) {
     return TasksCompanion(
@@ -1388,6 +1526,9 @@ class TasksCompanion extends UpdateCompanion<TaskRow> {
       position: position ?? this.position,
       listId: listId ?? this.listId,
       categoryId: categoryId ?? this.categoryId,
+      priority: priority ?? this.priority,
+      dueDate: dueDate ?? this.dueDate,
+      reminder: reminder ?? this.reminder,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1428,6 +1569,15 @@ class TasksCompanion extends UpdateCompanion<TaskRow> {
     if (categoryId.present) {
       map['category_id'] = Variable<String>(categoryId.value);
     }
+    if (priority.present) {
+      map['priority'] = Variable<String>(priority.value);
+    }
+    if (dueDate.present) {
+      map['due_date'] = Variable<String>(dueDate.value);
+    }
+    if (reminder.present) {
+      map['reminder'] = Variable<DateTime>(reminder.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1448,6 +1598,9 @@ class TasksCompanion extends UpdateCompanion<TaskRow> {
           ..write('position: $position, ')
           ..write('listId: $listId, ')
           ..write('categoryId: $categoryId, ')
+          ..write('priority: $priority, ')
+          ..write('dueDate: $dueDate, ')
+          ..write('reminder: $reminder, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2307,6 +2460,317 @@ class TaskTagsCompanion extends UpdateCompanion<TaskTagRow> {
   }
 }
 
+class $MyDayEntriesTable extends MyDayEntries
+    with TableInfo<$MyDayEntriesTable, MyDayEntryRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MyDayEntriesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _taskIdMeta = const VerificationMeta('taskId');
+  @override
+  late final GeneratedColumn<String> taskId = GeneratedColumn<String>(
+    'task_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES tasks (id)',
+    ),
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<String> date = GeneratedColumn<String>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _positionMeta = const VerificationMeta(
+    'position',
+  );
+  @override
+  late final GeneratedColumn<int> position = GeneratedColumn<int>(
+    'position',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, taskId, date, position];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'my_day_entries';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MyDayEntryRow> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('task_id')) {
+      context.handle(
+        _taskIdMeta,
+        taskId.isAcceptableOrUnknown(data['task_id']!, _taskIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_taskIdMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('position')) {
+      context.handle(
+        _positionMeta,
+        position.isAcceptableOrUnknown(data['position']!, _positionMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MyDayEntryRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MyDayEntryRow(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      taskId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}task_id'],
+      )!,
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}date'],
+      )!,
+      position: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}position'],
+      )!,
+    );
+  }
+
+  @override
+  $MyDayEntriesTable createAlias(String alias) {
+    return $MyDayEntriesTable(attachedDatabase, alias);
+  }
+}
+
+class MyDayEntryRow extends DataClass implements Insertable<MyDayEntryRow> {
+  final String id;
+  final String taskId;
+
+  /// Data local do foco `YYYY-MM-DD` (spec 06, RF-13).
+  final String date;
+
+  /// Ordem manual do dia (spec 03, RF-12).
+  final int position;
+  const MyDayEntryRow({
+    required this.id,
+    required this.taskId,
+    required this.date,
+    required this.position,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['task_id'] = Variable<String>(taskId);
+    map['date'] = Variable<String>(date);
+    map['position'] = Variable<int>(position);
+    return map;
+  }
+
+  MyDayEntriesCompanion toCompanion(bool nullToAbsent) {
+    return MyDayEntriesCompanion(
+      id: Value(id),
+      taskId: Value(taskId),
+      date: Value(date),
+      position: Value(position),
+    );
+  }
+
+  factory MyDayEntryRow.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MyDayEntryRow(
+      id: serializer.fromJson<String>(json['id']),
+      taskId: serializer.fromJson<String>(json['taskId']),
+      date: serializer.fromJson<String>(json['date']),
+      position: serializer.fromJson<int>(json['position']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'taskId': serializer.toJson<String>(taskId),
+      'date': serializer.toJson<String>(date),
+      'position': serializer.toJson<int>(position),
+    };
+  }
+
+  MyDayEntryRow copyWith({
+    String? id,
+    String? taskId,
+    String? date,
+    int? position,
+  }) => MyDayEntryRow(
+    id: id ?? this.id,
+    taskId: taskId ?? this.taskId,
+    date: date ?? this.date,
+    position: position ?? this.position,
+  );
+  MyDayEntryRow copyWithCompanion(MyDayEntriesCompanion data) {
+    return MyDayEntryRow(
+      id: data.id.present ? data.id.value : this.id,
+      taskId: data.taskId.present ? data.taskId.value : this.taskId,
+      date: data.date.present ? data.date.value : this.date,
+      position: data.position.present ? data.position.value : this.position,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MyDayEntryRow(')
+          ..write('id: $id, ')
+          ..write('taskId: $taskId, ')
+          ..write('date: $date, ')
+          ..write('position: $position')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, taskId, date, position);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MyDayEntryRow &&
+          other.id == this.id &&
+          other.taskId == this.taskId &&
+          other.date == this.date &&
+          other.position == this.position);
+}
+
+class MyDayEntriesCompanion extends UpdateCompanion<MyDayEntryRow> {
+  final Value<String> id;
+  final Value<String> taskId;
+  final Value<String> date;
+  final Value<int> position;
+  final Value<int> rowid;
+  const MyDayEntriesCompanion({
+    this.id = const Value.absent(),
+    this.taskId = const Value.absent(),
+    this.date = const Value.absent(),
+    this.position = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  MyDayEntriesCompanion.insert({
+    required String id,
+    required String taskId,
+    required String date,
+    this.position = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       taskId = Value(taskId),
+       date = Value(date);
+  static Insertable<MyDayEntryRow> custom({
+    Expression<String>? id,
+    Expression<String>? taskId,
+    Expression<String>? date,
+    Expression<int>? position,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (taskId != null) 'task_id': taskId,
+      if (date != null) 'date': date,
+      if (position != null) 'position': position,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  MyDayEntriesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? taskId,
+    Value<String>? date,
+    Value<int>? position,
+    Value<int>? rowid,
+  }) {
+    return MyDayEntriesCompanion(
+      id: id ?? this.id,
+      taskId: taskId ?? this.taskId,
+      date: date ?? this.date,
+      position: position ?? this.position,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (taskId.present) {
+      map['task_id'] = Variable<String>(taskId.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<String>(date.value);
+    }
+    if (position.present) {
+      map['position'] = Variable<int>(position.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MyDayEntriesCompanion(')
+          ..write('id: $id, ')
+          ..write('taskId: $taskId, ')
+          ..write('date: $date, ')
+          ..write('position: $position, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2317,6 +2781,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SubtasksTable subtasks = $SubtasksTable(this);
   late final $TagsTable tags = $TagsTable(this);
   late final $TaskTagsTable taskTags = $TaskTagsTable(this);
+  late final $MyDayEntriesTable myDayEntries = $MyDayEntriesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2329,6 +2794,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     subtasks,
     tags,
     taskTags,
+    myDayEntries,
   ];
 }
 
@@ -3209,6 +3675,9 @@ typedef $$TasksTableCreateCompanionBuilder = TasksCompanion Function({
   Value<int> position,
   Value<String?> listId,
   Value<String?> categoryId,
+  Value<String?> priority,
+  Value<String?> dueDate,
+  Value<DateTime?> reminder,
   Value<int> rowid,
 });
 typedef $$TasksTableUpdateCompanionBuilder = TasksCompanion Function({
@@ -3223,6 +3692,9 @@ typedef $$TasksTableUpdateCompanionBuilder = TasksCompanion Function({
   Value<int> position,
   Value<String?> listId,
   Value<String?> categoryId,
+  Value<String?> priority,
+  Value<String?> dueDate,
+  Value<DateTime?> reminder,
   Value<int> rowid,
 });
 
@@ -3299,6 +3771,24 @@ final class $$TasksTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<$MyDayEntriesTable, List<MyDayEntryRow>>
+  _myDayEntriesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.myDayEntries,
+    aliasName: 'tasks__id__my_day_entries__task_id',
+  );
+
+  $$MyDayEntriesTableProcessedTableManager get myDayEntriesRefs {
+    final manager = $$MyDayEntriesTableTableManager(
+      $_db,
+      $_db.myDayEntries,
+    ).filter((f) => f.taskId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_myDayEntriesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$TasksTableFilterComposer extends Composer<_$AppDatabase, $TasksTable> {
@@ -3351,6 +3841,21 @@ class $$TasksTableFilterComposer extends Composer<_$AppDatabase, $TasksTable> {
 
   ColumnFilters<int> get position => $composableBuilder(
     column: $table.position,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get priority => $composableBuilder(
+    column: $table.priority,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get dueDate => $composableBuilder(
+    column: $table.dueDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get reminder => $composableBuilder(
+    column: $table.reminder,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3449,6 +3954,31 @@ class $$TasksTableFilterComposer extends Composer<_$AppDatabase, $TasksTable> {
     );
     return f(composer);
   }
+
+  Expression<bool> myDayEntriesRefs(
+    Expression<bool> Function($$MyDayEntriesTableFilterComposer f) f,
+  ) {
+    final $$MyDayEntriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.myDayEntries,
+      getReferencedColumn: (t) => t.taskId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MyDayEntriesTableFilterComposer(
+            $db: $db,
+            $table: $db.myDayEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$TasksTableOrderingComposer
@@ -3502,6 +4032,21 @@ class $$TasksTableOrderingComposer
 
   ColumnOrderings<int> get position => $composableBuilder(
     column: $table.position,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get priority => $composableBuilder(
+    column: $table.priority,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get dueDate => $composableBuilder(
+    column: $table.dueDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get reminder => $composableBuilder(
+    column: $table.reminder,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -3591,6 +4136,15 @@ class $$TasksTableAnnotationComposer
 
   GeneratedColumn<int> get position =>
       $composableBuilder(column: $table.position, builder: (column) => column);
+
+  GeneratedColumn<String> get priority =>
+      $composableBuilder(column: $table.priority, builder: (column) => column);
+
+  GeneratedColumn<String> get dueDate =>
+      $composableBuilder(column: $table.dueDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get reminder =>
+      $composableBuilder(column: $table.reminder, builder: (column) => column);
 
   $$TaskListsTableAnnotationComposer get listId {
     final $$TaskListsTableAnnotationComposer composer = $composerBuilder(
@@ -3687,6 +4241,31 @@ class $$TasksTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> myDayEntriesRefs<T extends Object>(
+    Expression<T> Function($$MyDayEntriesTableAnnotationComposer a) f,
+  ) {
+    final $$MyDayEntriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.myDayEntries,
+      getReferencedColumn: (t) => t.taskId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$MyDayEntriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.myDayEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$TasksTableTableManager
@@ -3707,6 +4286,7 @@ class $$TasksTableTableManager
             bool categoryId,
             bool subtasksRefs,
             bool taskTagsRefs,
+            bool myDayEntriesRefs,
           })
         > {
   $$TasksTableTableManager(_$AppDatabase db, $TasksTable table)
@@ -3733,6 +4313,9 @@ class $$TasksTableTableManager
                 Value<int> position = const Value.absent(),
                 Value<String?> listId = const Value.absent(),
                 Value<String?> categoryId = const Value.absent(),
+                Value<String?> priority = const Value.absent(),
+                Value<String?> dueDate = const Value.absent(),
+                Value<DateTime?> reminder = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TasksCompanion(
                 id: id,
@@ -3746,6 +4329,9 @@ class $$TasksTableTableManager
                 position: position,
                 listId: listId,
                 categoryId: categoryId,
+                priority: priority,
+                dueDate: dueDate,
+                reminder: reminder,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -3761,6 +4347,9 @@ class $$TasksTableTableManager
                 Value<int> position = const Value.absent(),
                 Value<String?> listId = const Value.absent(),
                 Value<String?> categoryId = const Value.absent(),
+                Value<String?> priority = const Value.absent(),
+                Value<String?> dueDate = const Value.absent(),
+                Value<DateTime?> reminder = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TasksCompanion.insert(
                 id: id,
@@ -3774,6 +4363,9 @@ class $$TasksTableTableManager
                 position: position,
                 listId: listId,
                 categoryId: categoryId,
+                priority: priority,
+                dueDate: dueDate,
+                reminder: reminder,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -3790,12 +4382,14 @@ class $$TasksTableTableManager
                 categoryId = false,
                 subtasksRefs = false,
                 taskTagsRefs = false,
+                myDayEntriesRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (subtasksRefs) db.subtasks,
                     if (taskTagsRefs) db.taskTags,
+                    if (myDayEntriesRefs) db.myDayEntries,
                   ],
                   addJoins:
                       <
@@ -3882,6 +4476,27 @@ class $$TasksTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (myDayEntriesRefs)
+                        await $_getPrefetchedData<
+                          TaskRow,
+                          $TasksTable,
+                          MyDayEntryRow
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TasksTableReferences
+                              ._myDayEntriesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TasksTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).myDayEntriesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.taskId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -3907,6 +4522,7 @@ typedef $$TasksTableProcessedTableManager =
         bool categoryId,
         bool subtasksRefs,
         bool taskTagsRefs,
+        bool myDayEntriesRefs,
       })
     >;
 typedef $$SubtasksTableCreateCompanionBuilder = SubtasksCompanion Function({
@@ -4818,6 +5434,302 @@ typedef $$TaskTagsTableProcessedTableManager =
       TaskTagRow,
       PrefetchHooks Function({bool taskId, bool tagId})
     >;
+typedef $$MyDayEntriesTableCreateCompanionBuilder =
+    MyDayEntriesCompanion Function({
+      required String id,
+      required String taskId,
+      required String date,
+      Value<int> position,
+      Value<int> rowid,
+    });
+typedef $$MyDayEntriesTableUpdateCompanionBuilder =
+    MyDayEntriesCompanion Function({
+      Value<String> id,
+      Value<String> taskId,
+      Value<String> date,
+      Value<int> position,
+      Value<int> rowid,
+    });
+
+final class $$MyDayEntriesTableReferences
+    extends BaseReferences<_$AppDatabase, $MyDayEntriesTable, MyDayEntryRow> {
+  $$MyDayEntriesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $TasksTable _taskIdTable(_$AppDatabase db) =>
+      db.tasks.createAlias('my_day_entries__task_id__tasks__id');
+
+  $$TasksTableProcessedTableManager get taskId {
+    final $_column = $_itemColumn<String>('task_id')!;
+
+    final manager = $$TasksTableTableManager(
+      $_db,
+      $_db.tasks,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_taskIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$MyDayEntriesTableFilterComposer
+    extends Composer<_$AppDatabase, $MyDayEntriesTable> {
+  $$MyDayEntriesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$TasksTableFilterComposer get taskId {
+    final $$TasksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.taskId,
+      referencedTable: $db.tasks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TasksTableFilterComposer(
+            $db: $db,
+            $table: $db.tasks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$MyDayEntriesTableOrderingComposer
+    extends Composer<_$AppDatabase, $MyDayEntriesTable> {
+  $$MyDayEntriesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$TasksTableOrderingComposer get taskId {
+    final $$TasksTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.taskId,
+      referencedTable: $db.tasks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TasksTableOrderingComposer(
+            $db: $db,
+            $table: $db.tasks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$MyDayEntriesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $MyDayEntriesTable> {
+  $$MyDayEntriesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<int> get position =>
+      $composableBuilder(column: $table.position, builder: (column) => column);
+
+  $$TasksTableAnnotationComposer get taskId {
+    final $$TasksTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.taskId,
+      referencedTable: $db.tasks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TasksTableAnnotationComposer(
+            $db: $db,
+            $table: $db.tasks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$MyDayEntriesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $MyDayEntriesTable,
+          MyDayEntryRow,
+          $$MyDayEntriesTableFilterComposer,
+          $$MyDayEntriesTableOrderingComposer,
+          $$MyDayEntriesTableAnnotationComposer,
+          $$MyDayEntriesTableCreateCompanionBuilder,
+          $$MyDayEntriesTableUpdateCompanionBuilder,
+          (MyDayEntryRow, $$MyDayEntriesTableReferences),
+          MyDayEntryRow,
+          PrefetchHooks Function({bool taskId})
+        > {
+  $$MyDayEntriesTableTableManager(_$AppDatabase db, $MyDayEntriesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MyDayEntriesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$MyDayEntriesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$MyDayEntriesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> taskId = const Value.absent(),
+                Value<String> date = const Value.absent(),
+                Value<int> position = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MyDayEntriesCompanion(
+                id: id,
+                taskId: taskId,
+                date: date,
+                position: position,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String taskId,
+                required String date,
+                Value<int> position = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MyDayEntriesCompanion.insert(
+                id: id,
+                taskId: taskId,
+                date: date,
+                position: position,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$MyDayEntriesTable, MyDayEntryRow>(table),
+                  $$MyDayEntriesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({taskId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (taskId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.taskId,
+                        referencedTable: $$MyDayEntriesTableReferences
+                            ._taskIdTable(db),
+                        referencedColumn: $$MyDayEntriesTableReferences
+                            ._taskIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$MyDayEntriesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $MyDayEntriesTable,
+      MyDayEntryRow,
+      $$MyDayEntriesTableFilterComposer,
+      $$MyDayEntriesTableOrderingComposer,
+      $$MyDayEntriesTableAnnotationComposer,
+      $$MyDayEntriesTableCreateCompanionBuilder,
+      $$MyDayEntriesTableUpdateCompanionBuilder,
+      (MyDayEntryRow, $$MyDayEntriesTableReferences),
+      MyDayEntryRow,
+      PrefetchHooks Function({bool taskId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -4835,4 +5747,6 @@ class $AppDatabaseManager {
   $$TagsTableTableManager get tags => $$TagsTableTableManager(_db, _db.tags);
   $$TaskTagsTableTableManager get taskTags =>
       $$TaskTagsTableTableManager(_db, _db.taskTags);
+  $$MyDayEntriesTableTableManager get myDayEntries =>
+      $$MyDayEntriesTableTableManager(_db, _db.myDayEntries);
 }

@@ -3,8 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:urutau_tasks/src/app/app.dart';
 import 'package:urutau_tasks/src/data/providers.dart';
+import 'package:urutau_tasks/src/features/my_day/domain/my_day_repository.dart';
 import 'package:urutau_tasks/src/features/organization/domain/organization_repository.dart';
 import 'package:urutau_tasks/src/features/tasks/domain/task_repository.dart';
+
+import 'in_memory_my_day_repository.dart';
 
 /// Bombeia o aplicativo com repositórios isolados para testes de widget.
 ///
@@ -14,6 +17,7 @@ Future<void> pumpApp(
   WidgetTester tester, {
   required TaskRepository repository,
   OrganizationRepository? organization,
+  MyDayRepository? myDay,
 }) async {
   tester.view.physicalSize = const Size(800, 600);
   tester.view.devicePixelRatio = 1.0;
@@ -27,6 +31,9 @@ Future<void> pumpApp(
         taskRepositoryProvider.overrideWithValue(repository),
         if (organization != null)
           organizationRepositoryProvider.overrideWithValue(organization),
+        myDayRepositoryProvider.overrideWithValue(
+          myDay ?? InMemoryMyDayRepository(),
+        ),
       ],
       child: const UrutauApp(),
     ),
@@ -51,8 +58,15 @@ Future<void> tapNav(WidgetTester tester, {required IconData icon}) async {
 Future<void> restartApp(
   WidgetTester tester, {
   required TaskRepository repository,
+  OrganizationRepository? organization,
+  MyDayRepository? myDay,
 }) async {
   await tester.pumpWidget(const SizedBox.shrink());
   await tester.pump();
-  await pumpApp(tester, repository: repository);
+  await pumpApp(
+    tester,
+    repository: repository,
+    organization: organization,
+    myDay: myDay,
+  );
 }

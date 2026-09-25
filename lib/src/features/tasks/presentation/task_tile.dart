@@ -13,6 +13,7 @@ class TaskTile extends StatelessWidget {
     this.onEdit,
     this.onDelete,
     this.onRestore,
+    this.onAddToMyDay,
   });
 
   final Task task;
@@ -21,6 +22,7 @@ class TaskTile extends StatelessWidget {
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
   final VoidCallback? onRestore;
+  final VoidCallback? onAddToMyDay;
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +72,8 @@ class TaskTile extends StatelessWidget {
                 switch (action) {
                   case _TaskAction.edit:
                     onEdit?.call();
+                  case _TaskAction.addToMyDay:
+                    onAddToMyDay?.call();
                   case _TaskAction.delete:
                     onDelete?.call();
                 }
@@ -79,6 +83,11 @@ class TaskTile extends StatelessWidget {
                   value: _TaskAction.edit,
                   child: Text(l10n.editTaskTitle),
                 ),
+                if (onAddToMyDay != null)
+                  PopupMenuItem(
+                    value: _TaskAction.addToMyDay,
+                    child: Text(l10n.addToMyDay),
+                  ),
                 PopupMenuItem(
                   value: _TaskAction.delete,
                   child: Text(l10n.delete),
@@ -89,4 +98,4 @@ class TaskTile extends StatelessWidget {
   }
 }
 
-enum _TaskAction { edit, delete }
+enum _TaskAction { edit, addToMyDay, delete }

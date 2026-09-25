@@ -1,6 +1,10 @@
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../features/my_day/application/my_day_service.dart';
+import '../features/my_day/data/drift_my_day_repository.dart';
+import '../features/my_day/domain/my_day.dart';
+import '../features/my_day/domain/my_day_repository.dart';
 import '../features/organization/application/organization_service.dart';
 import '../features/organization/data/drift_organization_repository.dart';
 import '../features/organization/domain/organization_repository.dart';
@@ -33,8 +37,27 @@ final taskRepositoryProvider = Provider<TaskRepository>((ref) {
   return DriftTaskRepository(ref.watch(databaseProvider));
 });
 
+final myDayRepositoryProvider = Provider<MyDayRepository>((ref) {
+  return DriftMyDayRepository(ref.watch(databaseProvider));
+});
+
 final tasksServiceProvider = Provider<TasksService>((ref) {
-  return TasksService(ref.watch(taskRepositoryProvider));
+  return TasksService(
+    ref.watch(taskRepositoryProvider),
+    ref.watch(myDayRepositoryProvider),
+  );
+});
+
+final myDayServiceProvider = Provider<MyDayService>((ref) {
+  return MyDayService(
+    ref.watch(myDayRepositoryProvider),
+    ref.watch(taskRepositoryProvider),
+  );
+});
+
+/// Entradas do My Day observáveis.
+final myDayEntriesProvider = StreamProvider<List<MyDayEntry>>((ref) {
+  return ref.watch(myDayRepositoryProvider).watchAll();
 });
 
 final organizationRepositoryProvider = Provider<OrganizationRepository>((ref) {

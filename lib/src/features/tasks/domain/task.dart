@@ -16,6 +16,14 @@ enum TaskStatus {
   trash,
 }
 
+/// Prioridade da tarefa (escopo do MVP 3.3); nula quando não definida.
+enum TaskPriority {
+  low,
+  medium,
+  high,
+  urgent,
+}
+
 /// Falhas de validação/estado do domínio de tarefas.
 enum TaskFailure {
   /// Título/descrição vazio após trim (spec 01, RF-01/RF-05).
@@ -38,6 +46,9 @@ enum TaskFailure {
 
   /// Tag duplicada equivalente na tarefa (spec 02, RF-09).
   duplicateTag,
+
+  /// Data de prazo fora do formato ISO `YYYY-MM-DD` (spec 06, RF-11).
+  invalidDueDate,
 }
 
 /// Exceção de domínio com a falha associada.
@@ -54,6 +65,16 @@ String _validateTitle(String raw) {
   final trimmed = raw.trim();
   if (trimmed.isEmpty) {
     throw const TaskException(TaskFailure.emptyTitle);
+  }
+  return trimmed;
+}
+
+String _validateDueDate(String raw) {
+  final trimmed = raw.trim();
+  final valid = RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(trimmed) &&
+      DateTime.tryParse(trimmed) != null;
+  if (!valid) {
+    throw const TaskException(TaskFailure.invalidDueDate);
   }
   return trimmed;
 }
@@ -148,6 +169,9 @@ class Task {
     this.listId,
     this.categoryId,
     List<String> tagIds = const [],
+    this.priority,
+    this.dueDate,
+    this.reminder,
   })  : subtasks = List.unmodifiable(_sorted(subtasks)),
         tagIds = List.unmodifiable(tagIds.toSet().toList(growable: false)) {
     if (subtasks.any((s) => s.taskId != id)) {
@@ -165,6 +189,9 @@ class Task {
     String? listId,
     String? categoryId,
     List<String> tagIds = const [],
+    TaskPriority? priority,
+    String? dueDate,
+    DateTime? reminder,
   }) {
     return Task(
       id: id,
@@ -180,6 +207,9 @@ class Task {
       listId: listId,
       categoryId: categoryId,
       tagIds: tagIds,
+      priority: priority,
+      dueDate: dueDate == null ? null : _validateDueDate(dueDate),
+      reminder: reminder,
     );
   }
 
@@ -208,6 +238,16 @@ class Task {
 
   /// Tags associadas, sem duplicatas (spec 02, RF-09).
   final List<String> tagIds;
+
+  /// Prioridade opcional (escopo do MVP 3.3).
+  final TaskPriority? priority;
+
+  /// Prazo como data ISO `YYYY-MM-DD` de calendário local (spec 06, RF-11).
+  final String? dueDate;
+
+  /// Lembrete como instante UTC (spec 06, RF-12); semântica completa na
+  /// fatia da spec 04.
+  final DateTime? reminder;
 
   /// Subtarefas ordenadas por posição (spec 01, RF-06).
   final List<Subtask> subtasks;
@@ -246,6 +286,12 @@ class Task {
     String? categoryId,
     bool clearCategory = false,
     List<String>? tagIds,
+    TaskPriority? priority,
+    bool clearPriority = false,
+    String? dueDate,
+    bool clearDueDate = false,
+    DateTime? reminder,
+    bool clearReminder = false,
   }) {
     return Task(
       id: id,
@@ -264,6 +310,9 @@ class Task {
       listId: clearList ? null : (listId ?? this.listId),
       categoryId: clearCategory ? null : (categoryId ?? this.categoryId),
       tagIds: tagIds ?? this.tagIds,
+      priority: clearPriority ? null : (priority ?? this.priority),
+      dueDate: clearDueDate ? null : (dueDate ?? this.dueDate),
+      reminder: clearReminder ? null : (reminder ?? this.reminder),
     );
   }
 
@@ -424,6 +473,30 @@ class Task {
     );
   }
 
+  /// Define a prioridade (escopo do MVP 3.3); nula remove.
+  Task setPriority(TaskPriority? priority, {DateTime? at}) {
+    _ensureEditable(status);
+    return priority == null
+        ? _copyWith(clearPriority: true, updatedAt: at)
+        : _copyWith(priority: priority, updatedAt: at);
+  }
+
+  /// Define o prazo como data ISO de calendário local (spec 06, RF-11).
+  Task setDueDate(String? dueDate, {DateTime? at}) {
+    _ensureEditable(status);
+    return dueDate == null
+        ? _copyWith(clearDueDate: true, updatedAt: at)
+        : _copyWith(dueDate: _validateDueDate(dueDate), updatedAt: at);
+  }
+
+  /// Define o lembrete como instante UTC (spec 06, RF-12).
+  Task setReminder(DateTime? reminder, {DateTime? at}) {
+    _ensureEditable(status);
+    return reminder == null
+        ? _copyWith(clearReminder: true, updatedAt: at)
+        : _copyWith(reminder: reminder.toUtc(), updatedAt: at);
+  }
+
   /// Substitui o conjunto de tags preservando a ordem informada.
   Task setTagIds(List<String> newTagIds, {DateTime? at}) {
     _ensureEditable(status);
@@ -452,6 +525,9 @@ class Task {
         other.listId == listId &&
         other.categoryId == categoryId &&
         _listEquals(other.tagIds, tagIds) &&
+        other.priority == priority &&
+        other.dueDate == dueDate &&
+        other.reminder == reminder &&
         _listEquals(other.subtasks, subtasks);
   }
 
@@ -469,6 +545,9 @@ class Task {
         listId,
         categoryId,
         Object.hashAll(tagIds),
+        priority,
+        dueDate,
+        reminder,
         Object.hashAll(subtasks),
       );
 }

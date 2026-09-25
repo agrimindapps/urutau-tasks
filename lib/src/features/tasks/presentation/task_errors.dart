@@ -16,6 +16,7 @@ Future<void> runTaskAction(
     if (!context.mounted) return;
     final message = switch (error.failure) {
       TaskFailure.emptyTitle => l10n.errorTitleRequired,
+      TaskFailure.invalidDueDate => l10n.errorUnexpected,
       TaskFailure.editInTrash => l10n.errorEditInTrash,
       TaskFailure.duplicateTag ||
       TaskFailure.invalidTransition ||

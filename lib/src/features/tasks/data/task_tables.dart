@@ -32,6 +32,15 @@ class Tasks extends Table {
   TextColumn get categoryId =>
       text().nullable().references(Categories, #id)();
 
+  /// Prioridade: `low` | `medium` | `high` | `urgent` (escopo MVP 3.3).
+  TextColumn get priority => text().nullable()();
+
+  /// Prazo como data ISO `YYYY-MM-DD` de calendário local (spec 06, RF-11).
+  TextColumn get dueDate => text().nullable()();
+
+  /// Lembrete como instante UTC (spec 06, RF-12).
+  DateTimeColumn get reminder => dateTime().nullable()();
+
   @override
   Set<Column> get primaryKey => {id};
 }

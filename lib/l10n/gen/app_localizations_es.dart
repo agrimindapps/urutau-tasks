@@ -237,4 +237,67 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get rename => 'Renombrar';
+
+  @override
+  String get navMyDay => 'Mi día';
+
+  @override
+  String get myDayTitle => 'Mi día';
+
+  @override
+  String get myDayEmpty => 'Aún no hay tareas en tu día.';
+
+  @override
+  String get addToMyDay => 'Añadir a Mi día';
+
+  @override
+  String get removeFromMyDay => 'Quitar de Mi día';
+
+  @override
+  String get addExistingTask => 'Elegir tarea existente';
+
+  @override
+  String get noTasksToAdd => 'No hay tareas disponibles para añadir.';
+
+  @override
+  String get viewAll => 'Todas';
+
+  @override
+  String get viewImportant => 'Importantes';
+
+  @override
+  String get viewPlanned => 'Planificadas';
+
+  @override
+  String get viewCompleted => 'Completadas';
+
+  @override
+  String get priorityLabel => 'Prioridad';
+
+  @override
+  String get priorityNone => 'Sin prioridad';
+
+  @override
+  String get priorityLow => 'Baja';
+
+  @override
+  String get priorityMedium => 'Media';
+
+  @override
+  String get priorityHigh => 'Alta';
+
+  @override
+  String get priorityUrgent => 'Urgente';
+
+  @override
+  String get dueDateLabel => 'Fecha límite';
+
+  @override
+  String get noDueDate => 'Sin fecha límite';
+
+  @override
+  String get clearDueDate => 'Quitar fecha límite';
+
+  @override
+  String get emptyView => 'Nada aquí todavía.';
 }
