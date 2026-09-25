@@ -14,9 +14,11 @@ class TaskTile extends StatelessWidget {
     this.onDelete,
     this.onRestore,
     this.onAddToMyDay,
+    this.matchLabel,
   });
 
   final Task task;
+  final String? matchLabel;
   final VoidCallback? onTap;
   final ValueChanged<bool?>? onToggle;
   final VoidCallback? onEdit;
@@ -48,6 +50,8 @@ class TaskTile extends StatelessWidget {
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (matchLabel != null)
+            Text(matchLabel!, style: theme.textTheme.bodySmall),
           if (task.notes.isNotEmpty)
             Text(
               task.notes,

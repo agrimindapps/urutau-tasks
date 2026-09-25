@@ -352,4 +352,106 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get errorDueDateRequired =>
       'Defina um prazo antes de ativar a recorrência.';
+
+  @override
+  String get navSearch => 'Buscar';
+
+  @override
+  String get searchHint => 'Buscar tarefas...';
+
+  @override
+  String get filtersTooltip => 'Filtros';
+
+  @override
+  String get filtersTitle => 'Filtros';
+
+  @override
+  String get clearFilters => 'Limpar filtros';
+
+  @override
+  String get applyFilters => 'Aplicar';
+
+  @override
+  String get noResults => 'Nenhum resultado.';
+
+  @override
+  String get matchTitle => 'no título';
+
+  @override
+  String get matchNotes => 'nas notas';
+
+  @override
+  String get matchSubtask => 'em etapa';
+
+  @override
+  String get filterStatus => 'Status';
+
+  @override
+  String get filterActive => 'Ativas';
+
+  @override
+  String get filterCompleted => 'Concluídas';
+
+  @override
+  String get filterLists => 'Listas';
+
+  @override
+  String get filterGroups => 'Grupos';
+
+  @override
+  String get filterCategories => 'Categorias';
+
+  @override
+  String get filterTags => 'Tags';
+
+  @override
+  String get filterPriority => 'Prioridade';
+
+  @override
+  String get filterDueDate => 'Prazo';
+
+  @override
+  String get dueNone => 'Sem prazo';
+
+  @override
+  String get dueOverdue => 'Atrasadas';
+
+  @override
+  String get dueToday => 'Hoje';
+
+  @override
+  String get dueNext7 => 'Próximos 7 dias';
+
+  @override
+  String get dueRange => 'Intervalo personalizado';
+
+  @override
+  String get filterReminder => 'Lembrete';
+
+  @override
+  String get reminderAny => 'Qualquer';
+
+  @override
+  String get reminderWith => 'Com lembrete';
+
+  @override
+  String get reminderWithout => 'Sem lembrete';
+
+  @override
+  String get filterRecurrence => 'Recorrência';
+
+  @override
+  String get recurrenceAny => 'Qualquer';
+
+  @override
+  String get recurrenceActive => 'Ativa';
+
+  @override
+  String get recurrenceCancelled => 'Cancelada';
+
+  @override
+  String get recurrenceNone => 'Sem recorrência';
+
+  @override
+  String get noTags => 'Sem tags';
 }

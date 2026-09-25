@@ -765,6 +765,210 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Defina um prazo antes de ativar a recorrência.'**
   String get errorDueDateRequired;
+
+  /// No description provided for @navSearch.
+  ///
+  /// In pt, this message translates to:
+  /// **'Buscar'**
+  String get navSearch;
+
+  /// No description provided for @searchHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Buscar tarefas...'**
+  String get searchHint;
+
+  /// No description provided for @filtersTooltip.
+  ///
+  /// In pt, this message translates to:
+  /// **'Filtros'**
+  String get filtersTooltip;
+
+  /// No description provided for @filtersTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Filtros'**
+  String get filtersTitle;
+
+  /// No description provided for @clearFilters.
+  ///
+  /// In pt, this message translates to:
+  /// **'Limpar filtros'**
+  String get clearFilters;
+
+  /// No description provided for @applyFilters.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aplicar'**
+  String get applyFilters;
+
+  /// No description provided for @noResults.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum resultado.'**
+  String get noResults;
+
+  /// No description provided for @matchTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'no título'**
+  String get matchTitle;
+
+  /// No description provided for @matchNotes.
+  ///
+  /// In pt, this message translates to:
+  /// **'nas notas'**
+  String get matchNotes;
+
+  /// No description provided for @matchSubtask.
+  ///
+  /// In pt, this message translates to:
+  /// **'em etapa'**
+  String get matchSubtask;
+
+  /// No description provided for @filterStatus.
+  ///
+  /// In pt, this message translates to:
+  /// **'Status'**
+  String get filterStatus;
+
+  /// No description provided for @filterActive.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ativas'**
+  String get filterActive;
+
+  /// No description provided for @filterCompleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Concluídas'**
+  String get filterCompleted;
+
+  /// No description provided for @filterLists.
+  ///
+  /// In pt, this message translates to:
+  /// **'Listas'**
+  String get filterLists;
+
+  /// No description provided for @filterGroups.
+  ///
+  /// In pt, this message translates to:
+  /// **'Grupos'**
+  String get filterGroups;
+
+  /// No description provided for @filterCategories.
+  ///
+  /// In pt, this message translates to:
+  /// **'Categorias'**
+  String get filterCategories;
+
+  /// No description provided for @filterTags.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tags'**
+  String get filterTags;
+
+  /// No description provided for @filterPriority.
+  ///
+  /// In pt, this message translates to:
+  /// **'Prioridade'**
+  String get filterPriority;
+
+  /// No description provided for @filterDueDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Prazo'**
+  String get filterDueDate;
+
+  /// No description provided for @dueNone.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem prazo'**
+  String get dueNone;
+
+  /// No description provided for @dueOverdue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Atrasadas'**
+  String get dueOverdue;
+
+  /// No description provided for @dueToday.
+  ///
+  /// In pt, this message translates to:
+  /// **'Hoje'**
+  String get dueToday;
+
+  /// No description provided for @dueNext7.
+  ///
+  /// In pt, this message translates to:
+  /// **'Próximos 7 dias'**
+  String get dueNext7;
+
+  /// No description provided for @dueRange.
+  ///
+  /// In pt, this message translates to:
+  /// **'Intervalo personalizado'**
+  String get dueRange;
+
+  /// No description provided for @filterReminder.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lembrete'**
+  String get filterReminder;
+
+  /// No description provided for @reminderAny.
+  ///
+  /// In pt, this message translates to:
+  /// **'Qualquer'**
+  String get reminderAny;
+
+  /// No description provided for @reminderWith.
+  ///
+  /// In pt, this message translates to:
+  /// **'Com lembrete'**
+  String get reminderWith;
+
+  /// No description provided for @reminderWithout.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem lembrete'**
+  String get reminderWithout;
+
+  /// No description provided for @filterRecurrence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recorrência'**
+  String get filterRecurrence;
+
+  /// No description provided for @recurrenceAny.
+  ///
+  /// In pt, this message translates to:
+  /// **'Qualquer'**
+  String get recurrenceAny;
+
+  /// No description provided for @recurrenceActive.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ativa'**
+  String get recurrenceActive;
+
+  /// No description provided for @recurrenceCancelled.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cancelada'**
+  String get recurrenceCancelled;
+
+  /// No description provided for @recurrenceNone.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem recorrência'**
+  String get recurrenceNone;
+
+  /// No description provided for @noTags.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sem tags'**
+  String get noTags;
 }
 
 class _AppLocalizationsDelegate
